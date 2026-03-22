@@ -1,0 +1,58 @@
+## .NET
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+## NuGet
+**/packages/*
+!**/packages/build/
+*.nupkg
+**/[Pp]ublish/
+
+## Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Bb]uild/
+bld/
+
+## Visual Studio
+.vs/
+*.rsuser
+*.sln.docstates
+_ReSharper*/
+*.[Rr]e[Ss]harper
+
+## Rider
+.idea/
+
+## SQLite databases
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+
+## OS files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+
+## Secrets
+appsettings.Development.json
+appsettings.Local.json
+*.pfx
+*.p12
+
+## Native libs (managed separately)
+libs/nativas/win-x64/*.dll
+libs/nativas/linux-x64/*.so
+libs/nativas/osx-x64/*.dylib
+
+## Claude
+.claude/

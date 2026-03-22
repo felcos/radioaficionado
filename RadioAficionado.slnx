@@ -1,0 +1,25 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/RadioAficionado.Aplicacion/RadioAficionado.Aplicacion.csproj" />
+    <Project Path="src/RadioAficionado.Compartido/RadioAficionado.Compartido.csproj" />
+    <Project Path="src/RadioAficionado.Dominio/RadioAficionado.Dominio.csproj" />
+    <Project Path="src/RadioAficionado.Escritorio/RadioAficionado.Escritorio.csproj" />
+    <Project Path="src/RadioAficionado.IA/RadioAficionado.IA.csproj" />
+    <Project Path="src/RadioAficionado.Infraestructura.Postgres/RadioAficionado.Infraestructura.Postgres.csproj" />
+    <Project Path="src/RadioAficionado.Infraestructura.Sqlite/RadioAficionado.Infraestructura.Sqlite.csproj" />
+    <Project Path="src/RadioAficionado.Infraestructura/RadioAficionado.Infraestructura.csproj" />
+    <Project Path="src/RadioAficionado.Nativo.Audio/RadioAficionado.Nativo.Audio.csproj" />
+    <Project Path="src/RadioAficionado.Nativo.Dsp/RadioAficionado.Nativo.Dsp.csproj" />
+    <Project Path="src/RadioAficionado.Nativo.ModosDigitales/RadioAficionado.Nativo.ModosDigitales.csproj" />
+    <Project Path="src/RadioAficionado.Nativo.Rig/RadioAficionado.Nativo.Rig.csproj" />
+    <Project Path="src/RadioAficionado.Nativo.Rotador/RadioAficionado.Nativo.Rotador.csproj" />
+    <Project Path="src/RadioAficionado.Web/RadioAficionado.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/RadioAficionado.Aplicacion.Tests/RadioAficionado.Aplicacion.Tests.csproj" />
+    <Project Path="tests/RadioAficionado.Dominio.Tests/RadioAficionado.Dominio.Tests.csproj" />
+    <Project Path="tests/RadioAficionado.Escritorio.Tests/RadioAficionado.Escritorio.Tests.csproj" />
+    <Project Path="tests/RadioAficionado.Infraestructura.Tests/RadioAficionado.Infraestructura.Tests.csproj" />
+    <Project Path="tests/RadioAficionado.Web.Tests/RadioAficionado.Web.Tests.csproj" />
+  </Folder>
+</Solution>

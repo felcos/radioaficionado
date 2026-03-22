@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.2.7" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.2.7" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.7" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.7" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="Serilog" Version="4.2.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
+    <PackageReference Include="MediatR" Version="12.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RadioAficionado.Dominio\RadioAficionado.Dominio.csproj" />
+    <ProjectReference Include="..\RadioAficionado.Aplicacion\RadioAficionado.Aplicacion.csproj" />
+    <ProjectReference Include="..\RadioAficionado.Infraestructura\RadioAficionado.Infraestructura.csproj" />
+    <ProjectReference Include="..\RadioAficionado.Infraestructura.Sqlite\RadioAficionado.Infraestructura.Sqlite.csproj" />
+    <ProjectReference Include="..\RadioAficionado.Nativo.Dsp\RadioAficionado.Nativo.Dsp.csproj" />
+    <ProjectReference Include="..\RadioAficionado.Nativo.ModosDigitales\RadioAficionado.Nativo.ModosDigitales.csproj" />
+    <ProjectReference Include="..\RadioAficionado.Nativo.Rotador\RadioAficionado.Nativo.Rotador.csproj" />
+    <ProjectReference Include="..\RadioAficionado.Nativo.Audio\RadioAficionado.Nativo.Audio.csproj" />
+    <ProjectReference Include="..\RadioAficionado.Nativo.Rig\RadioAficionado.Nativo.Rig.csproj" />
+    <ProjectReference Include="..\RadioAficionado.IA\RadioAficionado.IA.csproj" />
+    <ProjectReference Include="..\RadioAficionado.Compartido\RadioAficionado.Compartido.csproj" />
+  </ItemGroup>
+</Project>
