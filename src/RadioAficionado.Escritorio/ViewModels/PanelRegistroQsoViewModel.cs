@@ -1,14 +1,22 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MediatR;
+using Microsoft.Extensions.Logging;
+using RadioAficionado.Aplicacion.Qsos.RegistrarQso;
+using RadioAficionado.Dominio.ObjetosDeValor;
 
 namespace RadioAficionado.Escritorio.ViewModels;
 
 /// <summary>
 /// ViewModel para el formulario de registro de QSO.
+/// Envía comandos a la capa de aplicación vía MediatR.
 /// </summary>
 public partial class PanelRegistroQsoViewModel : ViewModelBase
 {
+    private readonly IMediator _mediator;
+    private readonly ILogger<PanelRegistroQsoViewModel> _logger;
+
     /// <summary>
     /// Indicativo de la estación contactada.
     /// </summary>
@@ -46,10 +54,40 @@ public partial class PanelRegistroQsoViewModel : ViewModelBase
     private string _nombre = string.Empty;
 
     /// <summary>
+    /// Indicativo propio de la estación (configurable).
+    /// </summary>
+    [ObservableProperty]
+    private string _indicativoPropio = string.Empty;
+
+    /// <summary>
+    /// Frecuencia actual en Hz (sincronizada desde PanelRigViewModel).
+    /// </summary>
+    [ObservableProperty]
+    private long _frecuenciaActualHz = 14_074_000;
+
+    /// <summary>
+    /// Modo actual (sincronizado desde PanelRigViewModel).
+    /// </summary>
+    [ObservableProperty]
+    private string _modoActual = "FT8";
+
+    /// <summary>
+    /// Potencia en vatios (sincronizada desde PanelRigViewModel).
+    /// </summary>
+    [ObservableProperty]
+    private double _potenciaVatios = 50.0;
+
+    /// <summary>
     /// Total de QSOs registrados en la sesión actual.
     /// </summary>
     [ObservableProperty]
     private int _totalQsos = 0;
+
+    /// <summary>
+    /// Mensaje de error del último intento de guardado.
+    /// </summary>
+    [ObservableProperty]
+    private string _mensajeError = string.Empty;
 
     /// <summary>
     /// QSOs registrados recientemente en esta sesión.
@@ -57,7 +95,18 @@ public partial class PanelRegistroQsoViewModel : ViewModelBase
     public ObservableCollection<QsoRecienteVm> QsosRecientes { get; } = new();
 
     /// <summary>
-    /// Guarda el QSO actual y limpia el formulario.
+    /// Crea el ViewModel del panel de registro de QSO.
+    /// </summary>
+    /// <param name="mediator">Mediador para enviar comandos a la capa de aplicación.</param>
+    /// <param name="logger">Logger para diagnóstico.</param>
+    public PanelRegistroQsoViewModel(IMediator mediator, ILogger<PanelRegistroQsoViewModel> logger)
+    {
+        _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    }
+
+    /// <summary>
+    /// Guarda el QSO actual enviando un RegistrarQsoComando vía MediatR y limpia el formulario.
     /// </summary>
     [RelayCommand]
     private async Task GuardarQsoAsync()
@@ -67,24 +116,68 @@ public partial class PanelRegistroQsoViewModel : ViewModelBase
             return;
         }
 
-        // TODO: Enviar comando vía MediatR
-        await Task.CompletedTask;
-
-        QsoRecienteVm qsoReciente = new QsoRecienteVm
+        if (string.IsNullOrWhiteSpace(IndicativoPropio))
         {
-            Hora = DateTimeOffset.UtcNow.ToString("HH:mm"),
-            Indicativo = IndicativoContacto,
-            SenalEnviada = SenalEnviada,
-            SenalRecibida = SenalRecibida
-        };
-        QsosRecientes.Insert(0, qsoReciente);
-        TotalQsos++;
+            MensajeError = "Debe configurar el indicativo propio antes de registrar QSOs.";
+            _logger.LogWarning("Intento de guardar QSO sin indicativo propio configurado.");
+            return;
+        }
 
-        IndicativoContacto = string.Empty;
-        SenalRecibida = "59";
-        Localizador = string.Empty;
-        Notas = string.Empty;
-        Nombre = string.Empty;
+        MensajeError = string.Empty;
+
+        bool modoValido = ModoOperacionExtensiones.IntentarDesdeAdif(ModoActual, out ModoOperacion modo);
+        if (!modoValido)
+        {
+            modo = ModoOperacion.FT8;
+            _logger.LogWarning("Modo '{Modo}' no reconocido, usando FT8 por defecto.", ModoActual);
+        }
+
+        RegistrarQsoComando comando = new RegistrarQsoComando
+        {
+            IndicativoPropio = IndicativoPropio,
+            IndicativoContacto = IndicativoContacto,
+            FechaHoraInicio = DateTimeOffset.UtcNow,
+            FrecuenciaHz = FrecuenciaActualHz,
+            Modo = modo,
+            SenalEnviada = SenalEnviada,
+            SenalRecibida = SenalRecibida,
+            Potencia = PotenciaVatios,
+            LocalizadorContacto = string.IsNullOrWhiteSpace(Localizador) ? null : Localizador,
+            Notas = string.IsNullOrWhiteSpace(Notas) ? null : Notas
+        };
+
+        try
+        {
+            _logger.LogInformation("Registrando QSO con {Indicativo}...", IndicativoContacto);
+            RegistrarQsoResultado resultado = await _mediator.Send(comando);
+
+            if (resultado.Exitoso)
+            {
+                _logger.LogInformation("QSO registrado exitosamente. ID: {QsoId}", resultado.QsoId);
+
+                QsoRecienteVm qsoReciente = new QsoRecienteVm
+                {
+                    Hora = DateTimeOffset.UtcNow.ToString("HH:mm"),
+                    Indicativo = IndicativoContacto,
+                    SenalEnviada = SenalEnviada,
+                    SenalRecibida = SenalRecibida
+                };
+                QsosRecientes.Insert(0, qsoReciente);
+                TotalQsos++;
+
+                LimpiarCamposFormulario();
+            }
+            else
+            {
+                MensajeError = resultado.Error ?? "Error desconocido al registrar el QSO.";
+                _logger.LogWarning("Error al registrar QSO: {Error}", resultado.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            MensajeError = $"Error al guardar: {ex.Message}";
+            _logger.LogError(ex, "Excepción al registrar QSO con {Indicativo}.", IndicativoContacto);
+        }
     }
 
     /// <summary>
@@ -92,6 +185,15 @@ public partial class PanelRegistroQsoViewModel : ViewModelBase
     /// </summary>
     [RelayCommand]
     private void LimpiarFormulario()
+    {
+        LimpiarCamposFormulario();
+        MensajeError = string.Empty;
+    }
+
+    /// <summary>
+    /// Limpia los campos editables del formulario sin borrar el mensaje de error.
+    /// </summary>
+    private void LimpiarCamposFormulario()
     {
         IndicativoContacto = string.Empty;
         SenalEnviada = "59";

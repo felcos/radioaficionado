@@ -1,6 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:RadioAficionado.Escritorio.ViewModels"
+        xmlns:controles="using:RadioAficionado.Escritorio.Controles"
         x:Class="RadioAficionado.Escritorio.Vistas.VentanaPrincipal"
         x:DataType="vm:VentanaPrincipalViewModel"
         Title="{Binding Titulo}"
@@ -106,12 +107,13 @@
 
         <!-- Centro: Waterfall + Mensajes lado a lado -->
         <Grid ColumnDefinitions="*,350">
-            <!-- Izquierda: Placeholder del waterfall -->
+            <!-- Izquierda: Waterfall de espectro -->
             <Border Grid.Column="0" Background="#0a0a23" Margin="5">
-                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <TextBlock Text="WATERFALL" Foreground="#333333" FontSize="48" FontWeight="Bold" HorizontalAlignment="Center" />
-                    <TextBlock Text="(SkiaSharp — próxima fase)" Foreground="#444444" FontSize="14" HorizontalAlignment="Center" />
-                </StackPanel>
+                <controles:ControlWaterfall x:Name="Waterfall"
+                                            AnchoFft="1025"
+                                            DbMinimo="-120"
+                                            DbMaximo="0"
+                                            ClipToBounds="True" />
             </Border>
 
             <!-- Derecha: Mensajes decodificados -->

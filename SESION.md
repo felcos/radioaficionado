@@ -1,8 +1,19 @@
 # Sesión — RadioAficionado
 
-## Última sesión: 2026-03-22
+## Última sesión: 2026-03-23
 
 ### Lo que se hizo
+
+#### ControlWaterfall con SkiaSharp (2026-03-23)
+- Creado `Controles/ControlWaterfall.cs`: control Avalonia custom con renderizado SkiaSharp
+- Usa `ICustomDrawOperation` + `ISkiaSharpApiLeaseFeature` para acceso directo al `SKCanvas`
+- Bitmap interno con scroll vertical (`Buffer.MemoryCopy` unsafe para rendimiento)
+- Paleta de 256 colores precalculada: negro → azul → verde → amarillo → rojo
+- Thread-safe: `AgregarLinea()` desde cualquier hilo, invalidación en UI thread
+- Propiedades: AnchoFft, DbMinimo, DbMaximo
+- Reemplazado placeholder en `VentanaPrincipal.axaml` con el control real
+- Habilitado `AllowUnsafeBlocks` en csproj para manipulación directa de píxeles
+- Build limpio (0 warnings, 0 errores), 78 tests pasando
 
 #### Fase 0 — Cimientos (completada)
 - Estructura de solución: 14 proyectos fuente + 5 test
@@ -26,7 +37,7 @@
 - 201 tests (161 Dominio + 40 Infraestructura), todos pasando
 
 ### Pendiente
-- Implementar WaterfallControl con SkiaSharp (placeholder listo)
+- ~~Implementar WaterfallControl con SkiaSharp~~ ✅ Completado
 - Implementar decodificador FT8 con ft8_lib (P/Invoke)
 - Conectar ViewModels con servicios reales vía DI
 - Swap FFT managed → FFTW3 nativa cuando haya binarios
@@ -36,6 +47,6 @@
 - Ninguno crítico. Build limpio, todos los tests pasan.
 
 ### Siguiente paso sugerido
-- SkiaSharp WaterfallControl para visualización de espectro en tiempo real
-- O decodificador FT8 con ft8_lib
-- O conectar DI completa entre ViewModels ↔ servicios
+- Conectar DI: inyectar ProcesadorEspectro → PipelineAudio → ControlWaterfall para visualización en vivo
+- O decodificador FT8 con ft8_lib (P/Invoke)
+- O conectar DI completa entre ViewModels ↔ servicios reales

@@ -59,7 +59,8 @@
 #### Escritorio (RadioAficionado.Escritorio) → todos los proyectos
 - Avalonia UI, MVVM con CommunityToolkit.Mvvm, DI
 - ViewModels: ViewModelBase, VentanaPrincipalViewModel, PanelRigViewModel, PanelMensajesViewModel, PanelRegistroQsoViewModel, MensajeDigitalVm, QsoRecienteVm
-- Vistas: VentanaPrincipal (layout completo: rig bar, waterfall, mensajes, QSO form)
+- Controles: ControlWaterfall (SkiaSharp, ICustomDrawOperation, SKBitmap con scroll vertical)
+- Vistas: VentanaPrincipal (layout completo: rig bar, waterfall SkiaSharp, mensajes, QSO form)
 
 #### Web (RadioAficionado.Web) → Dominio, Aplicacion, Infraestructura, Infraestructura.Postgres, Compartido
 - ASP.NET MVC con Razor Views
@@ -82,7 +83,7 @@
 - ✅ FFT managed Cooley-Tukey + ProcesadorEspectro
 - ✅ UI escritorio MVVM (rig bar, waterfall placeholder, mensajes, QSO form)
 - ✅ 201 tests unitarios
-- 🔨 WaterfallControl con SkiaSharp
+- ✅ WaterfallControl con SkiaSharp
 - 🔨 Decodificador FT8 (ft8_lib P/Invoke)
 - 🔨 Conectar DI: ViewModels ↔ servicios reales
 - 📋 Fase 2: Logbook completo + ADIF parser/generador

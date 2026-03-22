@@ -1,5 +1,16 @@
 # Changelog — RadioAficionado
 
+## [0.5.0] — 2026-03-23 — ControlWaterfall con SkiaSharp
+
+### feat: ControlWaterfall (Escritorio/Controles)
+- Control Avalonia custom con renderizado SkiaSharp vía ICustomDrawOperation
+- SKBitmap interno con scroll vertical (unsafe Buffer.MemoryCopy)
+- Paleta de 256 colores precalculada: negro → azul → verde → amarillo → rojo
+- Método AgregarLinea(LineaEspectro) thread-safe (~25 FPS)
+- Propiedades: AnchoFft, DbMinimo, DbMaximo
+- Reemplazado placeholder en VentanaPrincipal.axaml
+- Archivos: Controles/ControlWaterfall.cs, Vistas/VentanaPrincipal.axaml
+
 ## [0.4.0] — 2026-03-22 — Tests capa nativa + UI escritorio
 
 ### test: 201 tests (161 Dominio + 40 Infraestructura)

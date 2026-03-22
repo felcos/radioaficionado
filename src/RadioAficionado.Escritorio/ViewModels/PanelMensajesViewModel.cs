@@ -1,13 +1,18 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Extensions.Logging;
+using RadioAficionado.Dominio.Interfaces;
 
 namespace RadioAficionado.Escritorio.ViewModels;
 
 /// <summary>
 /// ViewModel para la tabla de mensajes digitales decodificados.
+/// Recibe mensajes desde los decodificadores digitales registrados.
 /// </summary>
 public partial class PanelMensajesViewModel : ViewModelBase
 {
+    private readonly ILogger<PanelMensajesViewModel> _logger;
+
     /// <summary>
     /// Colección de mensajes decodificados mostrados en la tabla.
     /// </summary>
@@ -30,6 +35,42 @@ public partial class PanelMensajesViewModel : ViewModelBase
     /// </summary>
     [ObservableProperty]
     private int _periodoActual = 0;
+
+    /// <summary>
+    /// Crea el ViewModel del panel de mensajes digitales.
+    /// </summary>
+    /// <param name="logger">Logger para diagnóstico.</param>
+    public PanelMensajesViewModel(ILogger<PanelMensajesViewModel> logger)
+    {
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    }
+
+    /// <summary>
+    /// Procesa un mensaje decodificado recibido desde un IDecodificadorDigital
+    /// y lo agrega a la lista de mensajes visibles.
+    /// </summary>
+    /// <param name="mensajeDecodificado">Mensaje proveniente del decodificador digital.</param>
+    public void ProcesarMensajeDecodificado(MensajeDecodificado mensajeDecodificado)
+    {
+        if (mensajeDecodificado is null)
+        {
+            return;
+        }
+
+        MensajeDigitalVm mensajeVm = new MensajeDigitalVm
+        {
+            Hora = mensajeDecodificado.MarcaDeTiempo.ToString("HH:mm:ss"),
+            Snr = mensajeDecodificado.Snr,
+            DeltaTiempo = mensajeDecodificado.DeltaTiempo,
+            FrecuenciaHz = mensajeDecodificado.FrecuenciaAudioHz,
+            Mensaje = mensajeDecodificado.Texto,
+            IndicativoEmisor = mensajeDecodificado.IndicativoEmisor ?? string.Empty,
+            Localizador = mensajeDecodificado.Localizador ?? string.Empty
+        };
+
+        AgregarMensaje(mensajeVm);
+        _logger.LogDebug("Mensaje decodificado agregado: {Texto}", mensajeDecodificado.Texto);
+    }
 
     /// <summary>
     /// Añade un mensaje al inicio de la tabla, manteniendo un máximo de 500.
