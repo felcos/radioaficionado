@@ -30,45 +30,63 @@
 - ConfiguracionPostgres
 
 #### Nativo.Dsp → Compartido
-- (pendiente: P/Invoke a FFTW3)
+- Interfaces/ITransformadaFourier: contrato para FFT (intercambiable managed ↔ FFTW3)
+- TransformadaCooleyTukey: FFT radix-2 DIT managed con twiddle factors y ventana Hann pre-computados
+- ProcesadorEspectro: convierte PCM 16-bit → LineaEspectro (waterfall data)
+- VentanasDsp: funciones de ventana estáticas (Hann, Hamming, Blackman-Harris)
+- LineaEspectro: modelo de datos de espectro (magnitudes dB, resolución Hz, rango)
 
 #### Nativo.ModosDigitales → Compartido, Dominio
-- (pendiente: implementaciones de IDecodificadorDigital)
+- (pendiente: implementaciones de IDecodificadorDigital — FT8, CW, etc.)
 
-#### Nativo.Audio → Compartido
-- (pendiente: implementación de IAudioPipeline con NAudio)
+#### Nativo.Audio → Compartido, Dominio
+- PipelineAudioNAudio: captura/transmisión con NAudio WaveInEvent/WaveOutEvent
+- Pipeline pub/sub para múltiples consumidores simultáneos
+- Enumeración de dispositivos de entrada/salida
 
 #### Nativo.Rig → Compartido, Dominio
-- (pendiente: implementación de IControlRig)
+- ClienteRigctld: cliente TCP a rigctld (Hamlib), polling 500ms
+- MapeadorModos: conversión bidireccional rigctld ↔ ModoOperacion/SubModoOperacion
+- ConfiguracionRig: host, puerto, intervalo, potencia máxima
 
 #### Nativo.Rotador → Compartido, Dominio
-- (pendiente: implementación de IControlRotador)
+- ClienteRotctld: cliente TCP a rotctld, polling 1s, AZ/EL
+- ConfiguracionRotador: host, puerto, intervalo, umbral de cambio
 
 #### IA → Compartido, Dominio
 - (pendiente: ML.NET + ONNX)
 
 #### Escritorio (RadioAficionado.Escritorio) → todos los proyectos
-- Avalonia UI, MVVM, DI
-- Vistas: VentanaPrincipal
+- Avalonia UI, MVVM con CommunityToolkit.Mvvm, DI
+- ViewModels: ViewModelBase, VentanaPrincipalViewModel, PanelRigViewModel, PanelMensajesViewModel, PanelRegistroQsoViewModel, MensajeDigitalVm, QsoRecienteVm
+- Vistas: VentanaPrincipal (layout completo: rig bar, waterfall, mensajes, QSO form)
 
 #### Web (RadioAficionado.Web) → Dominio, Aplicacion, Infraestructura, Infraestructura.Postgres, Compartido
 - ASP.NET MVC con Razor Views
 
+### Tests (201 tests, todos pasando)
+- Dominio.Tests (161): Indicativo, Frecuencia, Localizador, Coordenadas, BandaRadio, ModoOperacion, Qso, PlanDeBanda, MapeadorModos
+- Infraestructura.Tests (40): TransformadaCooleyTukey, ProcesadorEspectro, VentanasDsp
+
 ### Features
 
-- ✅ Estructura de solución completa
-- ✅ Objetos de valor del dominio
+- ✅ Estructura de solución completa (14+5 proyectos)
+- ✅ Objetos de valor del dominio (24 bandas, 48+43 modos ADIF)
 - ✅ Modelo de compliance regulatorio
 - ✅ Interfaces de dominio completas
 - ✅ Entidad Qso + handler MediatR
 - ✅ EF Core con SQLite + PostgreSQL
-- ✅ Shell Avalonia + Shell Web
-- ✅ 89 tests unitarios
-- 🔨 Fase 1: Control de rig (rigctld)
-- 📋 Fase 1: Waterfall (FFTW3 + SkiaSharp)
-- 📋 Fase 1: Decodificador FT8 (ft8_lib)
-- 📋 Fase 2: Logbook + ADIF parser
-- 📋 Fase 2: POTA/SOTA
+- ✅ ClienteRigctld (control de radio vía TCP)
+- ✅ ClienteRotctld (control de rotador vía TCP)
+- ✅ PipelineAudioNAudio (captura/transmisión)
+- ✅ FFT managed Cooley-Tukey + ProcesadorEspectro
+- ✅ UI escritorio MVVM (rig bar, waterfall placeholder, mensajes, QSO form)
+- ✅ 201 tests unitarios
+- 🔨 WaterfallControl con SkiaSharp
+- 🔨 Decodificador FT8 (ft8_lib P/Invoke)
+- 🔨 Conectar DI: ViewModels ↔ servicios reales
+- 📋 Fase 2: Logbook completo + ADIF parser/generador
+- 📋 Fase 2: POTA/SOTA integrado
 - 📋 Fase 3: Web con cuentas + logbook online
 - 📋 Fase 4: DX Cluster, LoTW, eQSL, ClubLog, APRS, Satélites
 - 📋 Fase 5: SDR (SoapySDR) + más modos digitales

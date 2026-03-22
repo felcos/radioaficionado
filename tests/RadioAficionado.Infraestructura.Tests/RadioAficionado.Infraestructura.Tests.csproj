@@ -22,6 +22,7 @@
     <ProjectReference Include="..\..\src\RadioAficionado.Dominio\RadioAficionado.Dominio.csproj" />
     <ProjectReference Include="..\..\src\RadioAficionado.Aplicacion\RadioAficionado.Aplicacion.csproj" />
     <ProjectReference Include="..\..\src\RadioAficionado.Compartido\RadioAficionado.Compartido.csproj" />
+    <ProjectReference Include="..\..\src\RadioAficionado.Nativo.Dsp\RadioAficionado.Nativo.Dsp.csproj" />
   </ItemGroup>
 
   <ItemGroup>

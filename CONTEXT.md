@@ -65,6 +65,7 @@ Las capas **Dominio** y **Aplicacion** son compartidas entre escritorio y web. L
 | 2026-03-22 | ft8_lib para decodificación FT8 | Librería C ligera, sin dependencias de Fortran (vs WSJT-X) |
 | 2026-03-22 | Renombrado Nativo.Ft8 → Nativo.ModosDigitales | Extensibilidad para 50+ modos digitales |
 | 2026-03-22 | FFTW3 para FFT | Estándar de la industria, rendimiento óptimo |
+| 2026-03-22 | FFT managed Cooley-Tukey como implementación inicial | FFTW3 necesita binarios nativos; la interfaz ITransformadaFourier permite swap posterior |
 | 2026-03-22 | SQLite local + PostgreSQL web | SQLite sin servidor para escritorio, PostgreSQL escalable para web |
 | 2026-03-22 | SkiaSharp para waterfall | Renderizado 2D de alto rendimiento, multiplataforma |
 | 2026-03-22 | Soporte completo ADIF 3.1.4 (48 modos + 43 submodos) | Compatibilidad total con el estándar de la industria |

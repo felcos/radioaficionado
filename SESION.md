@@ -3,28 +3,39 @@
 ## Última sesión: 2026-03-22
 
 ### Lo que se hizo
-- Creada toda la estructura de la solución (14 proyectos + 5 test)
-- Implementados objetos de valor: Indicativo, Frecuencia, Localizador, Coordenadas
-- Implementado BandaRadio con 24 bandas (LF/MF a microondas)
-- Implementado ModoOperacion con 48 modos ADIF + 43 submodos
-- Creado modelo de compliance regulatorio (PlanDeBanda, SegmentoBanda, ResultadoCompliance)
-- Creadas interfaces: IControlRig, IControlRotador, IAudioPipeline, IDecodificadorDigital
-- Implementada entidad Qso + handler MediatR RegistrarQso
-- Configurado EF Core con conversiones + proveedores SQLite/PostgreSQL
-- Creado shell Avalonia (escritorio) y ASP.NET MVC (web)
-- 89 tests unitarios del dominio, todos pasando
-- Renombrado Nativo.Ft8 → Nativo.ModosDigitales (extensibilidad)
-- Añadido proyecto Nativo.Rotador
+
+#### Fase 0 — Cimientos (completada)
+- Estructura de solución: 14 proyectos fuente + 5 test
+- Objetos de valor: Indicativo, Frecuencia, Localizador, Coordenadas
+- BandaRadio (24 bandas), ModoOperacion (48 modos ADIF + 43 submodos)
+- Modelo compliance: PlanDeBanda, SegmentoBanda, ResultadoCompliance
+- Interfaces: IControlRig, IControlRotador, IAudioPipeline, IDecodificadorDigital
+- Entidad Qso + handler MediatR RegistrarQso
+- EF Core: ContextoRadioAficionado + proveedores SQLite/PostgreSQL
+- Shells: Avalonia (escritorio) + ASP.NET MVC (web)
+- 89 tests unitarios dominio
+
+#### Fase 1 — Capa nativa (en progreso)
+- ClienteRigctld: cliente TCP a rigctld, polling 500ms, mapeo modos, S-meter, PTT
+- ClienteRotctld: cliente TCP a rotctld, polling 1s, AZ/EL
+- PipelineAudioNAudio: captura/transmisión con NAudio, pub/sub multi-consumidor
+- TransformadaCooleyTukey: FFT managed radix-2 DIT, ventanas Hann/Hamming/Blackman-Harris
+- ProcesadorEspectro: audio PCM → LineaEspectro para waterfall
+- ViewModels MVVM: PanelRig, PanelMensajes, PanelRegistroQso
+- VentanaPrincipal: layout completo (rig bar, waterfall placeholder, mensajes, QSO form)
+- 201 tests (161 Dominio + 40 Infraestructura), todos pasando
 
 ### Pendiente
-- Implementar IControlRig (cliente TCP rigctld)
-- Implementar captura de audio con NAudio
-- Implementar FFT con FFTW3 para waterfall
-- Implementar decodificador FT8 con ft8_lib
-- Implementar WaterfallControl con SkiaSharp
+- Implementar WaterfallControl con SkiaSharp (placeholder listo)
+- Implementar decodificador FT8 con ft8_lib (P/Invoke)
+- Conectar ViewModels con servicios reales vía DI
+- Swap FFT managed → FFTW3 nativa cuando haya binarios
+- Fase 2: Logbook + ADIF parser + POTA/SOTA
 
 ### Problemas encontrados
-- Ninguno crítico. El build y los tests pasan sin errores ni warnings.
+- Ninguno crítico. Build limpio, todos los tests pasan.
 
 ### Siguiente paso sugerido
-- Fase 1: Empezar con IControlRig (cliente TCP a rigctld) — es la base sobre la que se construye todo lo demás.
+- SkiaSharp WaterfallControl para visualización de espectro en tiempo real
+- O decodificador FT8 con ft8_lib
+- O conectar DI completa entre ViewModels ↔ servicios

@@ -1,12 +1,142 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:RadioAficionado.Escritorio.ViewModels"
         x:Class="RadioAficionado.Escritorio.Vistas.VentanaPrincipal"
-        Title="RadioAficionado"
-        Width="1280"
-        Height="800"
-        WindowStartupLocation="CenterScreen">
-    <TextBlock Text="RadioAficionado — En desarrollo"
-               HorizontalAlignment="Center"
-               VerticalAlignment="Center"
-               FontSize="24" />
+        x:DataType="vm:VentanaPrincipalViewModel"
+        Title="{Binding Titulo}"
+        Width="1400"
+        Height="900"
+        WindowStartupLocation="CenterScreen"
+        Background="#1a1a2e">
+
+    <Design.DataContext>
+        <vm:VentanaPrincipalViewModel />
+    </Design.DataContext>
+
+    <DockPanel>
+        <!-- Barra superior: Control del Rig -->
+        <Border DockPanel.Dock="Top" Background="#16213e" Padding="10" CornerRadius="0">
+            <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto">
+                <!-- Estado de conexión y botón -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding EstadoConexion}" Foreground="White" VerticalAlignment="Center" />
+                    <Button Content="Conectar" Command="{Binding PanelRig.ConectarCommand}" Margin="8,0" />
+                </StackPanel>
+
+                <!-- Display de frecuencia -->
+                <Border Grid.Column="1" Background="#0f3460" CornerRadius="8" Padding="15,5" Margin="10,0" HorizontalAlignment="Center">
+                    <TextBlock Text="{Binding PanelRig.FrecuenciaDisplay}"
+                               FontFamily="Consolas"
+                               FontSize="36"
+                               FontWeight="Bold"
+                               Foreground="#e94560"
+                               HorizontalAlignment="Center" />
+                </Border>
+
+                <!-- Modo y banda -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                    <Border Background="#e94560" CornerRadius="4" Padding="8,4">
+                        <TextBlock Text="{Binding PanelRig.ModoActual}" Foreground="White" FontWeight="Bold" />
+                    </Border>
+                    <Border Background="#533483" CornerRadius="4" Padding="8,4">
+                        <TextBlock Text="{Binding PanelRig.BandaActual}" Foreground="White" FontWeight="Bold" />
+                    </Border>
+                </StackPanel>
+
+                <!-- S-Meter -->
+                <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center" Margin="10,0">
+                    <TextBlock Text="S" Foreground="#aaaaaa" VerticalAlignment="Center" />
+                    <ProgressBar Value="{Binding PanelRig.NivelSenal}" Maximum="9" Width="80" Height="16" />
+                    <TextBlock Text="{Binding PanelRig.PotenciaVatios, StringFormat={}{0:F0}W}"
+                               Foreground="#aaaaaa" VerticalAlignment="Center" Margin="10,0,0,0" />
+                </StackPanel>
+
+                <!-- PTT -->
+                <Button Grid.Column="4"
+                        Content="{Binding PanelRig.TextoPtt}"
+                        Command="{Binding PanelRig.CambiarPttCommand}"
+                        Foreground="White"
+                        Width="70"
+                        FontWeight="Bold"
+                        Margin="10,0,0,0" />
+            </Grid>
+        </Border>
+
+        <!-- Inferior: Registro de QSO -->
+        <Border DockPanel.Dock="Bottom" Background="#16213e" Padding="10" Height="200">
+            <Grid ColumnDefinitions="*,*">
+                <!-- Formulario de QSO -->
+                <StackPanel Grid.Column="0" Spacing="6">
+                    <TextBlock Text="Registrar QSO" Foreground="White" FontWeight="Bold" FontSize="14" />
+                    <Grid ColumnDefinitions="Auto,*,Auto,80" RowDefinitions="Auto,Auto,Auto" HorizontalAlignment="Stretch">
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Indicativo:" Foreground="#aaaaaa" VerticalAlignment="Center" Margin="0,0,5,0" />
+                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding PanelRegistroQso.IndicativoContacto}" Margin="0,2" />
+                        <TextBlock Grid.Row="0" Grid.Column="2" Text="  RST TX:" Foreground="#aaaaaa" VerticalAlignment="Center" Margin="5,0" />
+                        <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding PanelRegistroQso.SenalEnviada}" Margin="0,2" />
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Localizador:" Foreground="#aaaaaa" VerticalAlignment="Center" Margin="0,0,5,0" />
+                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding PanelRegistroQso.Localizador}" Margin="0,2" />
+                        <TextBlock Grid.Row="1" Grid.Column="2" Text="  RST RX:" Foreground="#aaaaaa" VerticalAlignment="Center" Margin="5,0" />
+                        <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding PanelRegistroQso.SenalRecibida}" Margin="0,2" />
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Notas:" Foreground="#aaaaaa" VerticalAlignment="Center" Margin="0,0,5,0" />
+                        <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding PanelRegistroQso.Notas}" Margin="0,2" />
+                        <Button Grid.Row="2" Grid.Column="3" Content="Guardar" Command="{Binding PanelRegistroQso.GuardarQsoCommand}" HorizontalAlignment="Stretch" Margin="0,2" />
+                    </Grid>
+                </StackPanel>
+
+                <!-- QSOs recientes -->
+                <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                    <TextBlock Text="{Binding PanelRegistroQso.TotalQsos, StringFormat=QSOs: {0}}" Foreground="White" FontWeight="Bold" FontSize="14" />
+                    <ListBox ItemsSource="{Binding PanelRegistroQso.QsosRecientes}" MaxHeight="150" Background="Transparent">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="vm:QsoRecienteVm">
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <TextBlock Text="{Binding Hora}" Foreground="#888888" Width="50" />
+                                    <TextBlock Text="{Binding Indicativo}" Foreground="#e94560" FontWeight="Bold" Width="100" />
+                                    <TextBlock Text="{Binding SenalEnviada}" Foreground="#aaaaaa" Width="40" />
+                                    <TextBlock Text="{Binding SenalRecibida}" Foreground="#aaaaaa" Width="40" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Centro: Waterfall + Mensajes lado a lado -->
+        <Grid ColumnDefinitions="*,350">
+            <!-- Izquierda: Placeholder del waterfall -->
+            <Border Grid.Column="0" Background="#0a0a23" Margin="5">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="WATERFALL" Foreground="#333333" FontSize="48" FontWeight="Bold" HorizontalAlignment="Center" />
+                    <TextBlock Text="(SkiaSharp — próxima fase)" Foreground="#444444" FontSize="14" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Border>
+
+            <!-- Derecha: Mensajes decodificados -->
+            <Border Grid.Column="1" Background="#16213e" Margin="5" CornerRadius="4" Padding="8">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="8" Margin="0,0,0,8">
+                        <TextBlock Text="Mensajes" Foreground="White" FontWeight="Bold" FontSize="14" VerticalAlignment="Center" />
+                        <Border Background="#e94560" CornerRadius="4" Padding="6,2">
+                            <TextBlock Text="{Binding PanelMensajes.ModoDigital}" Foreground="White" FontSize="11" />
+                        </Border>
+                    </StackPanel>
+                    <ListBox ItemsSource="{Binding PanelMensajes.Mensajes}" Background="Transparent">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="vm:MensajeDigitalVm">
+                                <Grid ColumnDefinitions="50,35,40,*">
+                                    <TextBlock Grid.Column="0" Text="{Binding Hora}" Foreground="#666666" FontFamily="Consolas" FontSize="11" />
+                                    <TextBlock Grid.Column="1" Text="{Binding Snr, StringFormat={}{0:+0;-0}}" Foreground="#00ff00" FontFamily="Consolas" FontSize="11" />
+                                    <TextBlock Grid.Column="2" Text="{Binding FrecuenciaHz}" Foreground="#888888" FontFamily="Consolas" FontSize="11" />
+                                    <TextBlock Grid.Column="3" Text="{Binding Mensaje}" Foreground="White" FontFamily="Consolas" FontSize="11" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </DockPanel>
+            </Border>
+        </Grid>
+    </DockPanel>
 </Window>
