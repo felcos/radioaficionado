@@ -2,6 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:RadioAficionado.Escritorio.ViewModels"
         xmlns:controles="using:RadioAficionado.Escritorio.Controles"
+        xmlns:vistas="using:RadioAficionado.Escritorio.Vistas"
         x:Class="RadioAficionado.Escritorio.Vistas.VentanaPrincipal"
         x:DataType="vm:VentanaPrincipalViewModel"
         Title="{Binding Titulo}"
@@ -105,40 +106,65 @@
             </Grid>
         </Border>
 
-        <!-- Centro: Waterfall + Mensajes lado a lado -->
-        <Grid ColumnDefinitions="*,350">
-            <!-- Izquierda: Waterfall de espectro -->
-            <Border Grid.Column="0" Background="#0a0a23" Margin="5">
-                <controles:ControlWaterfall x:Name="Waterfall"
-                                            AnchoFft="1025"
-                                            DbMinimo="-120"
-                                            DbMaximo="0"
-                                            ClipToBounds="True" />
-            </Border>
+        <!-- Centro: Pestañas con contenido principal -->
+        <TabControl SelectedIndex="{Binding PestanaActiva}">
+            <TabControl.Styles>
+                <Style Selector="TabItem">
+                    <Setter Property="Foreground" Value="#aaaaaa" />
+                    <Setter Property="FontWeight" Value="Bold" />
+                </Style>
+                <Style Selector="TabItem:selected">
+                    <Setter Property="Foreground" Value="#e94560" />
+                </Style>
+            </TabControl.Styles>
 
-            <!-- Derecha: Mensajes decodificados -->
-            <Border Grid.Column="1" Background="#16213e" Margin="5" CornerRadius="4" Padding="8">
-                <DockPanel>
-                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="8" Margin="0,0,0,8">
-                        <TextBlock Text="Mensajes" Foreground="White" FontWeight="Bold" FontSize="14" VerticalAlignment="Center" />
-                        <Border Background="#e94560" CornerRadius="4" Padding="6,2">
-                            <TextBlock Text="{Binding PanelMensajes.ModoDigital}" Foreground="White" FontSize="11" />
-                        </Border>
-                    </StackPanel>
-                    <ListBox ItemsSource="{Binding PanelMensajes.Mensajes}" Background="Transparent">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate x:DataType="vm:MensajeDigitalVm">
-                                <Grid ColumnDefinitions="50,35,40,*">
-                                    <TextBlock Grid.Column="0" Text="{Binding Hora}" Foreground="#666666" FontFamily="Consolas" FontSize="11" />
-                                    <TextBlock Grid.Column="1" Text="{Binding Snr, StringFormat={}{0:+0;-0}}" Foreground="#00ff00" FontFamily="Consolas" FontSize="11" />
-                                    <TextBlock Grid.Column="2" Text="{Binding FrecuenciaHz}" Foreground="#888888" FontFamily="Consolas" FontSize="11" />
-                                    <TextBlock Grid.Column="3" Text="{Binding Mensaje}" Foreground="White" FontFamily="Consolas" FontSize="11" />
-                                </Grid>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </DockPanel>
-            </Border>
-        </Grid>
+            <!-- Pestaña 0: Operación (Waterfall + Mensajes) -->
+            <TabItem Header="Operación">
+                <Grid ColumnDefinitions="*,350">
+                    <!-- Izquierda: Waterfall de espectro -->
+                    <Border Grid.Column="0" Background="#0a0a23" Margin="5">
+                        <controles:ControlWaterfall x:Name="Waterfall"
+                                                    AnchoFft="1025"
+                                                    DbMinimo="-120"
+                                                    DbMaximo="0"
+                                                    ClipToBounds="True" />
+                    </Border>
+
+                    <!-- Derecha: Mensajes decodificados -->
+                    <Border Grid.Column="1" Background="#16213e" Margin="5" CornerRadius="4" Padding="8">
+                        <DockPanel>
+                            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="8" Margin="0,0,0,8">
+                                <TextBlock Text="Mensajes" Foreground="White" FontWeight="Bold" FontSize="14" VerticalAlignment="Center" />
+                                <Border Background="#e94560" CornerRadius="4" Padding="6,2">
+                                    <TextBlock Text="{Binding PanelMensajes.ModoDigital}" Foreground="White" FontSize="11" />
+                                </Border>
+                            </StackPanel>
+                            <ListBox ItemsSource="{Binding PanelMensajes.Mensajes}" Background="Transparent">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:MensajeDigitalVm">
+                                        <Grid ColumnDefinitions="50,35,40,*">
+                                            <TextBlock Grid.Column="0" Text="{Binding Hora}" Foreground="#666666" FontFamily="Consolas" FontSize="11" />
+                                            <TextBlock Grid.Column="1" Text="{Binding Snr, StringFormat={}{0:+0;-0}}" Foreground="#00ff00" FontFamily="Consolas" FontSize="11" />
+                                            <TextBlock Grid.Column="2" Text="{Binding FrecuenciaHz}" Foreground="#888888" FontFamily="Consolas" FontSize="11" />
+                                            <TextBlock Grid.Column="3" Text="{Binding Mensaje}" Foreground="White" FontFamily="Consolas" FontSize="11" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </DockPanel>
+                    </Border>
+                </Grid>
+            </TabItem>
+
+            <!-- Pestaña 1: Logbook -->
+            <TabItem Header="Logbook">
+                <vistas:PanelLogbook DataContext="{Binding PanelLogbook}" />
+            </TabItem>
+
+            <!-- Pestaña 2: DX Cluster -->
+            <TabItem Header="DX Cluster">
+                <vistas:PanelDxCluster DataContext="{Binding PanelDxCluster}" />
+            </TabItem>
+        </TabControl>
     </DockPanel>
 </Window>

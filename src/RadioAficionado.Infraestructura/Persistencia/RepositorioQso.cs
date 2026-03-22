@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using RadioAficionado.Dominio.Entidades;
 using RadioAficionado.Dominio.Interfaces;
 using RadioAficionado.Dominio.ObjetosDeValor;
+using Frecuencia = RadioAficionado.Dominio.ObjetosDeValor.Frecuencia;
 
 namespace RadioAficionado.Infraestructura.Persistencia;
 
@@ -65,5 +66,76 @@ public sealed class RepositorioQso : IRepositorioQso
     public async Task<int> ContarAsync(CancellationToken ct)
     {
         return await _contexto.Qsos.CountAsync(ct);
+    }
+
+    /// <inheritdoc />
+    public async Task<ResultadoPaginado<Qso>> ObtenerPaginadoAsync(
+        int pagina, int tamano, FiltroQso? filtro, CancellationToken ct)
+    {
+        IQueryable<Qso> consulta = AplicarFiltro(_contexto.Qsos.AsQueryable(), filtro);
+
+        int total = await consulta.CountAsync(ct);
+
+        List<Qso> elementos = await consulta
+            .OrderByDescending(q => q.FechaHoraInicio)
+            .Skip((pagina - 1) * tamano)
+            .Take(tamano)
+            .ToListAsync(ct);
+
+        return new ResultadoPaginado<Qso>(elementos.AsReadOnly(), total);
+    }
+
+    /// <inheritdoc />
+    public async Task<int> ContarConFiltroAsync(FiltroQso? filtro, CancellationToken ct)
+    {
+        IQueryable<Qso> consulta = AplicarFiltro(_contexto.Qsos.AsQueryable(), filtro);
+        return await consulta.CountAsync(ct);
+    }
+
+    /// <summary>
+    /// Aplica los filtros de FiltroQso a una consulta IQueryable de QSOs.
+    /// </summary>
+    private static IQueryable<Qso> AplicarFiltro(IQueryable<Qso> consulta, FiltroQso? filtro)
+    {
+        if (filtro is null)
+        {
+            return consulta;
+        }
+
+        if (!string.IsNullOrWhiteSpace(filtro.Indicativo))
+        {
+            string indicativoBusqueda = filtro.Indicativo.ToUpperInvariant();
+            consulta = consulta.Where(q =>
+                q.IndicativoContacto.Valor.ToUpper().Contains(indicativoBusqueda) ||
+                q.IndicativoPropio.Valor.ToUpper().Contains(indicativoBusqueda));
+        }
+
+        if (filtro.Modo.HasValue)
+        {
+            ModoOperacion modo = filtro.Modo.Value;
+            consulta = consulta.Where(q => q.Modo == modo);
+        }
+
+        if (filtro.FechaDesde.HasValue)
+        {
+            DateTimeOffset fechaDesde = filtro.FechaDesde.Value;
+            consulta = consulta.Where(q => q.FechaHoraInicio >= fechaDesde);
+        }
+
+        if (filtro.FechaHasta.HasValue)
+        {
+            DateTimeOffset fechaHasta = filtro.FechaHasta.Value;
+            consulta = consulta.Where(q => q.FechaHoraInicio <= fechaHasta);
+        }
+
+        if (filtro.Banda.HasValue)
+        {
+            BandaRadio banda = filtro.Banda.Value;
+            (Frecuencia inicio, Frecuencia fin) = banda.ObtenerRangoFrecuencia();
+            consulta = consulta.Where(q =>
+                q.Frecuencia.Hz >= inicio.Hz && q.Frecuencia.Hz <= fin.Hz);
+        }
+
+        return consulta;
     }
 }

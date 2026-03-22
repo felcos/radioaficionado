@@ -1,5 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using RadioAficionado.Dominio.Interfaces;
+using RadioAficionado.Infraestructura.Compliance;
+using RadioAficionado.Infraestructura.DxCluster;
 using RadioAficionado.Infraestructura.Persistencia;
 
 namespace RadioAficionado.Infraestructura;
@@ -10,7 +12,7 @@ namespace RadioAficionado.Infraestructura;
 public static class ConfiguracionServicios
 {
     /// <summary>
-    /// Registra los servicios de infraestructura (repositorios, unidad de trabajo) en el contenedor de DI.
+    /// Registra los servicios de infraestructura (repositorios, unidad de trabajo, DX Cluster) en el contenedor de DI.
     /// </summary>
     /// <param name="servicios">Colección de servicios.</param>
     /// <returns>La colección de servicios para encadenar llamadas.</returns>
@@ -18,6 +20,8 @@ public static class ConfiguracionServicios
     {
         servicios.AddScoped<IRepositorioQso, RepositorioQso>();
         servicios.AddScoped<IUnidadDeTrabajo, UnidadDeTrabajo>();
+        servicios.AddSingleton<IDxCluster, ClienteDxCluster>();
+        servicios.AddSingleton<IServicioCompliance, ServicioCompliance>();
 
         return servicios;
     }

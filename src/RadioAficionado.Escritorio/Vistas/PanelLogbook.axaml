@@ -1,0 +1,138 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:RadioAficionado.Escritorio.ViewModels"
+             x:Class="RadioAficionado.Escritorio.Vistas.PanelLogbook"
+             x:DataType="vm:PanelLogbookViewModel">
+
+    <Border Background="#16213e" CornerRadius="4" Padding="10">
+        <DockPanel>
+            <!-- Título y botones de importar/exportar -->
+            <Grid DockPanel.Dock="Top" ColumnDefinitions="Auto,*,Auto,Auto" Margin="0,0,0,8">
+                <TextBlock Grid.Column="0" Text="Logbook" Foreground="White" FontWeight="Bold" FontSize="16" VerticalAlignment="Center" />
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                    <Button Content="Importar ADIF"
+                            Command="{Binding ImportarAdifCommand}"
+                            Background="#0f3460"
+                            Foreground="White"
+                            Padding="10,4" />
+                    <Button Content="Exportar ADIF"
+                            Command="{Binding ExportarAdifCommand}"
+                            Background="#0f3460"
+                            Foreground="White"
+                            Padding="10,4" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center" Margin="15,0,0,0">
+                    <TextBlock Text="{Binding TotalQsos, StringFormat=QSOs: {0}}" Foreground="#e94560" FontWeight="Bold" VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding TotalDxcc, StringFormat=DXCC: {0}}" Foreground="#aaaaaa" VerticalAlignment="Center" />
+                </StackPanel>
+            </Grid>
+
+            <!-- Barra de filtros -->
+            <Border DockPanel.Dock="Top" Background="#0f3460" CornerRadius="4" Padding="8" Margin="0,0,0,6">
+                <Grid ColumnDefinitions="Auto,150,Auto,120,Auto,120,Auto,140,Auto,140,Auto,Auto" RowDefinitions="Auto">
+                    <TextBlock Grid.Column="0" Text="Indicativo:" Foreground="#aaaaaa" VerticalAlignment="Center" Margin="0,0,5,0" />
+                    <TextBox Grid.Column="1" Text="{Binding FiltroIndicativo}" Watermark="Buscar..." Height="28" FontSize="12" />
+
+                    <TextBlock Grid.Column="2" Text="  Banda:" Foreground="#aaaaaa" VerticalAlignment="Center" Margin="5,0,5,0" />
+                    <ComboBox Grid.Column="3" ItemsSource="{Binding OpcionesBanda}" SelectedItem="{Binding FiltroBanda}" Height="28" FontSize="12" />
+
+                    <TextBlock Grid.Column="4" Text="  Modo:" Foreground="#aaaaaa" VerticalAlignment="Center" Margin="5,0,5,0" />
+                    <ComboBox Grid.Column="5" ItemsSource="{Binding OpcionesModo}" SelectedItem="{Binding FiltroModo}" Height="28" FontSize="12" />
+
+                    <TextBlock Grid.Column="6" Text="  Desde:" Foreground="#aaaaaa" VerticalAlignment="Center" Margin="5,0,5,0" />
+                    <DatePicker Grid.Column="7" SelectedDate="{Binding FiltroFechaDesde}" Height="28" FontSize="12" />
+
+                    <TextBlock Grid.Column="8" Text="  Hasta:" Foreground="#aaaaaa" VerticalAlignment="Center" Margin="5,0,5,0" />
+                    <DatePicker Grid.Column="9" SelectedDate="{Binding FiltroFechaHasta}" Height="28" FontSize="12" />
+
+                    <Button Grid.Column="10"
+                            Content="Filtrar"
+                            Command="{Binding AplicarFiltrosCommand}"
+                            Background="#e94560"
+                            Foreground="White"
+                            Padding="10,4"
+                            Margin="8,0,0,0"
+                            FontSize="12" />
+                    <Button Grid.Column="11"
+                            Content="Limpiar"
+                            Command="{Binding LimpiarFiltrosCommand}"
+                            Background="#533483"
+                            Foreground="White"
+                            Padding="10,4"
+                            Margin="4,0,0,0"
+                            FontSize="12" />
+                </Grid>
+            </Border>
+
+            <!-- Mensaje de estado -->
+            <TextBlock DockPanel.Dock="Top"
+                       Text="{Binding MensajeEstado}"
+                       Foreground="#e94560"
+                       FontSize="11"
+                       Margin="0,0,0,4"
+                       IsVisible="{Binding MensajeEstado, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+            <!-- Barra de paginación inferior -->
+            <Border DockPanel.Dock="Bottom" Margin="0,6,0,0">
+                <Grid ColumnDefinitions="Auto,Auto,*,Auto,Auto,Auto">
+                    <Button Grid.Column="0"
+                            Content="&lt; Anterior"
+                            Command="{Binding PaginaAnteriorCommand}"
+                            Background="#0f3460"
+                            Foreground="White"
+                            Padding="10,4"
+                            FontSize="12" />
+                    <Button Grid.Column="1"
+                            Content="Siguiente &gt;"
+                            Command="{Binding PaginaSiguienteCommand}"
+                            Background="#0f3460"
+                            Foreground="White"
+                            Padding="10,4"
+                            Margin="6,0,0,0"
+                            FontSize="12" />
+
+                    <TextBlock Grid.Column="3"
+                               Text="{Binding TextoPaginacion}"
+                               Foreground="#aaaaaa"
+                               VerticalAlignment="Center"
+                               Margin="0,0,10,0"
+                               FontSize="12" />
+                    <TextBlock Grid.Column="4"
+                               Text="{Binding TotalQsos, StringFormat=Total: {0} QSOs}"
+                               Foreground="White"
+                               VerticalAlignment="Center"
+                               FontWeight="Bold"
+                               FontSize="12" />
+                </Grid>
+            </Border>
+
+            <!-- DataGrid principal -->
+            <DataGrid ItemsSource="{Binding Qsos}"
+                      IsReadOnly="True"
+                      CanUserReorderColumns="True"
+                      CanUserResizeColumns="True"
+                      CanUserSortColumns="True"
+                      GridLinesVisibility="Horizontal"
+                      Background="#1a1a2e"
+                      Foreground="White"
+                      FontSize="12"
+                      FontFamily="Consolas"
+                      RowBackground="#1a1a2e"
+                      HeadersVisibility="Column"
+                      BorderThickness="0">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Fecha (UTC)" Binding="{Binding Fecha}" Width="140" />
+                    <DataGridTextColumn Header="Indicativo" Binding="{Binding Indicativo}" Width="110" />
+                    <DataGridTextColumn Header="Banda" Binding="{Binding Banda}" Width="70" />
+                    <DataGridTextColumn Header="Modo" Binding="{Binding Modo}" Width="70" />
+                    <DataGridTextColumn Header="Señal Env" Binding="{Binding SenalEnviada}" Width="80" />
+                    <DataGridTextColumn Header="Señal Rec" Binding="{Binding SenalRecibida}" Width="80" />
+                    <DataGridTextColumn Header="Frecuencia" Binding="{Binding Frecuencia}" Width="100" />
+                    <DataGridTextColumn Header="Notas" Binding="{Binding Notas}" Width="*" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+    </Border>
+</UserControl>

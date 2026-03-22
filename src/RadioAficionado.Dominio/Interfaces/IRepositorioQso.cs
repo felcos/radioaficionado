@@ -4,6 +4,13 @@ using RadioAficionado.Dominio.ObjetosDeValor;
 namespace RadioAficionado.Dominio.Interfaces;
 
 /// <summary>
+/// Resultado de una consulta paginada de QSOs.
+/// </summary>
+/// <param name="Elementos">QSOs de la página solicitada.</param>
+/// <param name="TotalElementos">Cantidad total de QSOs que coinciden con el filtro.</param>
+public sealed record ResultadoPaginado<T>(IReadOnlyList<T> Elementos, int TotalElementos);
+
+/// <summary>
 /// Repositorio para operaciones de persistencia de contactos de radio (QSOs).
 /// </summary>
 public interface IRepositorioQso
@@ -51,4 +58,22 @@ public interface IRepositorioQso
     /// <param name="ct">Token de cancelación.</param>
     /// <returns>Cantidad de QSOs.</returns>
     Task<int> ContarAsync(CancellationToken ct);
+
+    /// <summary>
+    /// Obtiene una página de QSOs aplicando filtros opcionales, ordenados por fecha descendente.
+    /// </summary>
+    /// <param name="pagina">Número de página (base 1).</param>
+    /// <param name="tamano">Cantidad de elementos por página.</param>
+    /// <param name="filtro">Filtros opcionales. Null para obtener todos.</param>
+    /// <param name="ct">Token de cancelación.</param>
+    /// <returns>Resultado paginado con los QSOs y el total de elementos.</returns>
+    Task<ResultadoPaginado<Qso>> ObtenerPaginadoAsync(int pagina, int tamano, FiltroQso? filtro, CancellationToken ct);
+
+    /// <summary>
+    /// Cuenta los QSOs que coinciden con un filtro.
+    /// </summary>
+    /// <param name="filtro">Filtros opcionales. Null para contar todos.</param>
+    /// <param name="ct">Token de cancelación.</param>
+    /// <returns>Cantidad de QSOs que coinciden.</returns>
+    Task<int> ContarConFiltroAsync(FiltroQso? filtro, CancellationToken ct);
 }
