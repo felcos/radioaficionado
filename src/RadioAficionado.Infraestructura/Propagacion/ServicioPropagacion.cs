@@ -1,7 +1,7 @@
 using RadioAficionado.Dominio.Interfaces;
 using RadioAficionado.Dominio.ObjetosDeValor;
 using RadioAficionado.Dominio.Propagacion;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace RadioAficionado.Infraestructura.Propagacion;
 
@@ -12,7 +12,7 @@ namespace RadioAficionado.Infraestructura.Propagacion;
 /// </summary>
 public sealed class ServicioPropagacion : IServicioPropagacion
 {
-    private readonly ILogger _logger;
+    private readonly ILogger<ServicioPropagacion> _logger;
     private readonly HttpClient _clienteHttp;
     private readonly ConfiguracionPropagacion _configuracion;
 
@@ -40,10 +40,10 @@ public sealed class ServicioPropagacion : IServicioPropagacion
     /// <summary>
     /// Crea una nueva instancia de <see cref="ServicioPropagacion"/>.
     /// </summary>
-    /// <param name="logger">Logger de Serilog.</param>
+    /// <param name="logger">Logger de Microsoft.Extensions.Logging.</param>
     /// <param name="clienteHttp">Cliente HTTP para consultas externas.</param>
     /// <param name="configuracion">Configuracion del servicio.</param>
-    public ServicioPropagacion(ILogger logger, HttpClient clienteHttp, ConfiguracionPropagacion configuracion)
+    public ServicioPropagacion(ILogger<ServicioPropagacion> logger, HttpClient clienteHttp, ConfiguracionPropagacion configuracion)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _clienteHttp = clienteHttp ?? throw new ArgumentNullException(nameof(clienteHttp));
@@ -64,7 +64,7 @@ public sealed class ServicioPropagacion : IServicioPropagacion
 
         try
         {
-            _logger.Information("Consultando indices solares desde {Url}", _configuracion.UrlDatosSolares);
+            _logger.LogInformation("Consultando indices solares desde {Url}", _configuracion.UrlDatosSolares);
             string respuesta = await _clienteHttp.GetStringAsync(_configuracion.UrlDatosSolares, ct);
             IndicesSolares indices = ParsearIndicesSolares(respuesta);
 
@@ -78,7 +78,7 @@ public sealed class ServicioPropagacion : IServicioPropagacion
         }
         catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
         {
-            _logger.Warning(ex, "No se pudieron obtener indices solares remotos, usando datos de respaldo");
+            _logger.LogWarning(ex, "No se pudieron obtener indices solares remotos, usando datos de respaldo");
             return ObtenerIndicesDeFallback();
         }
     }
@@ -352,7 +352,7 @@ public sealed class ServicioPropagacion : IServicioPropagacion
             // dado que el formato NOAA es predecible.
 
             // Fallback si el JSON no tiene el formato esperado
-            _logger.Debug("Respuesta de indices solares recibida ({Longitud} caracteres)", json.Length);
+            _logger.LogDebug("Respuesta de indices solares recibida ({Longitud} caracteres)", json.Length);
             return new IndicesSolares(
                 Sfi: 120,
                 Kp: 2,
@@ -362,7 +362,7 @@ public sealed class ServicioPropagacion : IServicioPropagacion
         }
         catch (Exception ex)
         {
-            _logger.Warning(ex, "Error al parsear indices solares, usando datos de respaldo");
+            _logger.LogWarning(ex, "Error al parsear indices solares, usando datos de respaldo");
             return ObtenerIndicesDeFallback();
         }
     }

@@ -183,7 +183,7 @@ public partial class ConfiguracionViewModel : ViewModelBase
     [RelayCommand]
     private async Task CargarAsync()
     {
-        ConfiguracionCompleta config = await _servicioConfiguracion.CargarAsync().ConfigureAwait(false);
+        ConfiguracionCompleta config = await _servicioConfiguracion.CargarAsync();
         AplicarDesdeConfiguracion(config);
         MensajeEstado = string.Empty;
     }
@@ -195,7 +195,7 @@ public partial class ConfiguracionViewModel : ViewModelBase
     private async Task GuardarAsync()
     {
         ConfiguracionCompleta config = ConstruirConfiguracion();
-        await _servicioConfiguracion.GuardarAsync(config).ConfigureAwait(false);
+        await _servicioConfiguracion.GuardarAsync(config);
         MensajeEstado = "Configuración guardada correctamente.";
         GuardadoExitoso = true;
     }
@@ -206,7 +206,7 @@ public partial class ConfiguracionViewModel : ViewModelBase
     [RelayCommand]
     private async Task CancelarAsync()
     {
-        ConfiguracionCompleta config = await _servicioConfiguracion.CargarAsync().ConfigureAwait(false);
+        ConfiguracionCompleta config = await _servicioConfiguracion.CargarAsync();
         AplicarDesdeConfiguracion(config);
         MensajeEstado = "Cambios descartados.";
     }

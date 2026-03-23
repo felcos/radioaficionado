@@ -3,7 +3,8 @@ using RadioAficionado.Dominio.Interfaces;
 using RadioAficionado.Dominio.ObjetosDeValor;
 using RadioAficionado.Dominio.Propagacion;
 using RadioAficionado.Infraestructura.Propagacion;
-using Serilog;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace RadioAficionado.Infraestructura.Tests.Propagacion;
 
@@ -32,7 +33,7 @@ public sealed class ServicioPropagacionTests : IDisposable
 
     public ServicioPropagacionTests()
     {
-        ILogger logger = new LoggerConfiguration().CreateLogger();
+        ILogger<ServicioPropagacion> logger = NullLogger<ServicioPropagacion>.Instance;
         _clienteHttp = new HttpClient();
         _configuracion = new ConfiguracionPropagacion
         {

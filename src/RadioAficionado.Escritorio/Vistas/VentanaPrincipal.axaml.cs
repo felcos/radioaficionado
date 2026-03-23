@@ -29,6 +29,6 @@ public partial class VentanaPrincipal : Window
     private async void AbrirConfiguracion(object? sender, RoutedEventArgs e)
     {
         VentanaConfiguracion ventana = new VentanaConfiguracion();
-        await ventana.ShowDialog(this).ConfigureAwait(false);
+        await ventana.ShowDialog(this);
     }
 }

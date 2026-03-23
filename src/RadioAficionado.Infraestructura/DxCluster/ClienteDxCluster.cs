@@ -3,7 +3,7 @@ using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using RadioAficionado.Dominio.Interfaces;
 using RadioAficionado.Dominio.ObjetosDeValor;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace RadioAficionado.Infraestructura.DxCluster;
 
@@ -22,7 +22,7 @@ public sealed class ClienteDxCluster : IDxCluster
         @"^DX\s+de\s+([A-Z0-9/]+):\s+(\d+\.?\d*)\s+([A-Z0-9/]+)\s*(.*?)\s+(\d{4})Z\s*$",
         RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-    private readonly ILogger _logger;
+    private readonly ILogger<ClienteDxCluster> _logger;
     private readonly SemaphoreSlim _semaforo = new(1, 1);
 
     private TcpClient? _clienteTcp;
@@ -51,18 +51,11 @@ public sealed class ClienteDxCluster : IDxCluster
     /// <summary>
     /// Crea una nueva instancia del cliente DX Cluster.
     /// </summary>
-    /// <param name="logger">Logger de Serilog para registrar la actividad.</param>
+    /// <param name="logger">Logger para registrar la actividad.</param>
     /// <exception cref="ArgumentNullException">Si el logger es null.</exception>
-    public ClienteDxCluster(ILogger logger)
+    public ClienteDxCluster(ILogger<ClienteDxCluster> logger)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    }
-
-    /// <summary>
-    /// Crea una nueva instancia del cliente DX Cluster con un logger por defecto.
-    /// </summary>
-    public ClienteDxCluster() : this(Log.Logger)
-    {
     }
 
     /// <inheritdoc />
@@ -135,7 +128,7 @@ public sealed class ClienteDxCluster : IDxCluster
 
         await EnviarLineaAsync(comando, ct).ConfigureAwait(false);
 
-        _logger.Information("Spot DX enviado: {Frecuencia} {Dx} {Comentario}", frecuenciaKHz, spot.Dx.Valor, spot.Comentario);
+        _logger.LogInformation("Spot DX enviado: {Frecuencia} {Dx} {Comentario}", frecuenciaKHz, spot.Dx.Valor, spot.Comentario);
     }
 
     /// <inheritdoc />
@@ -226,7 +219,7 @@ public sealed class ClienteDxCluster : IDxCluster
         using CancellationTokenSource ctsConexion = CancellationTokenSource.CreateLinkedTokenSource(ct);
         ctsConexion.CancelAfter(10_000);
 
-        _logger.Information("Conectando al DX Cluster {Servidor}:{Puerto}...", _servidor, _puerto);
+        _logger.LogInformation("Conectando al DX Cluster {Servidor}:{Puerto}...", _servidor, _puerto);
 
         await _clienteTcp.ConnectAsync(_servidor, _puerto, ctsConexion.Token).ConfigureAwait(false);
 
@@ -241,7 +234,7 @@ public sealed class ClienteDxCluster : IDxCluster
         _ctsLectura = new CancellationTokenSource();
         _tareaLectura = EjecutarLecturaAsync(_ctsLectura.Token);
 
-        _logger.Information("Conectado al DX Cluster {Servidor}:{Puerto}", _servidor, _puerto);
+        _logger.LogInformation("Conectado al DX Cluster {Servidor}:{Puerto}", _servidor, _puerto);
     }
 
     /// <summary>
@@ -261,18 +254,18 @@ public sealed class ClienteDxCluster : IDxCluster
                 if (linea is null)
                 {
                     // Conexión cerrada por el servidor
-                    _logger.Warning("El servidor DX Cluster cerró la conexión.");
+                    _logger.LogWarning("El servidor DX Cluster cerró la conexión.");
                     break;
                 }
 
-                _logger.Debug("DX Cluster << {Linea}", linea);
+                _logger.LogDebug("DX Cluster << {Linea}", linea);
 
                 // Detectar prompt de login
                 if (!loginEnviado && EsPromptDeLogin(linea))
                 {
                     await EnviarLineaAsync(_indicativo, ct).ConfigureAwait(false);
                     loginEnviado = true;
-                    _logger.Information("Login enviado al DX Cluster: {Indicativo}", _indicativo);
+                    _logger.LogInformation("Login enviado al DX Cluster: {Indicativo}", _indicativo);
                     continue;
                 }
 
@@ -280,7 +273,7 @@ public sealed class ClienteDxCluster : IDxCluster
                 SpotDx? spot = ParsearSpot(linea);
                 if (spot is not null)
                 {
-                    _logger.Debug("Spot recibido: {Spotteador} -> {Dx} en {Frecuencia}", spot.Spotteador, spot.Dx, spot.Frecuencia);
+                    _logger.LogDebug("Spot recibido: {Spotteador} -> {Dx} en {Frecuencia}", spot.Spotteador, spot.Dx, spot.Frecuencia);
                     SpotRecibido?.Invoke(this, spot);
                 }
             }
@@ -291,7 +284,7 @@ public sealed class ClienteDxCluster : IDxCluster
         }
         catch (IOException ex)
         {
-            _logger.Warning(ex, "Conexión perdida con el DX Cluster {Servidor}:{Puerto}", _servidor, _puerto);
+            _logger.LogWarning(ex, "Conexión perdida con el DX Cluster {Servidor}:{Puerto}", _servidor, _puerto);
         }
         catch (ObjectDisposedException)
         {
@@ -318,7 +311,7 @@ public sealed class ClienteDxCluster : IDxCluster
         while (!ct.IsCancellationRequested && !_disposed)
         {
             intentos++;
-            _logger.Information("Intentando reconexión al DX Cluster ({Intento})...", intentos);
+            _logger.LogInformation("Intentando reconexión al DX Cluster ({Intento})...", intentos);
 
             try
             {
@@ -326,7 +319,7 @@ public sealed class ClienteDxCluster : IDxCluster
                 await Task.Delay(retrasoMs, ct).ConfigureAwait(false);
                 await ConectarInternoAsync(ct).ConfigureAwait(false);
 
-                _logger.Information("Reconexión exitosa al DX Cluster {Servidor}:{Puerto}", _servidor, _puerto);
+                _logger.LogInformation("Reconexión exitosa al DX Cluster {Servidor}:{Puerto}", _servidor, _puerto);
                 Reconectado?.Invoke(this, EventArgs.Empty);
                 return;
             }
@@ -336,7 +329,7 @@ public sealed class ClienteDxCluster : IDxCluster
             }
             catch (Exception ex)
             {
-                _logger.Warning(ex, "Fallo en el intento de reconexión {Intento}", intentos);
+                _logger.LogWarning(ex, "Fallo en el intento de reconexión {Intento}", intentos);
                 retrasoMs = Math.Min(retrasoMs * 2, MaxRetrasoMs);
             }
         }
@@ -373,7 +366,7 @@ public sealed class ClienteDxCluster : IDxCluster
             }
 
             await _escritor.WriteLineAsync(texto.AsMemory(), ct).ConfigureAwait(false);
-            _logger.Debug("DX Cluster >> {Texto}", texto);
+            _logger.LogDebug("DX Cluster >> {Texto}", texto);
         }
         finally
         {

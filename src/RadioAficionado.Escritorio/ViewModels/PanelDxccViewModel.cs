@@ -283,7 +283,7 @@ public partial class PanelDxccViewModel : ViewModelBase
             EstaCargando = true;
             MensajeEstado = "Cargando datos DXCC...";
 
-            IReadOnlyList<Qso> qsos = await _repositorioQso.ObtenerTodosAsync(ct).ConfigureAwait(false);
+            IReadOnlyList<Qso> qsos = await _repositorioQso.ObtenerTodosAsync(ct);
             IReadOnlyList<EntidadDxcc> entidadesActivas = CatalogoDxcc.ObtenerActivas();
 
             HashSet<int> trabajadas = _estadisticasDxcc.EntidadesTrabajadas(qsos);

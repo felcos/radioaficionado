@@ -5,7 +5,7 @@ using System.Text.Json;
 using System.Xml.Linq;
 using RadioAficionado.Dominio.Interfaces;
 using RadioAficionado.Dominio.ObjetosDeValor;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace RadioAficionado.Infraestructura.PskReporter;
 
@@ -16,7 +16,7 @@ namespace RadioAficionado.Infraestructura.PskReporter;
 /// </summary>
 public sealed class ClientePskReporter : IPskReporter
 {
-    private readonly ILogger _logger;
+    private readonly ILogger<ClientePskReporter> _logger;
     private readonly HttpClient _clienteHttp;
     private readonly ConfiguracionPskReporter _configuracion;
     private readonly ConcurrentQueue<SpotPsk> _bufferSpots = new();
@@ -32,24 +32,15 @@ public sealed class ClientePskReporter : IPskReporter
     /// <summary>
     /// Crea una nueva instancia del cliente PSKReporter.
     /// </summary>
-    /// <param name="logger">Logger de Serilog para registrar la actividad.</param>
+    /// <param name="logger">Logger para registrar la actividad.</param>
     /// <param name="clienteHttp">Cliente HTTP para las peticiones a PSKReporter.</param>
     /// <param name="configuracion">Configuración del cliente PSKReporter.</param>
     /// <exception cref="ArgumentNullException">Si algún parámetro es null.</exception>
-    public ClientePskReporter(ILogger logger, HttpClient clienteHttp, ConfiguracionPskReporter configuracion)
+    public ClientePskReporter(ILogger<ClientePskReporter> logger, HttpClient clienteHttp, ConfiguracionPskReporter configuracion)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _clienteHttp = clienteHttp ?? throw new ArgumentNullException(nameof(clienteHttp));
         _configuracion = configuracion ?? throw new ArgumentNullException(nameof(configuracion));
-    }
-
-    /// <summary>
-    /// Crea una nueva instancia del cliente PSKReporter con logger por defecto y HttpClient nuevo.
-    /// </summary>
-    /// <param name="configuracion">Configuración del cliente PSKReporter.</param>
-    public ClientePskReporter(ConfiguracionPskReporter configuracion)
-        : this(Log.Logger, new HttpClient(), configuracion)
-    {
     }
 
     /// <inheritdoc />
@@ -65,7 +56,7 @@ public sealed class ClientePskReporter : IPskReporter
             _bufferSpots.Enqueue(spot);
         }
 
-        _logger.Information("Se añadieron {Cantidad} spots al buffer de PSKReporter. Total en buffer: {Total}",
+        _logger.LogInformation("Se añadieron {Cantidad} spots al buffer de PSKReporter. Total en buffer: {Total}",
             spots.Count, _bufferSpots.Count);
 
         // Si no hay tarea de envío periódico activa, iniciarla
@@ -92,7 +83,7 @@ public sealed class ClientePskReporter : IPskReporter
                      $"&noactive=true" +
                      $"&callback=";
 
-        _logger.Information("Consultando spots de PSKReporter para {Indicativo} en los últimos {Segundos}s",
+        _logger.LogInformation("Consultando spots de PSKReporter para {Indicativo} en los últimos {Segundos}s",
             indicativo.Valor, segundos);
 
         HttpResponseMessage respuesta = await _clienteHttp.GetAsync(url, ct).ConfigureAwait(false);
@@ -102,7 +93,7 @@ public sealed class ClientePskReporter : IPskReporter
 
         IReadOnlyList<SpotPsk> spots = ParsearRespuestaJson(json);
 
-        _logger.Information("Se obtuvieron {Cantidad} spots de PSKReporter para {Indicativo}",
+        _logger.LogInformation("Se obtuvieron {Cantidad} spots de PSKReporter para {Indicativo}",
             spots.Count, indicativo.Valor);
 
         SpotsConsultados?.Invoke(spots);
@@ -200,7 +191,7 @@ public sealed class ClientePskReporter : IPskReporter
         }
         catch (JsonException ex)
         {
-            _logger.Warning(ex, "Error al parsear la respuesta JSON de PSKReporter");
+            _logger.LogWarning(ex, "Error al parsear la respuesta JSON de PSKReporter");
         }
 
         return spots.AsReadOnly();
@@ -242,7 +233,7 @@ public sealed class ClientePskReporter : IPskReporter
         }
         catch (Exception ex)
         {
-            _logger.Warning(ex, "Error al vaciar el buffer de PSKReporter durante el dispose");
+            _logger.LogWarning(ex, "Error al vaciar el buffer de PSKReporter durante el dispose");
         }
 
         _semaforo.Dispose();
@@ -275,7 +266,7 @@ public sealed class ClientePskReporter : IPskReporter
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error(ex, "Error en el envío periódico de spots a PSKReporter");
+                    _logger.LogError(ex, "Error en el envío periódico de spots a PSKReporter");
                 }
             }
         }, ct);
@@ -309,7 +300,7 @@ public sealed class ClientePskReporter : IPskReporter
 
             string xml = GenerarXml(spotsAEnviar);
 
-            _logger.Debug("Enviando {Cantidad} spots a PSKReporter:\n{Xml}", spotsAEnviar.Count, xml);
+            _logger.LogDebug("Enviando {Cantidad} spots a PSKReporter:\n{Xml}", spotsAEnviar.Count, xml);
 
             using StringContent contenido = new(xml, Encoding.UTF8, "application/xml");
             HttpResponseMessage respuesta = await _clienteHttp.PostAsync(
@@ -317,7 +308,7 @@ public sealed class ClientePskReporter : IPskReporter
 
             respuesta.EnsureSuccessStatusCode();
 
-            _logger.Information("Enviados {Cantidad} spots a PSKReporter exitosamente", spotsAEnviar.Count);
+            _logger.LogInformation("Enviados {Cantidad} spots a PSKReporter exitosamente", spotsAEnviar.Count);
         }
         catch (OperationCanceledException)
         {
@@ -325,7 +316,7 @@ public sealed class ClientePskReporter : IPskReporter
         }
         catch (Exception ex)
         {
-            _logger.Error(ex, "Error al enviar spots a PSKReporter");
+            _logger.LogError(ex, "Error al enviar spots a PSKReporter");
         }
         finally
         {
@@ -461,7 +452,7 @@ public sealed class ClientePskReporter : IPskReporter
         }
         catch (Exception ex)
         {
-            _logger.Warning(ex, "Error al parsear un spot individual de PSKReporter");
+            _logger.LogWarning(ex, "Error al parsear un spot individual de PSKReporter");
             return null;
         }
     }

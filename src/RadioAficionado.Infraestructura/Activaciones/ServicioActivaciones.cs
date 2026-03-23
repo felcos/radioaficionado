@@ -1,7 +1,7 @@
 using RadioAficionado.Dominio.Activaciones;
 using RadioAficionado.Dominio.Interfaces;
 using RadioAficionado.Dominio.ObjetosDeValor;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace RadioAficionado.Infraestructura.Activaciones;
 
@@ -13,18 +13,18 @@ public class ServicioActivaciones : IServicioActivaciones
 {
     private readonly IRepositorioActivaciones _repositorioActivaciones;
     private readonly IUnidadDeTrabajo _unidadDeTrabajo;
-    private readonly ILogger _logger;
+    private readonly ILogger<ServicioActivaciones> _logger;
 
     /// <summary>
     /// Crea una nueva instancia de <see cref="ServicioActivaciones"/>.
     /// </summary>
     /// <param name="repositorioActivaciones">Repositorio de activaciones.</param>
     /// <param name="unidadDeTrabajo">Unidad de trabajo para persistencia.</param>
-    /// <param name="logger">Logger de Serilog.</param>
+    /// <param name="logger">Logger.</param>
     public ServicioActivaciones(
         IRepositorioActivaciones repositorioActivaciones,
         IUnidadDeTrabajo unidadDeTrabajo,
-        ILogger logger)
+        ILogger<ServicioActivaciones> logger)
     {
         _repositorioActivaciones = repositorioActivaciones ?? throw new ArgumentNullException(nameof(repositorioActivaciones));
         _unidadDeTrabajo = unidadDeTrabajo ?? throw new ArgumentNullException(nameof(unidadDeTrabajo));
@@ -40,7 +40,7 @@ public class ServicioActivaciones : IServicioActivaciones
         string? notas = null,
         CancellationToken ct = default)
     {
-        _logger.Information(
+        _logger.LogInformation(
             "Creando activación {TipoActivacion} con referencia {Referencia} para {Indicativo}",
             tipoActivacion, referencia, indicativoActivador.Valor);
 
@@ -54,7 +54,7 @@ public class ServicioActivaciones : IServicioActivaciones
         await _repositorioActivaciones.AgregarAsync(activacion, ct);
         await _unidadDeTrabajo.GuardarCambiosAsync(ct);
 
-        _logger.Information(
+        _logger.LogInformation(
             "Activación {IdActivacion} creada exitosamente con referencia {Referencia}",
             activacion.Id, activacion.Referencia);
 
@@ -87,7 +87,7 @@ public class ServicioActivaciones : IServicioActivaciones
         await _repositorioActivaciones.ActualizarAsync(activacion, ct);
         await _unidadDeTrabajo.GuardarCambiosAsync(ct);
 
-        _logger.Information(
+        _logger.LogInformation(
             "Activación {IdActivacion} ({Referencia}) iniciada",
             activacion.Id, activacion.Referencia);
 
@@ -110,7 +110,7 @@ public class ServicioActivaciones : IServicioActivaciones
         await _repositorioActivaciones.ActualizarAsync(activacion, ct);
         await _unidadDeTrabajo.GuardarCambiosAsync(ct);
 
-        _logger.Information(
+        _logger.LogInformation(
             "Activación {IdActivacion} ({Referencia}) completada con {TotalQsos} QSOs",
             activacion.Id, activacion.Referencia, activacion.Qsos.Count);
 
@@ -133,7 +133,7 @@ public class ServicioActivaciones : IServicioActivaciones
         await _repositorioActivaciones.ActualizarAsync(activacion, ct);
         await _unidadDeTrabajo.GuardarCambiosAsync(ct);
 
-        _logger.Information(
+        _logger.LogInformation(
             "Activación {IdActivacion} ({Referencia}) cancelada",
             activacion.Id, activacion.Referencia);
 

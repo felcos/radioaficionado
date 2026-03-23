@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using RadioAficionado.Escritorio.ViewModels;
 
@@ -24,15 +25,15 @@ public partial class VentanaConfiguracion : Window
         // Cargar configuración al abrir la ventana
         Opened += async (_, _) =>
         {
-            await viewModel.CargarCommand.ExecuteAsync(null).ConfigureAwait(false);
+            await viewModel.CargarCommand.ExecuteAsync(null);
         };
 
-        // Cerrar la ventana al guardar exitosamente
+        // Cerrar la ventana al guardar exitosamente (desde el hilo de UI)
         viewModel.PropertyChanged += (_, args) =>
         {
             if (args.PropertyName == nameof(ConfiguracionViewModel.GuardadoExitoso) && viewModel.GuardadoExitoso)
             {
-                Close();
+                Dispatcher.UIThread.Post(() => Close());
             }
         };
     }

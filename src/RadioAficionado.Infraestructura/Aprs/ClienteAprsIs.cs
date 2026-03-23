@@ -3,7 +3,7 @@ using System.Text;
 using RadioAficionado.Dominio.Aprs;
 using RadioAficionado.Dominio.Interfaces;
 using RadioAficionado.Dominio.ObjetosDeValor;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace RadioAficionado.Infraestructura.Aprs;
 
@@ -23,7 +23,7 @@ public class ClienteAprsIs : IServicioAprs, IDisposable
     /// </summary>
     private const string VersionSoftware = "1.0";
 
-    private readonly ILogger _logger;
+    private readonly ILogger<ClienteAprsIs> _logger;
     private TcpClient? _clienteTcp;
     private StreamWriter? _escritor;
     private StreamReader? _lector;
@@ -43,7 +43,7 @@ public class ClienteAprsIs : IServicioAprs, IDisposable
     /// Crea una nueva instancia de <see cref="ClienteAprsIs"/>.
     /// </summary>
     /// <param name="logger">Logger para registrar eventos de conexión y errores.</param>
-    public ClienteAprsIs(ILogger logger)
+    public ClienteAprsIs(ILogger<ClienteAprsIs> logger)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
@@ -64,7 +64,7 @@ public class ClienteAprsIs : IServicioAprs, IDisposable
         _configuracionActual = configuracion;
         _contadorMensajes = 0;
 
-        _logger.Information(
+        _logger.LogInformation(
             "Conectando a APRS-IS: {Servidor}:{Puerto} como {Indicativo}",
             configuracion.Servidor,
             configuracion.Puerto,
@@ -79,16 +79,16 @@ public class ClienteAprsIs : IServicioAprs, IDisposable
 
         // Leer la línea de bienvenida del servidor
         string? lineaBienvenida = await _lector.ReadLineAsync(tokenCancelacion).ConfigureAwait(false);
-        _logger.Information("APRS-IS bienvenida: {Bienvenida}", lineaBienvenida);
+        _logger.LogInformation("APRS-IS bienvenida: {Bienvenida}", lineaBienvenida);
 
         // Enviar login
         string comandoLogin = ConstruirComandoLogin(configuracion);
         await _escritor.WriteLineAsync(comandoLogin.AsMemory(), tokenCancelacion).ConfigureAwait(false);
-        _logger.Information("Login enviado a APRS-IS");
+        _logger.LogInformation("Login enviado a APRS-IS");
 
         // Leer respuesta de login
         string? respuestaLogin = await _lector.ReadLineAsync(tokenCancelacion).ConfigureAwait(false);
-        _logger.Information("APRS-IS respuesta login: {Respuesta}", respuestaLogin);
+        _logger.LogInformation("APRS-IS respuesta login: {Respuesta}", respuestaLogin);
 
         // Iniciar recepción continua de paquetes
         _tokenCancelacionRecepcion = new CancellationTokenSource();
@@ -98,7 +98,7 @@ public class ClienteAprsIs : IServicioAprs, IDisposable
     /// <inheritdoc />
     public async Task DesconectarAsync()
     {
-        _logger.Information("Desconectando de APRS-IS");
+        _logger.LogInformation("Desconectando de APRS-IS");
 
         if (_tokenCancelacionRecepcion is not null)
         {
@@ -131,7 +131,7 @@ public class ClienteAprsIs : IServicioAprs, IDisposable
 
         _configuracionActual = null;
 
-        _logger.Information("Desconectado de APRS-IS");
+        _logger.LogInformation("Desconectado de APRS-IS");
     }
 
     /// <inheritdoc />
@@ -151,7 +151,7 @@ public class ClienteAprsIs : IServicioAprs, IDisposable
         string paquete = $"{_configuracionActual.Indicativo}>APRS,TCPIP*:={posicionFormateada}-{comentario}";
 
         await _escritor.WriteLineAsync(paquete.AsMemory(), tokenCancelacion).ConfigureAwait(false);
-        _logger.Information("Posición APRS enviada: {Lat}, {Lon}", coordenadas.Latitud, coordenadas.Longitud);
+        _logger.LogInformation("Posición APRS enviada: {Lat}, {Lon}", coordenadas.Latitud, coordenadas.Longitud);
     }
 
     /// <inheritdoc />
@@ -174,7 +174,7 @@ public class ClienteAprsIs : IServicioAprs, IDisposable
         string paquete = $"{_configuracionActual.Indicativo}>APRS,TCPIP*::{destinatarioFormateado}:{texto}{{{numeroMensaje}";
 
         await _escritor.WriteLineAsync(paquete.AsMemory(), tokenCancelacion).ConfigureAwait(false);
-        _logger.Information("Mensaje APRS enviado a {Destinatario}: {Texto}", destinatario.Valor, texto);
+        _logger.LogInformation("Mensaje APRS enviado a {Destinatario}: {Texto}", destinatario.Valor, texto);
     }
 
     /// <summary>
@@ -192,7 +192,7 @@ public class ClienteAprsIs : IServicioAprs, IDisposable
 
                 if (linea is null)
                 {
-                    _logger.Warning("APRS-IS: conexión cerrada por el servidor");
+                    _logger.LogWarning("APRS-IS: conexión cerrada por el servidor");
                     break;
                 }
 
@@ -210,7 +210,7 @@ public class ClienteAprsIs : IServicioAprs, IDisposable
                     }
                     catch (Exception excepcion)
                     {
-                        _logger.Error(excepcion, "Error en manejador de PaqueteRecibido");
+                        _logger.LogError(excepcion, "Error en manejador de PaqueteRecibido");
                     }
                 }
             }
@@ -221,11 +221,11 @@ public class ClienteAprsIs : IServicioAprs, IDisposable
         }
         catch (IOException excepcion)
         {
-            _logger.Error(excepcion, "Error de E/S en la recepción APRS-IS");
+            _logger.LogError(excepcion, "Error de E/S en la recepción APRS-IS");
         }
         catch (Exception excepcion)
         {
-            _logger.Error(excepcion, "Error inesperado en la recepción APRS-IS");
+            _logger.LogError(excepcion, "Error inesperado en la recepción APRS-IS");
         }
     }
 

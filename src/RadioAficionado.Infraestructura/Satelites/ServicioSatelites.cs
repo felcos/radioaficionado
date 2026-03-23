@@ -1,7 +1,7 @@
 using RadioAficionado.Dominio.Interfaces;
 using RadioAficionado.Dominio.ObjetosDeValor;
 using RadioAficionado.Dominio.Satelites;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace RadioAficionado.Infraestructura.Satelites;
 
@@ -12,7 +12,7 @@ namespace RadioAficionado.Infraestructura.Satelites;
 /// </summary>
 public sealed class ServicioSatelites : IServicioSatelites
 {
-    private readonly ILogger _logger;
+    private readonly ILogger<ServicioSatelites> _logger;
     private readonly HttpClient _clienteHttp;
     private readonly ConfiguracionSatelites _configuracion;
 
@@ -28,10 +28,10 @@ public sealed class ServicioSatelites : IServicioSatelites
     /// <summary>
     /// Crea una nueva instancia del servicio de satélites.
     /// </summary>
-    /// <param name="logger">Logger de Serilog.</param>
+    /// <param name="logger">Logger de Microsoft.Extensions.Logging.</param>
     /// <param name="clienteHttp">Cliente HTTP para descargar TLEs.</param>
     /// <param name="configuracion">Configuración del servicio.</param>
-    public ServicioSatelites(ILogger logger, HttpClient clienteHttp, ConfiguracionSatelites configuracion)
+    public ServicioSatelites(ILogger<ServicioSatelites> logger, HttpClient clienteHttp, ConfiguracionSatelites configuracion)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _clienteHttp = clienteHttp ?? throw new ArgumentNullException(nameof(clienteHttp));
@@ -76,7 +76,7 @@ public sealed class ServicioSatelites : IServicioSatelites
         IReadOnlyList<PasoSatelite> pasos = CalculadorOrbital.PredecirPasos(
             tle, satelite, observador, desde, hasta, _configuracion.ElevacionMinimaPaso);
 
-        _logger.Information(
+        _logger.LogInformation(
             "Predichos {CantidadPasos} pasos para {Satelite} entre {Desde} y {Hasta}",
             pasos.Count, satelite.Nombre, desde, hasta);
 
@@ -148,7 +148,7 @@ public sealed class ServicioSatelites : IServicioSatelites
                 return;
             }
 
-            _logger.Information("Descargando TLEs desde {Url}", _configuracion.UrlTle);
+            _logger.LogInformation("Descargando TLEs desde {Url}", _configuracion.UrlTle);
 
             string textoTle = await _clienteHttp.GetStringAsync(_configuracion.UrlTle, ct).ConfigureAwait(false);
             IReadOnlyList<Tle> tles = CalculadorOrbital.ParsearMultiplesTle(textoTle);
@@ -162,11 +162,11 @@ public sealed class ServicioSatelites : IServicioSatelites
             _cacheTle = nuevaCache;
             _ultimaActualizacionTle = DateTime.UtcNow;
 
-            _logger.Information("TLEs actualizados: {Cantidad} satélites cargados", tles.Count);
+            _logger.LogInformation("TLEs actualizados: {Cantidad} satélites cargados", tles.Count);
         }
         catch (HttpRequestException ex)
         {
-            _logger.Warning(ex, "Error descargando TLEs. Se usará la cache anterior si existe.");
+            _logger.LogWarning(ex, "Error descargando TLEs. Se usará la cache anterior si existe.");
 
             if (_cacheTle.Count == 0)
             {

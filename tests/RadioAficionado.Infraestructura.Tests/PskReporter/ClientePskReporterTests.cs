@@ -3,7 +3,8 @@ using FluentAssertions;
 using RadioAficionado.Dominio.Interfaces;
 using RadioAficionado.Dominio.ObjetosDeValor;
 using RadioAficionado.Infraestructura.PskReporter;
-using Serilog;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace RadioAficionado.Infraestructura.Tests.PskReporter;
 
@@ -27,7 +28,7 @@ public sealed class ClientePskReporterTests : IDisposable
             IntervaloEnvioSegundos = 300
         };
 
-        ILogger logger = new LoggerConfiguration().CreateLogger();
+        ILogger<ClientePskReporter> logger = NullLogger<ClientePskReporter>.Instance;
         HttpClient clienteHttp = new();
         _cliente = new ClientePskReporter(logger, clienteHttp, _configuracion);
     }
@@ -190,7 +191,7 @@ public sealed class ClientePskReporterTests : IDisposable
             VersionSoftware = "1.0"
         };
 
-        ILogger logger = new LoggerConfiguration().CreateLogger();
+        ILogger<ClientePskReporter> logger = NullLogger<ClientePskReporter>.Instance;
         using HttpClient clienteHttp = new();
         ClientePskReporter clienteSinLoc = new(logger, clienteHttp, configuracionSinLoc);
 
