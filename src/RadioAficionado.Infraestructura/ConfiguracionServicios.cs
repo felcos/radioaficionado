@@ -8,6 +8,9 @@ using RadioAficionado.Infraestructura.Persistencia;
 using RadioAficionado.Infraestructura.Activaciones;
 using RadioAficionado.Infraestructura.Propagacion;
 using RadioAficionado.Infraestructura.PskReporter;
+using RadioAficionado.Infraestructura.Qsl;
+using RadioAficionado.Infraestructura.Aprs;
+using RadioAficionado.Infraestructura.Satelites;
 using RadioAficionado.Infraestructura.Sincronizacion;
 
 namespace RadioAficionado.Infraestructura;
@@ -49,6 +52,16 @@ public static class ConfiguracionServicios
 
         // Sincronización de QSOs con la API web
         servicios.AddHttpClient<IServicioSincronizacion, ServicioSincronizacion>();
+
+        // Generador de tarjetas QSL digitales
+        servicios.AddSingleton<IGeneradorQsl, GeneradorQslSkia>();
+
+        // APRS-IS (Automatic Packet Reporting System)
+        servicios.AddSingleton<IServicioAprs, ClienteAprsIs>();
+
+        // Tracking de satélites amateur
+        servicios.AddSingleton<ConfiguracionSatelites>();
+        servicios.AddHttpClient<IServicioSatelites, ServicioSatelites>();
 
         return servicios;
     }
