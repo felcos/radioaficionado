@@ -106,10 +106,12 @@
 
 #### Web (RadioAficionado.Web) → Dominio, Aplicacion, Infraestructura, Infraestructura.Postgres, Compartido
 - ASP.NET MVC con Razor Views, Bootstrap 5 local, tema oscuro
-- Controllers: InicioController (estadisticas, homepage), LogbookController (paginacion, filtros, detalle)
-- ViewModels: InicioViewModel, QsoResumenViewModel, LogbookIndexViewModel, QsoDetalleViewModel
-- Views: _Layout.cshtml (tema oscuro), Inicio/Index, Logbook/Index, Logbook/Detalle, Shared/Error
+- Data: ContextoIdentidadRadioAficionado (IdentityDbContext separado para Identity)
+- Controllers: InicioController, LogbookController, CuentaController (registro, login, perfil, editar perfil)
+- ViewModels: InicioViewModel, QsoResumenViewModel, LogbookIndexViewModel, QsoDetalleViewModel, RegistrarViewModel, IniciarSesionViewModel, PerfilViewModel, EditarPerfilViewModel
+- Views: _Layout.cshtml, Inicio/Index, Logbook/Index+Detalle, Cuenta/Registrar+IniciarSesion+Perfil+EditarPerfil, Shared/Error
 - CSS: sitio.css (variables --ra-*, tema oscuro azul/gris)
+- Identity: ASP.NET Identity con UsuarioRadio, cookie auth, password policy
 
 ### Tests (550 tests, todos pasando)
 - Dominio.Tests (308):

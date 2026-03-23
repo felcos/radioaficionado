@@ -76,4 +76,27 @@ public interface IRepositorioQso
     /// <param name="ct">Token de cancelación.</param>
     /// <returns>Cantidad de QSOs que coinciden.</returns>
     Task<int> ContarConFiltroAsync(FiltroQso? filtro, CancellationToken ct);
+
+    /// <summary>
+    /// Elimina un QSO del repositorio.
+    /// </summary>
+    /// <param name="qso">El QSO a eliminar.</param>
+    /// <param name="ct">Token de cancelación.</param>
+    Task EliminarAsync(Qso qso, CancellationToken ct);
+
+    /// <summary>
+    /// Verifica si ya existe un QSO con el mismo indicativo contacto, fecha/hora de inicio, frecuencia y modo.
+    /// </summary>
+    /// <param name="indicativoContacto">Indicativo de la estación contactada.</param>
+    /// <param name="fechaHoraInicio">Fecha y hora de inicio del contacto.</param>
+    /// <param name="frecuencia">Frecuencia utilizada.</param>
+    /// <param name="modo">Modo de operación.</param>
+    /// <param name="ct">Token de cancelación.</param>
+    /// <returns>True si ya existe un QSO con esos parámetros.</returns>
+    Task<bool> ExisteDuplicadoAsync(
+        Indicativo indicativoContacto,
+        DateTimeOffset fechaHoraInicio,
+        Frecuencia frecuencia,
+        ModoOperacion modo,
+        CancellationToken ct);
 }

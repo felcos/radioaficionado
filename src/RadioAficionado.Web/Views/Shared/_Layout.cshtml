@@ -31,6 +31,33 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Logbook" asp-action="Index">Logbook</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Logbook" asp-action="Mapa">Mapa</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-ra-acento" asp-controller="Cuenta" asp-action="Perfil">
+                                    @User.Identity.Name
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <form asp-controller="Cuenta" asp-action="CerrarSesion" method="post" class="d-inline">
+                                    <button type="submit" class="nav-link btn btn-link text-ra-suave">Cerrar sesión</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Cuenta" asp-action="IniciarSesion">Iniciar sesión</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-ra-acento btn-sm ms-2 mt-1" asp-controller="Cuenta" asp-action="Registrar">Registrarse</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

@@ -1,5 +1,20 @@
 # Changelog — RadioAficionado
 
+## [1.1.0] — 2026-03-23 — ASP.NET Identity: Registro, Login, Perfil de usuario
+
+### feat: ASP.NET Identity con UsuarioRadio (Web + Dominio)
+- UsuarioRadio (hereda IdentityUser): Indicativo, Localizador, Nombre, FechaRegistro, Biografia, RegionItu
+- ContextoIdentidadRadioAficionado: DbContext separado para Identity (no modifica el compartido con escritorio)
+- CuentaController: Registrar, IniciarSesion, CerrarSesion, Perfil, EditarPerfil
+- ViewModels: RegistrarViewModel, IniciarSesionViewModel, PerfilViewModel, EditarPerfilViewModel
+- Vistas Razor: Registrar, IniciarSesion, Perfil, EditarPerfil (tema oscuro consistente)
+- _Layout.cshtml: navbar con Login/Register o indicativo del usuario logueado
+- Program.cs: Identity configurado con password policy, lockout, cookie auth
+- Paquetes: Microsoft.Extensions.Identity.Stores (Dominio), Microsoft.AspNetCore.Identity.EntityFrameworkCore (Web)
+- Tabla "usuarios" con indicativo único, CHECK constraint para RegionItu (1-3)
+- Traducción de errores de Identity al español
+- Archivos: Dominio/Entidades/UsuarioRadio.cs, Web/Data/ContextoIdentidadRadioAficionado.cs, Web/Controllers/CuentaController.cs, Web/ViewModels/Registrar+IniciarSesion+Perfil+EditarPerfilViewModel.cs, Web/Views/Cuenta/*.cshtml
+
 ## [1.0.0] — 2026-03-23 — Confirmaciones externas + Propagacion + Contest UI + Propagacion UI + Configuracion UI
 
 ### feat: Clientes LoTW/eQSL/ClubLog + ServicioConfirmaciones (Dominio + Infraestructura)

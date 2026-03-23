@@ -1,0 +1,50 @@
+@model RadioAficionado.Web.ViewModels.IniciarSesionViewModel
+@{
+    ViewData["Title"] = "Iniciar sesión";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-5 col-lg-4">
+        <div class="card bg-ra-tarjeta border-ra-borde">
+            <div class="card-body p-4">
+                <h2 class="card-title text-center mb-4">
+                    <span class="text-ra-acento">Iniciar</span> sesión
+                </h2>
+
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                <form asp-action="IniciarSesion" asp-route-urlRetorno="@ViewData["UrlRetorno"]" method="post">
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label text-ra-suave"></label>
+                        <input asp-for="Email" class="form-control bg-ra-input text-light border-secondary"
+                               placeholder="correo@ejemplo.com" autocomplete="email" />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Contrasena" class="form-label text-ra-suave"></label>
+                        <input asp-for="Contrasena" class="form-control bg-ra-input text-light border-secondary"
+                               autocomplete="current-password" />
+                        <span asp-validation-for="Contrasena" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-4 form-check">
+                        <input asp-for="Recordarme" class="form-check-input" />
+                        <label asp-for="Recordarme" class="form-check-label text-ra-suave"></label>
+                    </div>
+
+                    <button type="submit" class="btn btn-ra-acento w-100 mb-3">Iniciar sesión</button>
+
+                    <p class="text-center text-ra-suave mb-0">
+                        ¿No tienes cuenta?
+                        <a asp-action="Registrar" class="text-ra-acento">Regístrate</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

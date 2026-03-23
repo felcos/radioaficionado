@@ -8,6 +8,7 @@ using RadioAficionado.Infraestructura.Persistencia;
 using RadioAficionado.Infraestructura.Activaciones;
 using RadioAficionado.Infraestructura.Propagacion;
 using RadioAficionado.Infraestructura.PskReporter;
+using RadioAficionado.Infraestructura.Sincronizacion;
 
 namespace RadioAficionado.Infraestructura;
 
@@ -45,6 +46,9 @@ public static class ConfiguracionServicios
         // Propagacion HF
         servicios.AddSingleton<ConfiguracionPropagacion>();
         servicios.AddSingleton<IServicioPropagacion, ServicioPropagacion>();
+
+        // Sincronización de QSOs con la API web
+        servicios.AddHttpClient<IServicioSincronizacion, ServicioSincronizacion>();
 
         return servicios;
     }

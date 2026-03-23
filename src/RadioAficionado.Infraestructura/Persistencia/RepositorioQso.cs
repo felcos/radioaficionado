@@ -92,6 +92,28 @@ public sealed class RepositorioQso : IRepositorioQso
         return await consulta.CountAsync(ct);
     }
 
+    /// <inheritdoc />
+    public Task EliminarAsync(Qso qso, CancellationToken ct)
+    {
+        _contexto.Qsos.Remove(qso);
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc />
+    public async Task<bool> ExisteDuplicadoAsync(
+        Indicativo indicativoContacto,
+        DateTimeOffset fechaHoraInicio,
+        Frecuencia frecuencia,
+        ModoOperacion modo,
+        CancellationToken ct)
+    {
+        return await _contexto.Qsos.AnyAsync(q =>
+            q.IndicativoContacto == indicativoContacto &&
+            q.FechaHoraInicio == fechaHoraInicio &&
+            q.Frecuencia == frecuencia &&
+            q.Modo == modo, ct);
+    }
+
     /// <summary>
     /// Aplica los filtros de FiltroQso a una consulta IQueryable de QSOs.
     /// </summary>

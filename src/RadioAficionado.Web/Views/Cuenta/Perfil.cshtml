@@ -1,0 +1,85 @@
+@model RadioAficionado.Web.ViewModels.PerfilViewModel
+@{
+    ViewData["Title"] = $"Perfil — {Model.Indicativo}";
+}
+
+@if (TempData["MensajeExito"] is string mensaje)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @mensaje
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+    </div>
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card bg-ra-tarjeta border-ra-borde">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-start mb-4">
+                    <div>
+                        <h2 class="mb-1">
+                            <span class="text-ra-acento">@Model.Indicativo</span>
+                        </h2>
+                        <p class="text-ra-suave mb-0">@Model.Nombre</p>
+                    </div>
+                    <a asp-action="EditarPerfil" class="btn btn-outline-ra-acento btn-sm">Editar perfil</a>
+                </div>
+
+                <hr class="border-secondary" />
+
+                <dl class="row mb-0">
+                    <dt class="col-sm-4 text-ra-suave">Correo electrónico</dt>
+                    <dd class="col-sm-8">@Model.Email</dd>
+
+                    <dt class="col-sm-4 text-ra-suave">Localizador</dt>
+                    <dd class="col-sm-8">
+                        @if (!string.IsNullOrWhiteSpace(Model.Localizador))
+                        {
+                            <span>@Model.Localizador</span>
+                        }
+                        else
+                        {
+                            <span class="text-ra-suave fst-italic">No especificado</span>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-4 text-ra-suave">Región ITU</dt>
+                    <dd class="col-sm-8">
+                        @if (Model.RegionItu.HasValue)
+                        {
+                            <span>Región @Model.RegionItu</span>
+                            <span class="text-ra-suave ms-1">
+                                @(Model.RegionItu switch
+                                {
+                                    1 => "— Europa, África, Oriente Medio",
+                                    2 => "— América",
+                                    3 => "— Asia, Oceanía",
+                                    _ => ""
+                                })
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="text-ra-suave fst-italic">No especificada</span>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-4 text-ra-suave">Biografía</dt>
+                    <dd class="col-sm-8">
+                        @if (!string.IsNullOrWhiteSpace(Model.Biografia))
+                        {
+                            <p class="mb-0">@Model.Biografia</p>
+                        }
+                        else
+                        {
+                            <span class="text-ra-suave fst-italic">Sin biografía</span>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-4 text-ra-suave">Miembro desde</dt>
+                    <dd class="col-sm-8">@Model.FechaRegistro.ToString("d 'de' MMMM 'de' yyyy", new System.Globalization.CultureInfo("es-ES"))</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>

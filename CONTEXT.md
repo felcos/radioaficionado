@@ -86,6 +86,8 @@ Las capas **Dominio** y **Aplicacion** son compartidas entre escritorio y web. L
 | 2026-03-23 | LoTW/eQSL/ClubLog como clientes HTTP independientes | Cada servicio tiene su interfaz + implementacion; ServicioConfirmaciones orquesta las 3 fuentes |
 | 2026-03-23 | Modelo de propagacion basado en SFI | IndicesSolares como record inmutable; predicciones por banda HF con NivelPropagacion |
 | 2026-03-23 | UI de escritorio completa con 10 vistas + 12 ViewModels | Cada modulo (contest, DXCC, propagacion, activaciones, configuracion) tiene su panel dedicado |
+| 2026-03-23 | ContextoIdentidadRadioAficionado separado del DbContext principal | ContextoRadioAficionado es compartido con escritorio (SQLite); Identity es solo web, necesita IdentityDbContext separado para no romper la app de escritorio |
+| 2026-03-23 | Microsoft.Extensions.Identity.Stores en Dominio (no Identity.EFCore) | UsuarioRadio hereda IdentityUser; paquete ligero sin dependencias de EF Core en capa de dominio |
 
 ## Estado actual
 
@@ -125,4 +127,4 @@ Las capas **Dominio** y **Aplicacion** son compartidas entre escritorio y web. L
 - **Corregir errores de compilacion**: Web ViewModels namespace + Escritorio PanelDxccViewModel referencia
 - **Decodificador FT8**: ft8_lib via P/Invoke
 - **Waterfall en vivo**: conectar ProcesadorEspectro → PipelineAudio → ControlWaterfall via DI
-- **Web autenticacion**: logbook privado con cuentas de usuario
+- **Web autenticacion**: Identity implementado (registro, login, perfil). Falta logbook privado con CRUD autenticado

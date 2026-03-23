@@ -4,6 +4,16 @@
 
 ### Lo que se hizo
 
+#### ASP.NET Identity: Registro, Login, Perfil (2026-03-23)
+- UsuarioRadio en Dominio/Entidades (hereda IdentityUser + campos de radioaficionado)
+- ContextoIdentidadRadioAficionado separado del DbContext compartido (para no romper escritorio)
+- CuentaController con 6 acciones: Registrar, IniciarSesion, CerrarSesion, Perfil, EditarPerfil
+- 4 ViewModels con validación DataAnnotations en español
+- 4 vistas Razor con tema oscuro consistente
+- Navbar actualizada con botones Login/Register o indicativo del usuario
+- Identity configurado en Program.cs: password policy, lockout, cookie auth
+- Errores de Identity traducidos al español
+
 #### Confirmaciones externas: LoTW/eQSL/ClubLog (2026-03-23)
 - IClienteLoTW, IClienteEQsl, IClienteClubLog: interfaces en Dominio/Interfaces
 - IServicioConfirmaciones: orquestador de confirmaciones multifuente
@@ -93,11 +103,11 @@
 - Nota: Web y Escritorio tienen errores de compilacion menores (ViewModels namespace, PanelDxccViewModel referencia) que no afectan tests
 
 ### Pendiente
-- Corregir errores de compilacion en Web (ViewModels namespace) y Escritorio (PanelDxccViewModel referencia)
+- Crear migración EF Core para las tablas de Identity en PostgreSQL
+- Implementar logbook privado (CRUD de QSOs autenticado)
 - Implementar decodificador FT8 con ft8_lib (P/Invoke)
 - Swap FFT managed → FFTW3 nativa cuando haya binarios
 - Conectar DI completa: ProcesadorEspectro → PipelineAudio → ControlWaterfall para waterfall en vivo
-- Web: autenticacion + logbook privado
 
 ### Problemas encontrados
 - Web: `RadioAficionado.Web.ViewModels` namespace no encontrado en _ViewImports.cshtml (el namespace real es diferente al esperado)
@@ -105,7 +115,6 @@
 - Ambos son errores menores de compilacion, no afectan la suite de 550 tests
 
 ### Siguiente paso sugerido
-- Corregir los 2 errores de compilacion (Web ViewModels namespace + Escritorio PanelDxccViewModel)
-- Conectar DI: ProcesadorEspectro → PipelineAudio → ControlWaterfall para waterfall en vivo
+- Crear migración EF Core PostgreSQL para tablas de Identity (usuarios, roles, claims)
+- Implementar logbook privado: CRUD de QSOs asociado al usuario autenticado
 - O implementar decodificador FT8 con ft8_lib (P/Invoke)
-- O iniciar autenticacion web para logbook privado

@@ -90,6 +90,55 @@ public class LogbookController(IRepositorioQso repositorioQso, ILogger<LogbookCo
     }
 
     /// <summary>
+    /// Muestra la vista de mapa con los contactos del logbook geolocalizados.
+    /// </summary>
+    /// <returns>Vista del mapa de contactos.</returns>
+    [HttpGet]
+    public IActionResult Mapa()
+    {
+        return View();
+    }
+
+    /// <summary>
+    /// Endpoint JSON que retorna los datos de QSOs con localizador para mostrar en el mapa.
+    /// Solo incluye contactos que tienen localizador Maidenhead asignado.
+    /// </summary>
+    /// <param name="ct">Token de cancelación.</param>
+    /// <returns>Lista JSON de contactos con coordenadas geográficas.</returns>
+    [HttpGet]
+    public async Task<IActionResult> MapaDatos(CancellationToken ct)
+    {
+        _logger.LogDebug("Obteniendo datos de QSOs para el mapa de contactos.");
+
+        IReadOnlyList<Qso> todosLosQsos = await _repositorioQso.ObtenerTodosAsync(ct);
+
+        IReadOnlyList<MapaContactoViewModel> marcadores = todosLosQsos
+            .Where(q => q.LocalizadorContacto.HasValue)
+            .Select(q =>
+            {
+                Coordenadas coordenadas = q.LocalizadorContacto!.Value.ObtenerCoordenadas();
+                BandaRadio? banda = q.Frecuencia.ObtenerBanda();
+
+                return new MapaContactoViewModel
+                {
+                    Latitud = coordenadas.Latitud,
+                    Longitud = coordenadas.Longitud,
+                    Indicativo = q.IndicativoContacto.Valor,
+                    Fecha = q.FechaHoraInicio.ToString("yyyy-MM-dd HH:mm UTC"),
+                    Banda = banda?.ObtenerNombre(),
+                    Modo = q.Modo.ToString(),
+                    Localizador = q.LocalizadorContacto!.Value.Valor
+                };
+            })
+            .ToList();
+
+        _logger.LogDebug("Mapa de contactos: {Total} QSOs con localizador de {TodosTotal} totales.",
+            marcadores.Count, todosLosQsos.Count);
+
+        return Json(marcadores);
+    }
+
+    /// <summary>
     /// Muestra el detalle de un QSO específico.
     /// </summary>
     /// <param name="id">Identificador del QSO.</param>

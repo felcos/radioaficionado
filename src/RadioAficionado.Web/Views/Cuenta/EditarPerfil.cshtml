@@ -1,0 +1,67 @@
+@model RadioAficionado.Web.ViewModels.EditarPerfilViewModel
+@{
+    ViewData["Title"] = "Editar perfil";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card bg-ra-tarjeta border-ra-borde">
+            <div class="card-body p-4">
+                <h2 class="card-title text-center mb-4">
+                    <span class="text-ra-acento">Editar</span> perfil
+                </h2>
+
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                <form asp-action="EditarPerfil" method="post">
+                    <div class="mb-3">
+                        <label asp-for="Indicativo" class="form-label text-ra-suave"></label>
+                        <input asp-for="Indicativo" class="form-control bg-ra-input text-light border-secondary"
+                               placeholder="Ej: EA4ABC" />
+                        <span asp-validation-for="Indicativo" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Nombre" class="form-label text-ra-suave"></label>
+                        <input asp-for="Nombre" class="form-control bg-ra-input text-light border-secondary" />
+                        <span asp-validation-for="Nombre" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Localizador" class="form-label text-ra-suave"></label>
+                        <input asp-for="Localizador" class="form-control bg-ra-input text-light border-secondary"
+                               placeholder="Ej: IN80dk" />
+                        <span asp-validation-for="Localizador" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Biografia" class="form-label text-ra-suave"></label>
+                        <textarea asp-for="Biografia" class="form-control bg-ra-input text-light border-secondary"
+                                  rows="4" placeholder="Cuéntanos sobre ti y tu estación..."></textarea>
+                        <span asp-validation-for="Biografia" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="RegionItu" class="form-label text-ra-suave"></label>
+                        <select asp-for="RegionItu" class="form-select bg-ra-input text-light border-secondary">
+                            <option value="">— Seleccionar (opcional) —</option>
+                            <option value="1">Región 1 — Europa, África, Oriente Medio</option>
+                            <option value="2">Región 2 — América</option>
+                            <option value="3">Región 3 — Asia, Oceanía</option>
+                        </select>
+                        <span asp-validation-for="RegionItu" class="text-danger small"></span>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-ra-acento flex-grow-1">Guardar cambios</button>
+                        <a asp-action="Perfil" class="btn btn-outline-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

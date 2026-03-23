@@ -1,0 +1,86 @@
+@model RadioAficionado.Web.ViewModels.RegistrarViewModel
+@{
+    ViewData["Title"] = "Registro";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card bg-ra-tarjeta border-ra-borde">
+            <div class="card-body p-4">
+                <h2 class="card-title text-center mb-4">
+                    <span class="text-ra-acento">Crear</span> cuenta
+                </h2>
+
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                <form asp-action="Registrar" method="post">
+                    <div class="mb-3">
+                        <label asp-for="Indicativo" class="form-label text-ra-suave"></label>
+                        <input asp-for="Indicativo" class="form-control bg-ra-input text-light border-secondary"
+                               placeholder="Ej: EA4ABC" autocomplete="off" />
+                        <span asp-validation-for="Indicativo" class="text-danger small"></span>
+                        <div class="form-text text-ra-suave">Tu indicativo de radioaficionado (obligatorio).</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Nombre" class="form-label text-ra-suave"></label>
+                        <input asp-for="Nombre" class="form-control bg-ra-input text-light border-secondary"
+                               placeholder="Tu nombre completo" autocomplete="name" />
+                        <span asp-validation-for="Nombre" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label text-ra-suave"></label>
+                        <input asp-for="Email" class="form-control bg-ra-input text-light border-secondary"
+                               placeholder="correo@ejemplo.com" autocomplete="email" />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Contrasena" class="form-label text-ra-suave"></label>
+                        <input asp-for="Contrasena" class="form-control bg-ra-input text-light border-secondary"
+                               autocomplete="new-password" />
+                        <span asp-validation-for="Contrasena" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="ConfirmarContrasena" class="form-label text-ra-suave"></label>
+                        <input asp-for="ConfirmarContrasena" class="form-control bg-ra-input text-light border-secondary"
+                               autocomplete="new-password" />
+                        <span asp-validation-for="ConfirmarContrasena" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Localizador" class="form-label text-ra-suave"></label>
+                        <input asp-for="Localizador" class="form-control bg-ra-input text-light border-secondary"
+                               placeholder="Ej: IN80dk" autocomplete="off" />
+                        <span asp-validation-for="Localizador" class="text-danger small"></span>
+                        <div class="form-text text-ra-suave">Localizador Maidenhead (opcional).</div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="RegionItu" class="form-label text-ra-suave"></label>
+                        <select asp-for="RegionItu" class="form-select bg-ra-input text-light border-secondary">
+                            <option value="">— Seleccionar (opcional) —</option>
+                            <option value="1">Región 1 — Europa, África, Oriente Medio</option>
+                            <option value="2">Región 2 — América</option>
+                            <option value="3">Región 3 — Asia, Oceanía</option>
+                        </select>
+                        <span asp-validation-for="RegionItu" class="text-danger small"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-ra-acento w-100 mb-3">Crear cuenta</button>
+
+                    <p class="text-center text-ra-suave mb-0">
+                        ¿Ya tienes cuenta?
+                        <a asp-action="IniciarSesion" class="text-ra-acento">Inicia sesión</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
