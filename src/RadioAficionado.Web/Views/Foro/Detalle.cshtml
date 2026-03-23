@@ -1,0 +1,161 @@
+@model HiloDetalleViewModel
+@{
+    ViewData["Title"] = Model.Titulo;
+}
+
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a asp-controller="Foro" asp-action="Index" class="text-ra-acento text-decoration-none">Foro</a>
+        </li>
+        <li class="breadcrumb-item active text-ra-suave" aria-current="page">@Model.Titulo</li>
+    </ol>
+</nav>
+
+<!-- Hilo principal -->
+<div class="card bg-ra-tarjeta border-ra-borde mb-4">
+    <div class="card-header bg-ra-tarjeta border-ra-borde d-flex justify-content-between align-items-start">
+        <div>
+            <h1 class="h4 mb-1">@Model.Titulo</h1>
+            <span class="badge bg-ra-modo">@ObtenerNombreCategoria(Model.Categoria)</span>
+            @if (Model.Cerrado)
+            {
+                <span class="badge bg-secondary ms-1">Cerrado</span>
+            }
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="d-flex gap-3">
+            <div class="text-center" style="min-width: 80px;">
+                <span class="d-block text-ra-acento fw-semibold">@Model.AutorIndicativo</span>
+                <small class="text-ra-suave">@Model.AutorNombre</small>
+            </div>
+            <div class="flex-grow-1">
+                <div class="mb-2">
+                    <small class="text-ra-suave">@Model.FechaCreacion.ToString("dd/MM/yyyy HH:mm") UTC</small>
+                </div>
+                <div class="text-ra-texto" style="white-space: pre-wrap;">@Model.Contenido</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Respuestas -->
+@if (Model.Respuestas.Count > 0)
+{
+    <h2 class="h5 mb-3 text-ra-suave">Respuestas (@Model.TotalRespuestas)</h2>
+
+    @foreach (RespuestaViewModel respuesta in Model.Respuestas)
+    {
+        <div class="card bg-ra-tarjeta border-ra-borde mb-3">
+            <div class="card-body">
+                <div class="d-flex gap-3">
+                    <div class="text-center" style="min-width: 80px;">
+                        <span class="d-block text-ra-acento fw-semibold">@respuesta.AutorIndicativo</span>
+                        <small class="text-ra-suave">@respuesta.AutorNombre</small>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="mb-2">
+                            <small class="text-ra-suave">@respuesta.FechaCreacion.ToString("dd/MM/yyyy HH:mm") UTC</small>
+                            @if (respuesta.FechaEdicion.HasValue)
+                            {
+                                <small class="text-ra-suave ms-2">(editado @respuesta.FechaEdicion.Value.ToString("dd/MM/yyyy HH:mm") UTC)</small>
+                            }
+                        </div>
+                        <div style="white-space: pre-wrap;">@respuesta.Contenido</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Paginación de respuestas -->
+    @if (Model.TotalPaginas > 1)
+    {
+        <nav aria-label="Paginación de respuestas">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(Model.PaginaActual == 1 ? "disabled" : "")">
+                    <a class="page-link bg-ra-tarjeta border-ra-borde text-ra-acento"
+                       asp-action="Detalle"
+                       asp-route-id="@Model.Id"
+                       asp-route-pagina="@(Model.PaginaActual - 1)">
+                        Anterior
+                    </a>
+                </li>
+                @for (int i = 1; i <= Model.TotalPaginas; i++)
+                {
+                    <li class="page-item @(i == Model.PaginaActual ? "active" : "")">
+                        <a class="page-link @(i == Model.PaginaActual ? "bg-ra-acento-solido border-ra-borde text-dark" : "bg-ra-tarjeta border-ra-borde text-ra-acento")"
+                           asp-action="Detalle"
+                           asp-route-id="@Model.Id"
+                           asp-route-pagina="@i">
+                            @i
+                        </a>
+                    </li>
+                }
+                <li class="page-item @(Model.PaginaActual == Model.TotalPaginas ? "disabled" : "")">
+                    <a class="page-link bg-ra-tarjeta border-ra-borde text-ra-acento"
+                       asp-action="Detalle"
+                       asp-route-id="@Model.Id"
+                       asp-route-pagina="@(Model.PaginaActual + 1)">
+                        Siguiente
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    }
+}
+
+<!-- Formulario de respuesta -->
+@if (User.Identity?.IsAuthenticated == true && !Model.Cerrado)
+{
+    <div class="card bg-ra-tarjeta border-ra-borde mt-4">
+        <div class="card-header bg-ra-tarjeta border-ra-borde">
+            <h3 class="h5 mb-0">Responder</h3>
+        </div>
+        <div class="card-body">
+            @if (TempData["Error"] is string errorMsg)
+            {
+                <div class="alert alert-danger">@errorMsg</div>
+            }
+            <form asp-action="Responder" method="post">
+                <input type="hidden" name="HiloId" value="@Model.Id" />
+                <div class="mb-3">
+                    <textarea name="Contenido" class="form-control bg-ra-input text-ra-acento border-ra-borde" rows="5"
+                              placeholder="Escribe tu respuesta..." required minlength="5"></textarea>
+                </div>
+                <button type="submit" class="btn btn-ra-acento">Publicar respuesta</button>
+            </form>
+        </div>
+    </div>
+}
+else if (!User.Identity?.IsAuthenticated == true)
+{
+    <div class="card bg-ra-tarjeta border-ra-borde mt-4 p-4 text-center">
+        <p class="text-ra-suave mb-2">Inicia sesión para responder a este hilo.</p>
+        <a asp-controller="Cuenta" asp-action="IniciarSesion" class="btn btn-outline-ra-acento">Iniciar sesión</a>
+    </div>
+}
+else if (Model.Cerrado)
+{
+    <div class="card bg-ra-tarjeta border-ra-borde mt-4 p-4 text-center">
+        <p class="text-ra-suave mb-0">Este hilo está cerrado y no acepta nuevas respuestas.</p>
+    </div>
+}
+
+@functions {
+    static string ObtenerNombreCategoria(RadioAficionado.Dominio.Entidades.CategoriaForo categoria)
+    {
+        return categoria switch
+        {
+            RadioAficionado.Dominio.Entidades.CategoriaForo.General => "General",
+            RadioAficionado.Dominio.Entidades.CategoriaForo.Tecnico => "Técnico",
+            RadioAficionado.Dominio.Entidades.CategoriaForo.DX => "DX",
+            RadioAficionado.Dominio.Entidades.CategoriaForo.Contests => "Contests",
+            RadioAficionado.Dominio.Entidades.CategoriaForo.Activaciones => "Activaciones",
+            RadioAficionado.Dominio.Entidades.CategoriaForo.Compraventa => "Compraventa",
+            _ => categoria.ToString()
+        };
+    }
+}

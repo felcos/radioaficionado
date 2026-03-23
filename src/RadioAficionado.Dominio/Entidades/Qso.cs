@@ -78,6 +78,11 @@ public class Qso
     public DateTimeOffset? FechaModificacion { get; private set; }
 
     /// <summary>
+    /// Indica si el QSO ya fue sincronizado con el servidor remoto.
+    /// </summary>
+    public bool Sincronizado { get; private set; }
+
+    /// <summary>
     /// Constructor sin parámetros requerido por Entity Framework Core.
     /// </summary>
     private Qso()
@@ -144,7 +149,8 @@ public class Qso
             LocalizadorContacto = localizadorContacto,
             Notas = notas?.Trim(),
             FechaCreacion = DateTimeOffset.UtcNow,
-            FechaModificacion = null
+            FechaModificacion = null,
+            Sincronizado = false
         };
 
         return qso;
@@ -181,6 +187,24 @@ public class Qso
 
         FechaHoraFin = fechaFin;
         SenalRecibida = senalRecibida.Trim();
+        FechaModificacion = DateTimeOffset.UtcNow;
+        Sincronizado = false;
+    }
+
+    /// <summary>
+    /// Marca el QSO como sincronizado con el servidor remoto.
+    /// </summary>
+    public void MarcarComoSincronizado()
+    {
+        Sincronizado = true;
+    }
+
+    /// <summary>
+    /// Marca el QSO como pendiente de sincronización (por ejemplo, tras una edición local).
+    /// </summary>
+    public void MarcarComoPendienteDeSincronizacion()
+    {
+        Sincronizado = false;
         FechaModificacion = DateTimeOffset.UtcNow;
     }
 }

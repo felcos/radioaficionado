@@ -34,6 +34,12 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Logbook" asp-action="Mapa">Mapa</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Estadisticas" asp-action="Index">Estadisticas</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Foro" asp-action="Index">Foro</a>
+                        </li>
                     </ul>
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         @if (User.Identity?.IsAuthenticated == true)

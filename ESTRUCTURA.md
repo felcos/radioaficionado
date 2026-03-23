@@ -11,26 +11,27 @@
 
 #### Dominio (RadioAficionado.Dominio) → Compartido
 - ObjetosDeValor: Indicativo, Frecuencia, Localizador, Coordenadas, BandaRadio (24 bandas), ModoOperacion (48 modos + 43 submodos), RegionItu, ClaseLicencia, FiltroQso, ReferenciaPota, ReferenciaSota, EstadoActivacion, TipoActivacion
-- Entidades: Qso
+- Entidades: Qso, UsuarioRadio (hereda IdentityUser), CategoriaForo (enum), HiloForo, RespuestaForo
 - Activaciones: Activacion (entidad para POTA/SOTA)
 - Compliance: PlanDeBanda, SegmentoBanda, ResultadoCompliance, TipoSegmento, TipoViolacion, PlanDeBandaItu (planes IARU 3 regiones)
 - Contests: MotorContest, ReglaContest, ConfiguracionContest, ResultadoContest, TipoContest, TipoIntercambio, MetodoMultiplicador, Intercambio
 - Dxcc: EntidadDxcc, CatalogoDxcc (~170 entidades + prefijos alternativos), ConfirmacionQso, TipoConfirmacion, EstadisticasDxcc, ResumenDxcc
 - Configuracion: ConfiguracionCompleta, ConfiguracionEstacion, ConfiguracionAudio, ConfiguracionGeneral
 - Propagacion: IndicesSolares (record), PrediccionBanda, NivelPropagacion
-- Interfaces (17 interfaces):
-  - Repositorios: IRepositorioQso, IRepositorioActivaciones, IUnidadDeTrabajo
+- Interfaces (20 interfaces):
+  - Repositorios: IRepositorioQso (con paginacion y filtros), IRepositorioActivaciones, IUnidadDeTrabajo
   - Hardware: IControlRig, IControlRotador, IAudioPipeline
   - Modos digitales: IDecodificadorDigital, IRegistroDecodificadores
-  - Servicios: IServicioCompliance, IServicioActivaciones, IServicioConfiguracion, IServicioConfirmaciones, IServicioPropagacion
+  - Servicios: IServicioCompliance, IServicioActivaciones, IServicioConfiguracion, IServicioConfirmaciones, IServicioPropagacion, IServicioSincronizacion
   - Clientes externos: IDxCluster, IPskReporter, IClienteLoTW, IClienteEQsl, IClienteClubLog
+  - Records de sincronizacion: ConfiguracionSincronizacion, ResultadoSincronizacion, EstadoSincronizacion
 
 #### Aplicacion (RadioAficionado.Aplicacion) → Dominio, Compartido
 - Qsos/RegistrarQso: RegistrarQsoComando, RegistrarQsoHandler, RegistrarQsoValidador
 - ConfiguracionServicios (MediatR + FluentValidation)
 
 #### Infraestructura (RadioAficionado.Infraestructura) → Dominio, Aplicacion, Compartido
-- Persistencia: ContextoRadioAficionado, QsoConfiguracion, RepositorioQso (con paginacion y filtros), RepositorioActivaciones (EF Core, Include QSOs), UnidadDeTrabajo
+- Persistencia: ContextoRadioAficionado, QsoConfiguracion, ActivacionConfiguracion, RepositorioQso (con paginacion y filtros), RepositorioActivaciones (EF Core, Include QSOs), UnidadDeTrabajo
 - Adif: RegistroAdif, ParserAdif, GeneradorAdif, ConvertidorAdifQso
 - DxCluster: ClienteDxCluster (cliente TCP/Telnet)
 - Compliance: ServicioCompliance (verificacion IARU 3 regiones)
@@ -40,12 +41,13 @@
 - Configuracion: ServicioConfiguracionJson (persistencia JSON)
 - Confirmaciones: ClienteLoTW, ClienteEQsl, ClienteClubLog, ServicioConfirmaciones (orquestador multifuente)
 - Propagacion: ServicioPropagacion (modelo basado en SFI, predicciones HF)
+- Sincronizacion: ServicioSincronizacion (cliente HTTP bidireccional escritorio ↔ API web)
 - ConfiguracionServicios (DI)
 
 #### Infraestructura.Sqlite → Infraestructura
 - ConfiguracionSqlite (con MigrationsAssembly configurado)
 - FabricaContextoEnDiseño (IDesignTimeDbContextFactory para EF Core CLI)
-- Migraciones/Inicial: tablas Activaciones, Qsos (FK, índices)
+- Migraciones/Inicial: tablas Activaciones, Qsos (FK, indices)
 
 #### Infraestructura.Postgres → Infraestructura
 - ConfiguracionPostgres
@@ -79,7 +81,7 @@
 
 #### Escritorio (RadioAficionado.Escritorio) → todos los proyectos
 - Avalonia UI, MVVM con CommunityToolkit.Mvvm, DI
-- ViewModels (12):
+- ViewModels (14):
   - ViewModelBase
   - VentanaPrincipalViewModel (navegacion entre paneles)
   - PanelRigViewModel (polling real al rig con timer)
@@ -92,9 +94,10 @@
   - PanelDxccViewModel (estadisticas DXCC, filtros por continente/estado, barras de progreso)
   - PanelPropagacionViewModel (indices solares SFI/K/A, predicciones por banda HF)
   - ConfiguracionViewModel (preferencias de estacion, audio, generales)
+  - EstadoSincronizacionViewModel (indicador de estado, sincronizacion manual, QSOs pendientes)
 - Controles:
   - ControlWaterfall (SkiaSharp, ICustomDrawOperation, SKBitmap con scroll vertical, paleta 256 colores)
-- Vistas (10):
+- Vistas (8 .axaml):
   - VentanaPrincipal.axaml (layout completo: rig bar, waterfall, mensajes, QSO form, pestanas)
   - VentanaConfiguracion.axaml (ventana de preferencias con pestanas)
   - PanelLogbook.axaml (DataGrid paginado con filtros)
@@ -107,13 +110,38 @@
 #### Web (RadioAficionado.Web) → Dominio, Aplicacion, Infraestructura, Infraestructura.Postgres, Compartido
 - ASP.NET MVC con Razor Views, Bootstrap 5 local, tema oscuro
 - Data: ContextoIdentidadRadioAficionado (IdentityDbContext separado para Identity)
-- Controllers: InicioController, LogbookController, CuentaController (registro, login, perfil, editar perfil)
-- ViewModels: InicioViewModel, QsoResumenViewModel, LogbookIndexViewModel, QsoDetalleViewModel, RegistrarViewModel, IniciarSesionViewModel, PerfilViewModel, EditarPerfilViewModel
-- Views: _Layout.cshtml, Inicio/Index, Logbook/Index+Detalle, Cuenta/Registrar+IniciarSesion+Perfil+EditarPerfil, Shared/Error
-- CSS: sitio.css (variables --ra-*, tema oscuro azul/gris)
+- Controllers MVC (6):
+  - HomeController (pagina por defecto ASP.NET)
+  - InicioController (homepage con estadisticas generales)
+  - LogbookController (logbook publico con paginacion, filtros, detalle, mapa)
+  - CuentaController (registro, login, logout, perfil, editar perfil)
+  - EstadisticasController (dashboard con datos agregados + endpoints JSON para graficos)
+  - ForoController (listado paginado, detalle, crear hilo, responder — con [Authorize])
+- API REST (2 controladores):
+  - QsoApiController [api/qsos]: CRUD de QSOs, paginacion, filtros, [Authorize]
+  - AdifApiController [api/adif]: importacion/exportacion ADIF via API, [Authorize], limite 5 MB
+  - Dtos: QsoDto, FiltroQsoDto, ResultadoSincronizacionDto
+  - Mapeadores: MapeadorQsoDto (conversion bidireccional Qso ↔ QsoDto)
+- ViewModels (16):
+  - InicioViewModel, QsoResumenViewModel
+  - LogbookIndexViewModel, QsoDetalleViewModel, MapaContactoViewModel
+  - RegistrarViewModel, IniciarSesionViewModel, PerfilViewModel, EditarPerfilViewModel
+  - EstadisticasViewModel
+  - ForoIndexViewModel, HiloDetalleViewModel, HiloResumenViewModel, CrearHiloViewModel, ResponderHiloViewModel, RespuestaViewModel
+- Views:
+  - Shared: _Layout.cshtml, Error.cshtml
+  - Home: Index.cshtml, Privacy.cshtml
+  - Inicio: Index.cshtml
+  - Logbook: Index.cshtml, Detalle.cshtml, Mapa.cshtml
+  - Cuenta: Registrar.cshtml, IniciarSesion.cshtml, Perfil.cshtml, EditarPerfil.cshtml
+  - Foro: Index.cshtml, Detalle.cshtml, CrearHilo.cshtml
+- CSS: sitio.css + site.css (variables --ra-*, tema oscuro azul/gris)
+- JavaScript: estadisticas.js (Chart.js), mapa-contactos.js (Leaflet), site.js
+- Librerias locales: bootstrap, chartjs, leaflet, jquery, jquery-validation, jquery-validation-unobtrusive
 - Identity: ASP.NET Identity con UsuarioRadio, cookie auth, password policy
+- Models: ErrorViewModel
 
-### Tests (550 tests, todos pasando)
+### Tests (608 tests, todos pasando, 0 fallos)
 - Dominio.Tests (308):
   - ObjetosDeValor: IndicativoTests, FrecuenciaTests, LocalizadorTests, CoordenadasTests, BandaRadioTests, ModoOperacionTests
   - Entidades: QsoTests
@@ -122,7 +150,7 @@
   - Activaciones: ReferenciaPotaTests, ReferenciaSotaTests, ActivacionTests
   - Contests: MotorContestTests
   - Dxcc: CatalogoDxccTests, EstadisticasDxccTests
-- Infraestructura.Tests (213):
+- Infraestructura.Tests (228):
   - Dsp: TransformadaCooleyTukeyTests, ProcesadorEspectroTests, VentanasDspTests
   - Adif: ParserAdifTests, GeneradorAdifTests, ConvertidorAdifQsoTests
   - Compliance: ServicioComplianceTests
@@ -132,7 +160,14 @@
   - Configuracion: ServicioConfiguracionJsonTests
   - Confirmaciones: ClienteLoTWTests, ClienteEQslTests, ClienteClubLogTests, ServicioConfirmacionesTests
   - Propagacion: ServicioPropagacionTests
-- Aplicacion.Tests (29): RegistrarQsoHandlerTests, RegistrarQsoValidadorTests
+  - Sincronizacion: ServicioSincronizacionTests
+- Web.Tests (31):
+  - Api: QsoApiControllerTests
+  - Controllers: InicioControllerTests, LogbookControllerTests
+- Aplicacion.Tests (29):
+  - Qsos: RegistrarQsoHandlerTests, RegistrarQsoValidadorTests
+- Escritorio.Tests (12):
+  - ViewModels: PanelLogbookViewModelTests
 
 ### Features
 
@@ -140,7 +175,7 @@
 - ✅ Objetos de valor del dominio (24 bandas, 48+43 modos ADIF)
 - ✅ Modelo de compliance regulatorio (PlanDeBandaItu, IARU 3 regiones)
 - ✅ ServicioCompliance con verificacion de frecuencia/modo
-- ✅ Interfaces de dominio completas (17 interfaces)
+- ✅ Interfaces de dominio completas (20 interfaces)
 - ✅ Entidad Qso + handler MediatR
 - ✅ EF Core con SQLite + PostgreSQL + migracion inicial
 - ✅ ClienteRigctld (control de radio via TCP)
@@ -168,10 +203,17 @@
 - ✅ Propagacion (ServicioPropagacion basado en SFI, predicciones HF)
 - ✅ Panel de Propagacion UI (PanelPropagacion con indices solares y tabla de bandas)
 - ✅ Web MVP: homepage con estadisticas + logbook publico paginado con filtros
-- ✅ 550 tests unitarios (308 + 213 + 29)
+- ✅ ASP.NET Identity (registro, login, perfil, editar perfil, UsuarioRadio)
+- ✅ API REST (QsoApiController + AdifApiController, DTOs, Mapeadores, [Authorize])
+- ✅ Sincronizacion bidireccional escritorio ↔ web (IServicioSincronizacion, ServicioSincronizacion, EstadoSincronizacionViewModel)
+- ✅ Mapa de contactos con Leaflet (Logbook/Mapa, mapa-contactos.js, marcadores interactivos)
+- ✅ Dashboard de estadisticas con Chart.js (EstadisticasController, graficos por banda/modo/continente)
+- ✅ Foro de la comunidad (CategoriaForo, HiloForo, RespuestaForo, ForoController, vistas)
+- ✅ 608 tests (308 + 228 + 31 + 29 + 12), 0 fallos
 - 🔨 Decodificador FT8 (ft8_lib P/Invoke)
 - 🔨 Swap FFT managed → FFTW3 nativa
-- 🔨 Web: autenticacion + logbook privado
+- 🔨 Migracion EF Core PostgreSQL para Identity
+- 🔨 Logbook privado (CRUD de QSOs autenticado)
 - 📋 APRS, Satelites
 - 📋 SDR (SoapySDR) + mas modos digitales
 - 📋 IA (ML.NET + ONNX) + Mobile

@@ -80,11 +80,16 @@ public sealed class QsoConfiguracion : IEntityTypeConfiguration<Qso>
         builder.Property(q => q.FechaCreacion)
             .IsRequired();
 
+        builder.Property(q => q.Sincronizado)
+            .HasDefaultValue(false)
+            .IsRequired();
+
         // --- Índices ---
 
         builder.HasIndex(q => q.IndicativoPropio);
         builder.HasIndex(q => q.IndicativoContacto);
         builder.HasIndex(q => q.FechaHoraInicio);
         builder.HasIndex(q => q.Frecuencia);
+        builder.HasIndex(q => q.Sincronizado);
     }
 }

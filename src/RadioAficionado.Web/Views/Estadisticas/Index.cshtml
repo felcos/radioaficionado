@@ -1,0 +1,161 @@
+@model EstadisticasViewModel
+
+@{
+    ViewData["Title"] = "Estadisticas";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="text-ra-acento mb-0">Estadisticas del Logbook</h1>
+</div>
+
+<!-- Tarjetas resumen -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="card bg-ra-tarjeta border-ra-borde h-100">
+            <div class="card-body text-center">
+                <h6 class="card-subtitle mb-2 text-ra-suave">Total QSOs</h6>
+                <h2 class="card-title text-ra-acento mb-0">@Model.TotalQsos.ToString("N0")</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card bg-ra-tarjeta border-ra-borde h-100">
+            <div class="card-body text-center">
+                <h6 class="card-subtitle mb-2 text-ra-suave">Entidades DXCC</h6>
+                <h2 class="card-title text-ra-acento mb-0">@Model.TotalEntidadesDxcc</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card bg-ra-tarjeta border-ra-borde h-100">
+            <div class="card-body text-center">
+                <h6 class="card-subtitle mb-2 text-ra-suave">Bandas usadas</h6>
+                <h2 class="card-title text-ra-acento mb-0">@Model.TotalBandas</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card bg-ra-tarjeta border-ra-borde h-100">
+            <div class="card-body text-center">
+                <h6 class="card-subtitle mb-2 text-ra-suave">Modos usados</h6>
+                <h2 class="card-title text-ra-acento mb-0">@Model.TotalModos</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tarjetas secundarias: records y promedios -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card bg-ra-tarjeta border-ra-borde h-100">
+            <div class="card-body">
+                <h6 class="text-ra-suave mb-3">Indicativos unicos</h6>
+                <p class="fs-4 text-ra-acento mb-1">@Model.TotalIndicativosUnicos.ToString("N0")</p>
+                <small class="text-ra-suave">estaciones diferentes contactadas</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-ra-tarjeta border-ra-borde h-100">
+            <div class="card-body">
+                <h6 class="text-ra-suave mb-3">Actividad</h6>
+                <p class="fs-4 text-ra-acento mb-1">@Model.PromedioQsosPorDia QSOs/dia</p>
+                <small class="text-ra-suave">promedio en dias con actividad</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-ra-tarjeta border-ra-borde h-100">
+            <div class="card-body">
+                <h6 class="text-ra-suave mb-3">Dia record</h6>
+                @if (Model.DiaRecord is not null)
+                {
+                    <p class="fs-4 text-ra-acento mb-1">@Model.QsosEnDiaRecord QSOs</p>
+                    <small class="text-ra-suave">el @Model.DiaRecord</small>
+                }
+                else
+                {
+                    <p class="text-ra-suave mb-0">Sin datos</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Informacion adicional -->
+<div class="row g-3 mb-4">
+    <div class="col-md-6">
+        <div class="card bg-ra-tarjeta border-ra-borde h-100">
+            <div class="card-body">
+                <h6 class="text-ra-suave mb-3">Preferencias</h6>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Banda favorita:</span>
+                    <span class="text-ra-acento fw-bold">@(Model.BandaMasUsada ?? "N/A")</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span>Modo favorito:</span>
+                    <span class="text-ra-acento fw-bold">@(Model.ModoMasUsado ?? "N/A")</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card bg-ra-tarjeta border-ra-borde h-100">
+            <div class="card-body">
+                <h6 class="text-ra-suave mb-3">Rango temporal</h6>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Primer QSO:</span>
+                    <span class="text-ra-acento">@(Model.PrimerQso?.ToString("dd/MM/yyyy") ?? "N/A")</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span>Ultimo QSO:</span>
+                    <span class="text-ra-acento">@(Model.UltimoQso?.ToString("dd/MM/yyyy") ?? "N/A")</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Graficos -->
+<div class="row g-3 mb-4">
+    <div class="col-lg-8">
+        <div class="card bg-ra-tarjeta border-ra-borde h-100">
+            <div class="card-body">
+                <h5 class="card-title text-ra-suave mb-3">QSOs por banda</h5>
+                <canvas id="graficoBandas"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card bg-ra-tarjeta border-ra-borde h-100">
+            <div class="card-body">
+                <h5 class="card-title text-ra-suave mb-3">QSOs por modo</h5>
+                <canvas id="graficoModos"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-lg-8">
+        <div class="card bg-ra-tarjeta border-ra-borde h-100">
+            <div class="card-body">
+                <h5 class="card-title text-ra-suave mb-3">Actividad mensual (ultimos 12 meses)</h5>
+                <canvas id="graficoTemporal"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card bg-ra-tarjeta border-ra-borde h-100">
+            <div class="card-body">
+                <h5 class="card-title text-ra-suave mb-3">QSOs por continente</h5>
+                <canvas id="graficoContinentes"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/chartjs/chart.min.js"></script>
+    <script src="~/js/estadisticas.js" asp-append-version="true"></script>
+}

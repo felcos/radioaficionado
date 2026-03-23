@@ -1,12 +1,14 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using RadioAficionado.Aplicacion;
 using RadioAficionado.Dominio.Interfaces;
 using RadioAficionado.Infraestructura;
+using RadioAficionado.Infraestructura.Persistencia;
 using RadioAficionado.Infraestructura.Sqlite;
 using RadioAficionado.Nativo.Audio;
 using RadioAficionado.Nativo.Rig;
@@ -51,12 +53,35 @@ public class App : Application
         ConfigurarServicios(coleccion);
         Servicios = coleccion.BuildServiceProvider();
 
+        AplicarMigraciones(Servicios);
+
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime escritorio)
         {
             escritorio.MainWindow = new VentanaPrincipal();
         }
 
         base.OnFrameworkInitializationCompleted();
+    }
+
+    /// <summary>
+    /// Aplica las migraciones pendientes de Entity Framework Core al iniciar la aplicación.
+    /// Si la migración falla, registra el error y continúa (la app puede funcionar parcialmente).
+    /// </summary>
+    /// <param name="proveedor">Proveedor de servicios de la aplicación.</param>
+    private static void AplicarMigraciones(ServiceProvider proveedor)
+    {
+        try
+        {
+            using IServiceScope scope = proveedor.CreateScope();
+            ContextoRadioAficionado contexto = scope.ServiceProvider
+                .GetRequiredService<ContextoRadioAficionado>();
+            contexto.Database.Migrate();
+            Log.Information("Migraciones de base de datos aplicadas correctamente.");
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error al aplicar migraciones de base de datos al iniciar la aplicación.");
+        }
     }
 
     private static void ConfigurarServicios(IServiceCollection servicios)

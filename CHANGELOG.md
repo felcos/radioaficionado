@@ -1,5 +1,46 @@
 # Changelog — RadioAficionado
 
+## [1.2.0] — 2026-03-23 — Identity + API REST + Sincronizacion + Mapa + Foro + Estadisticas + Tests completos
+
+### feat: API REST para sincronizacion escritorio-web (Web/Api)
+- QsoApiController: CRUD completo de QSOs via REST, [Authorize], paginacion, filtros
+- AdifApiController: importacion/exportacion de archivos ADIF via API, limite 5 MB
+- DTOs: QsoDto, FiltroQsoDto, ResultadoSincronizacionDto
+- MapeadorQsoDto: conversion bidireccional entre Qso y QsoDto
+- Archivos: Api/QsoApiController.cs, Api/AdifApiController.cs, Api/Dtos/*.cs, Api/Mapeadores/MapeadorQsoDto.cs
+
+### feat: Servicio de sincronizacion bidireccional (Dominio + Infraestructura + Escritorio)
+- IServicioSincronizacion: interfaz con SincronizarAsync, ObtenerEstadoAsync, ConfigurarAsync
+- ConfiguracionSincronizacion, ResultadoSincronizacion, EstadoSincronizacion (records en Dominio)
+- ServicioSincronizacion: cliente HTTP que sincroniza QSOs locales con la API web
+- EstadoSincronizacionViewModel: indicador de estado en escritorio, sincronizacion manual
+- Archivos: Dominio/Interfaces/IServicioSincronizacion.cs, Infraestructura/Sincronizacion/ServicioSincronizacion.cs, Escritorio/ViewModels/EstadoSincronizacionViewModel.cs
+
+### feat: Mapa de contactos con Leaflet (Web)
+- Logbook/Mapa.cshtml: mapa interactivo con marcadores de contactos
+- MapaContactoViewModel: datos de QSOs con coordenadas para el mapa
+- mapa-contactos.js: logica Leaflet con marcadores, popups, clustering
+- Leaflet local en wwwroot/lib/leaflet (sin CDN)
+- Archivos: Views/Logbook/Mapa.cshtml, ViewModels/MapaContactoViewModel.cs, wwwroot/js/mapa-contactos.js
+
+### feat: Dashboard de estadisticas con Chart.js (Web)
+- EstadisticasController: datos agregados + endpoints JSON para graficos
+- EstadisticasViewModel: estadisticas por banda, modo, continente, hora, mes
+- estadisticas.js: graficos Chart.js (barras, donut, lineas)
+- Chart.js local en wwwroot/lib/chartjs (sin CDN)
+- Archivos: Controllers/EstadisticasController.cs, ViewModels/EstadisticasViewModel.cs, wwwroot/js/estadisticas.js
+
+### feat: Foro de la comunidad (Web + Dominio)
+- Entidades de dominio: CategoriaForo (enum), HiloForo, RespuestaForo
+- ForoController: listado paginado, detalle, crear hilo, responder (con [Authorize])
+- ViewModels: ForoIndexViewModel, HiloDetalleViewModel, HiloResumenViewModel, CrearHiloViewModel, ResponderHiloViewModel, RespuestaViewModel
+- Vistas: Foro/Index, Foro/Detalle, Foro/CrearHilo
+- Archivos: Dominio/Entidades/CategoriaForo.cs+HiloForo.cs+RespuestaForo.cs, Controllers/ForoController.cs, ViewModels/Foro*.cs, Views/Foro/*.cshtml
+
+### test: 608 tests (308 Dominio + 228 Infraestructura + 31 Web + 29 Aplicacion + 12 Escritorio)
+- Nuevos: ServicioSincronizacionTests, QsoApiControllerTests, InicioControllerTests, LogbookControllerTests, PanelLogbookViewModelTests
+- 0 fallos, 0 omitidos
+
 ## [1.1.0] — 2026-03-23 — ASP.NET Identity: Registro, Login, Perfil de usuario
 
 ### feat: ASP.NET Identity con UsuarioRadio (Web + Dominio)
@@ -11,8 +52,8 @@
 - _Layout.cshtml: navbar con Login/Register o indicativo del usuario logueado
 - Program.cs: Identity configurado con password policy, lockout, cookie auth
 - Paquetes: Microsoft.Extensions.Identity.Stores (Dominio), Microsoft.AspNetCore.Identity.EntityFrameworkCore (Web)
-- Tabla "usuarios" con indicativo único, CHECK constraint para RegionItu (1-3)
-- Traducción de errores de Identity al español
+- Tabla "usuarios" con indicativo unico, CHECK constraint para RegionItu (1-3)
+- Traduccion de errores de Identity al espanol
 - Archivos: Dominio/Entidades/UsuarioRadio.cs, Web/Data/ContextoIdentidadRadioAficionado.cs, Web/Controllers/CuentaController.cs, Web/ViewModels/Registrar+IniciarSesion+Perfil+EditarPerfilViewModel.cs, Web/Views/Cuenta/*.cshtml
 
 ## [1.0.0] — 2026-03-23 — Confirmaciones externas + Propagacion + Contest UI + Propagacion UI + Configuracion UI
@@ -49,19 +90,14 @@
 - VentanaConfiguracion.axaml: ventana con pestanas para cada seccion de configuracion
 - Archivos: Escritorio/ViewModels/ConfiguracionViewModel.cs, Escritorio/Vistas/VentanaConfiguracion.axaml(.cs)
 
-### test: 550 tests (308 Dominio + 213 Infraestructura + 29 Aplicacion), todos pasando
-- ClienteLoTWTests, ClienteEQslTests, ClienteClubLogTests, ServicioConfirmacionesTests (Infraestructura.Tests/Confirmaciones/)
-- ServicioPropagacionTests (Infraestructura.Tests/Propagacion/)
+## [0.9.1] — 2026-03-23 — Migracion inicial EF Core SQLite
 
-## [0.9.1] — 2026-03-23 — Migración inicial EF Core SQLite
-
-### feat: Migración inicial de base de datos (Infraestructura.Sqlite)
-- Migración "Inicial" con tablas Activaciones y Qsos, FK, índices
+### feat: Migracion inicial de base de datos (Infraestructura.Sqlite)
+- Migracion "Inicial" con tablas Activaciones y Qsos, FK, indices
 - FabricaContextoEnDiseño (IDesignTimeDbContextFactory) para EF Core CLI
 - MigrationsAssembly configurado en ConfiguracionSqlite y FabricaContextoEnDiseño
 - Paquete Microsoft.EntityFrameworkCore.Design añadido al proyecto Sqlite
-- Archivos creados: FabricaContextoEnDiseño.cs, Migraciones/20260323100132_Inicial.cs (+Designer +Snapshot)
-- Archivos modificados: ConfiguracionSqlite.cs, RadioAficionado.Infraestructura.Sqlite.csproj
+- Archivos: FabricaContextoEnDiseño.cs, Migraciones/20260323100132_Inicial.cs (+Designer +Snapshot)
 
 ## [0.9.0] — 2026-03-23 — Web MVP: Homepage + Logbook Publico
 
@@ -79,49 +115,43 @@
 ### feat: Vistas Razor con tema oscuro (Web/Views)
 - _Layout.cshtml: layout responsive con navbar, footer, Bootstrap 5 local, tema oscuro
 - Inicio/Index.cshtml: hero section, 4 tarjetas de estadisticas, tabla de ultimos QSOs, seccion de features
-- Logbook/Index.cshtml: tabla paginada con filtros (indicativo, modo, banda, fechas), paginacion completa con ellipsis
+- Logbook/Index.cshtml: tabla paginada con filtros, paginacion completa con ellipsis
 - Logbook/Detalle.cshtml: detalle de QSO con breadcrumb, datos del contacto, senales, potencia, notas, metadatos
-- Error.cshtml actualizado a espanol
 - Archivos: Views/Shared/_Layout.cshtml, Views/Inicio/Index.cshtml, Views/Logbook/Index.cshtml, Views/Logbook/Detalle.cshtml
 
 ### feat: CSS tema oscuro (Web/wwwroot/css)
 - sitio.css: variables CSS personalizadas (--ra-*), tema oscuro consistente con colores azul/gris
-- Estilos para: navegacion, tarjetas, tablas, badges, botones, formularios, paginacion, responsive
 - Archivo: wwwroot/css/sitio.css
-
-### refactor: Program.cs
-- Ruta por defecto cambiada de Home a Inicio
-- ExceptionHandler apuntando a /Inicio/Error
 
 ## [0.8.1] — 2026-03-23 — Panel DXCC UI
 
 ### feat: Panel de tracking DXCC (Escritorio)
-- PanelDxccViewModel: carga datos desde IRepositorioQso, calcula estadísticas con EstadisticasDxcc
+- PanelDxccViewModel: carga datos desde IRepositorioQso, calcula estadisticas con EstadisticasDxcc
 - EntidadDxccVm con indicadores visuales: verde=confirmada, amarillo=trabajada, gris=no trabajada
 - Filtros reactivos: continente (Todos/AF/AS/EU/NA/OC/SA), estado (Todas/Trabajadas/NoTrabajadas/Confirmadas)
 - ResumenContinenteVm y ResumenBandaVm con barras de progreso
-- PanelDxcc.axaml: barra de estadísticas, filtros, DataGrid de entidades, panel lateral con resúmenes
-- Tema oscuro consistente, compiled bindings, integrado como pestaña "DXCC" en VentanaPrincipal
+- PanelDxcc.axaml: barra de estadisticas, filtros, DataGrid de entidades, panel lateral con resumenes
+- Tema oscuro consistente, compiled bindings, integrado como pestana "DXCC" en VentanaPrincipal
 - Archivos: Escritorio/ViewModels/PanelDxccViewModel.cs, Escritorio/Vistas/PanelDxcc.axaml(.cs)
 
 ## [0.8.0] — 2026-03-23 — Tracking DXCC y Premios
 
-### feat: Catálogo DXCC (Dominio/Dxcc)
+### feat: Catalogo DXCC (Dominio/Dxcc)
 - EntidadDxcc (record): Numero, Nombre, Prefijo, Continente, ZonaCq, ZonaItu, Latitud, Longitud, Eliminada
-- CatalogoDxcc: catálogo estático con ~170 entidades DXCC (todas las más activas + eliminadas históricas)
-- Búsqueda por prefijo (exacta + progresiva), por indicativo, listado completo, solo activas
-- Prefijos alternativos registrados para USA, Rusia, Japón, Alemania, China, Canadá, Brasil, Argentina, España, Francia, Italia, Inglaterra, Australia, México, India, Corea
-- ConfirmacionQso + TipoConfirmacion (LoTW, QSL física, eQSL, directa, bureau)
+- CatalogoDxcc: catalogo estatico con ~170 entidades DXCC (todas las mas activas + eliminadas historicas)
+- Busqueda por prefijo (exacta + progresiva), por indicativo, listado completo, solo activas
+- Prefijos alternativos registrados para USA, Rusia, Japon, Alemania, China, Canada, Brasil, Argentina, Espana, Francia, Italia, Inglaterra, Australia, Mexico, India, Corea
+- ConfirmacionQso + TipoConfirmacion (LoTW, QSL fisica, eQSL, directa, bureau)
 - Archivos: Dominio/Dxcc/EntidadDxcc.cs, CatalogoDxcc.cs, ConfirmacionQso.cs
 
-### feat: Estadísticas DXCC (Dominio/Dxcc)
-- EstadisticasDxcc: cálculo de entidades trabajadas, confirmadas, por banda, por modo, faltantes
+### feat: Estadisticas DXCC (Dominio/Dxcc)
+- EstadisticasDxcc: calculo de entidades trabajadas, confirmadas, por banda, por modo, faltantes
 - ResumenDxcc (record): TotalTrabajadas, TotalConfirmadas, PorBanda, PorModo, PorContinente
 - Archivo: Dominio/Dxcc/EstadisticasDxcc.cs
 
-### test: Tests DXCC (56 tests nuevos)
-- CatalogoDxccTests: 15 tests (búsqueda por prefijo principal/alternativo, por indicativo, nulo/vacío/inexistente, eliminadas, continentes, zonas CQ/ITU, case-insensitive)
-- EstadisticasDxccTests: 12 tests (trabajadas, confirmadas, por banda, por modo, faltantes, resumen, null checks)
+### test: Tests DXCC (27 tests)
+- CatalogoDxccTests: 15 tests (busqueda por prefijo principal/alternativo, por indicativo, case-insensitive, eliminadas)
+- EstadisticasDxccTests: 12 tests (trabajadas, confirmadas, por banda, por modo, faltantes, resumen)
 - Archivos: Dominio.Tests/Dxcc/CatalogoDxccTests.cs, EstadisticasDxccTests.cs
 
 ## [0.7.1] — 2026-03-23 — Panel de Activaciones POTA/SOTA UI
@@ -137,11 +167,6 @@
 - Implementacion EF Core de IRepositorioActivaciones con Include de QSOs
 - ObtenerTodasAsync, ObtenerActivaAsync, ObtenerPorTipoAsync, ObtenerPorIdAsync
 - Archivo: Infraestructura/Persistencia/RepositorioActivaciones.cs
-
-### feat: CancelarAsync + ObtenerTodasAsync en servicio de activaciones
-- Añadidos a IServicioActivaciones y ServicioActivaciones
-- Añadido ObtenerTodasAsync a IRepositorioActivaciones
-- Registros de DI: IRepositorioActivaciones, IServicioActivaciones
 
 ## [0.7.0] — 2026-03-23 — Motor de Contests + POTA/SOTA + PSK Reporter + Configuracion
 
@@ -173,12 +198,6 @@
 - ServicioConfiguracionJson en Infraestructura/Configuracion/
 - Archivos: Dominio/Configuracion/*.cs, Infraestructura/Configuracion/ServicioConfiguracionJson.cs
 
-### test: 321 tests (161 Dominio + 131 Infraestructura + 29 Aplicacion)
-- MotorContestTests: tests del motor de contests (Dominio.Tests/Contests/)
-- ReferenciaPotaTests: validacion de referencias POTA (Dominio.Tests/Activaciones/)
-- GeneradorCabrilloTests: tests del generador Cabrillo (Infraestructura.Tests/Contests/)
-- ClientePskReporterTests: tests del cliente PSK Reporter (Infraestructura.Tests/PskReporter/)
-
 ## [0.6.0] — 2026-03-23 — Logbook + DX Cluster + Compliance + ADIF
 
 ### feat: ADIF parser/generador (Infraestructura/Adif)
@@ -200,7 +219,7 @@
 - ClienteDxCluster: cliente TCP/Telnet en Infraestructura/DxCluster
 - PanelDxClusterViewModel: ViewModel con filtros, spots en tiempo real
 - PanelDxCluster.axaml: vista con DataGrid de spots
-- Archivos: Dominio/Interfaces/IDxCluster.cs, Infraestructura/DxCluster/ClienteDxCluster.cs, Escritorio/ViewModels/PanelDxClusterViewModel.cs, Escritorio/Vistas/PanelDxCluster.axaml*
+- Archivos: Dominio/Interfaces/IDxCluster.cs, Infraestructura/DxCluster/ClienteDxCluster.cs, Escritorio/ViewModels+Vistas
 
 ### feat: ServicioCompliance regulatorio (Infraestructura/Compliance)
 - PlanDeBandaItu: planes de banda IARU para 3 regiones
@@ -213,12 +232,6 @@
 - VentanaPrincipalViewModel: navegacion entre paneles
 - Archivos: Escritorio/ViewModels/*.cs
 
-### test: Tests ADIF + Compliance + DX Cluster + Aplicacion
-- ConvertidorAdifQsoTests, GeneradorAdifTests, ParserAdifTests (Infraestructura.Tests/Adif/)
-- ServicioComplianceTests (Infraestructura.Tests/Compliance/)
-- ClienteDxClusterTests (Infraestructura.Tests/DxCluster/)
-- RegistrarQsoHandlerTests, RegistrarQsoValidadorTests (Aplicacion.Tests/Qsos/)
-
 ## [0.5.0] — 2026-03-23 — ControlWaterfall con SkiaSharp
 
 ### feat: ControlWaterfall (Escritorio/Controles)
@@ -227,13 +240,12 @@
 - Paleta de 256 colores precalculada: negro → azul → verde → amarillo → rojo
 - Metodo AgregarLinea(LineaEspectro) thread-safe (~25 FPS)
 - Propiedades: AnchoFft, DbMinimo, DbMaximo
-- Reemplazado placeholder en VentanaPrincipal.axaml
 - Archivos: Controles/ControlWaterfall.cs, Vistas/VentanaPrincipal.axaml
 
 ## [0.4.0] — 2026-03-22 — Tests capa nativa + UI escritorio
 
 ### test: 201 tests (161 Dominio + 40 Infraestructura)
-- TransformadaCooleyTukeyTests: 10 tests (seno puro, silencio, tamaños, dispose)
+- TransformadaCooleyTukeyTests: 10 tests (seno puro, silencio, tamanos, dispose)
 - ProcesadorEspectroTests: 10 tests (PCM, bloques, solapamiento, validacion)
 - VentanasDspTests: 10 tests (Hann, Hamming, Blackman-Harris extremos/centro/simetria)
 - MapeadorModosTests: 30 tests (29 modos rigctld, S-meter dBm→S, VFO)

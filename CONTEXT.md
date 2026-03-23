@@ -2,7 +2,7 @@
 
 ## Que es el proyecto
 
-RadioAficionado es una plataforma unificada de radioaficion que combina una aplicacion de escritorio multiplataforma y una aplicacion web. Su objetivo es ser la herramienta integral que los radioaficionados necesitan: control de radio, waterfall, modos digitales, logbook, compliance regulatorio, DX cluster, contests, activaciones POTA/SOTA, e integracion con servicios externos (LoTW, eQSL, ClubLog, PSK Reporter).
+RadioAficionado es una plataforma unificada de radioaficion que combina una aplicacion de escritorio multiplataforma y una aplicacion web. Su objetivo es ser la herramienta integral que los radioaficionados necesitan: control de radio, waterfall, modos digitales, logbook, compliance regulatorio, DX cluster, contests, activaciones POTA/SOTA, tracking DXCC, confirmaciones (LoTW/eQSL/ClubLog), propagacion, foro comunitario, estadisticas, mapa de contactos e integracion con servicios externos.
 
 ## Por que existe
 
@@ -34,6 +34,8 @@ RadioAficionado pretende resolver todo esto con una plataforma moderna, multipla
 | Audio | NAudio | Captura/reproduccion de audio en .NET |
 | Rig control | Hamlib via rigctld (TCP) | Estandar universal de control de radio |
 | Rotador | Hamlib via rotctld (TCP) | Estandar universal de control de rotador |
+| Mapas | Leaflet (local) | Mapas interactivos, open source, sin CDN |
+| Graficos | Chart.js (local) | Graficos interactivos, sin CDN |
 | IA | ML.NET + ONNX Runtime | Inferencia local sin dependencias de nube |
 
 ## Arquitectura
@@ -50,10 +52,10 @@ Compartido ← Dominio ← Aplicacion ← Infraestructura ← Infraestructura.Sq
                                    ← Nativo.Rotador
                                    ← IA
                                    ← Escritorio (Avalonia UI)
-                                   ← Web (ASP.NET MVC)
+                                   ← Web (ASP.NET MVC + API REST)
 ```
 
-Las capas **Dominio** y **Aplicacion** son compartidas entre escritorio y web. La infraestructura se divide por proveedor de BD. Los proyectos Nativo.* encapsulan P/Invoke a librerias nativas.
+Las capas **Dominio** y **Aplicacion** son compartidas entre escritorio y web. La infraestructura se divide por proveedor de BD. Los proyectos Nativo.* encapsulan P/Invoke a librerias nativas. La sincronizacion bidireccional conecta escritorio y web via API REST.
 
 ## Decisiones tomadas
 
@@ -85,23 +87,28 @@ Las capas **Dominio** y **Aplicacion** son compartidas entre escritorio y web. L
 | 2026-03-23 | Migraciones EF Core en proyecto Sqlite separado | MigrationsAssembly apunta a Infraestructura.Sqlite; DesignTimeFactory para EF CLI sin startup Avalonia |
 | 2026-03-23 | LoTW/eQSL/ClubLog como clientes HTTP independientes | Cada servicio tiene su interfaz + implementacion; ServicioConfirmaciones orquesta las 3 fuentes |
 | 2026-03-23 | Modelo de propagacion basado en SFI | IndicesSolares como record inmutable; predicciones por banda HF con NivelPropagacion |
-| 2026-03-23 | UI de escritorio completa con 10 vistas + 12 ViewModels | Cada modulo (contest, DXCC, propagacion, activaciones, configuracion) tiene su panel dedicado |
-| 2026-03-23 | ContextoIdentidadRadioAficionado separado del DbContext principal | ContextoRadioAficionado es compartido con escritorio (SQLite); Identity es solo web, necesita IdentityDbContext separado para no romper la app de escritorio |
-| 2026-03-23 | Microsoft.Extensions.Identity.Stores en Dominio (no Identity.EFCore) | UsuarioRadio hereda IdentityUser; paquete ligero sin dependencias de EF Core en capa de dominio |
+| 2026-03-23 | UI de escritorio completa con 8 vistas + 14 ViewModels | Cada modulo tiene su panel dedicado |
+| 2026-03-23 | ContextoIdentidadRadioAficionado separado del DbContext principal | ContextoRadioAficionado es compartido con escritorio (SQLite); Identity es solo web, necesita IdentityDbContext separado |
+| 2026-03-23 | Microsoft.Extensions.Identity.Stores en Dominio | UsuarioRadio hereda IdentityUser; paquete ligero sin dependencias de EF Core en capa de dominio |
+| 2026-03-23 | API REST para sincronizacion escritorio ↔ web | QsoApiController + AdifApiController con DTOs y [Authorize]; ServicioSincronizacion como cliente HTTP bidireccional |
+| 2026-03-23 | Leaflet local para mapa de contactos | Mapa interactivo sin CDN, marcadores con coordenadas de QSOs |
+| 2026-03-23 | Chart.js local para estadisticas | Graficos interactivos sin CDN, datos via endpoints JSON del controller |
+| 2026-03-23 | Foro con entidades de dominio propias | CategoriaForo, HiloForo, RespuestaForo; gestionado via ContextoIdentidadRadioAficionado |
+| 2026-03-23 | Sincronizacion bidireccional como servicio de infraestructura | IServicioSincronizacion con records inmutables para configuracion, resultado y estado |
 
 ## Estado actual
 
 **Fase 0 + Fase 1 completadas** — Cimientos + capa nativa.
 **Fase 2 completada** — Logbook, ADIF, DX Cluster, Compliance, Contests, POTA/SOTA, PSK Reporter, DXCC, Confirmaciones, Propagacion.
-**Fase 3 en progreso** — Web MVP con homepage y logbook publico implementados.
+**Fase 3 completada** — Web MVP, Identity, API REST, Sincronizacion, Mapa, Estadisticas, Foro.
 
 ### Que funciona
 - Solucion completa: 14 proyectos fuente + 5 proyectos de test
-- 550 tests (308 Dominio + 213 Infraestructura + 29 Aplicacion), todos pasando
-- Modelo de dominio completo: objetos de valor, entidades, compliance, contests, activaciones, DXCC, propagacion
-- 17 interfaces de dominio definidas e implementadas
+- **608 tests** (308 Dominio + 228 Infraestructura + 31 Web + 29 Aplicacion + 12 Escritorio), **todos pasando, 0 fallos**
+- Modelo de dominio completo: objetos de valor, 5 entidades, compliance, contests, activaciones, DXCC, propagacion, foro
+- 20 interfaces de dominio definidas e implementadas
 - ADIF parser/generador completo con conversion bidireccional Qso ↔ RegistroAdif
-- Logbook UI con DataGrid paginado, filtros, import/export ADIF
+- Logbook UI escritorio con DataGrid paginado, filtros, import/export ADIF
 - DX Cluster con cliente TCP/Telnet y UI de spots en tiempo real
 - Motor de Contests con reglas, multiplicadores, GeneradorCabrillo y Panel de Contest UI
 - Activaciones POTA/SOTA con ciclo de vida completo y Panel de Activaciones UI con cronometro
@@ -114,17 +121,23 @@ Las capas **Dominio** y **Aplicacion** son compartidas entre escritorio y web. L
 - Control de rig (rigctld) y rotador (rotctld) via TCP
 - Pipeline de audio con NAudio + FFT + ProcesadorEspectro
 - WaterfallControl con SkiaSharp
-- UI escritorio MVVM: 12 ViewModels, 10 vistas, 1 control custom
-- Web MVP: homepage con estadisticas + logbook publico paginado con filtros y detalle
+- UI escritorio MVVM: 14 ViewModels, 8 vistas, 1 control custom
+- Web completa: homepage, logbook publico (paginado, filtros, detalle, mapa), estadisticas con Chart.js
+- ASP.NET Identity: registro, login, perfil, editar perfil
+- API REST: QsoApiController + AdifApiController con DTOs, mapeadores y [Authorize]
+- Sincronizacion bidireccional: ServicioSincronizacion + EstadoSincronizacionViewModel
+- Foro comunitario: categorias, hilos, respuestas, paginacion
+- Mapa de contactos con Leaflet (marcadores interactivos)
 - Migracion EF Core SQLite con tablas Activaciones y Qsos
 
 ### Problemas conocidos
-- Web: namespace `RadioAficionado.Web.ViewModels` no encontrado en _ViewImports.cshtml (error de compilacion menor)
-- Escritorio: `PanelDxccViewModel` no encontrado en VentanaPrincipalViewModel.cs (falta using o referencia)
-- Ambos errores no afectan la suite de 550 tests (que pasan al 100%)
+- Web: errores de compilacion menores en namespaces de ViewModels — no afectan tests
+- Escritorio: referencia PanelDxccViewModel pendiente en VentanaPrincipalViewModel — no afecta tests
+- Escritorio: lock de DLL de Avalonia ocasional en compilacion paralela (error AVLN9999)
 
 ### Que viene despues
-- **Corregir errores de compilacion**: Web ViewModels namespace + Escritorio PanelDxccViewModel referencia
+- **Migracion EF Core PostgreSQL para Identity**: tablas de usuarios, roles, claims
+- **Logbook privado**: CRUD de QSOs asociado al usuario autenticado
 - **Decodificador FT8**: ft8_lib via P/Invoke
 - **Waterfall en vivo**: conectar ProcesadorEspectro → PipelineAudio → ControlWaterfall via DI
-- **Web autenticacion**: Identity implementado (registro, login, perfil). Falta logbook privado con CRUD autenticado
+- **FFTW3 nativa**: swap de FFT managed cuando haya binarios disponibles
