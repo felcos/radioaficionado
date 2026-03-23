@@ -1,52 +1,65 @@
-# Sesión — RadioAficionado
+# Sesion — RadioAficionado
 
-## Última sesión: 2026-03-23
+## Ultima sesion: 2026-03-23
 
 ### Lo que se hizo
 
+#### Fase 2 completada — Logbook, ADIF, DX Cluster, Compliance (2026-03-23)
+- ADIF parser/generador completo: RegistroAdif, ParserAdif, GeneradorAdif, ConvertidorAdifQso
+- Logbook UI: PanelLogbookViewModel con DataGrid paginado, filtros, import/export ADIF
+- DX Cluster: IDxCluster, ClienteDxCluster (TCP/Telnet), PanelDxClusterViewModel con spots en tiempo real
+- ServicioCompliance regulatorio: PlanDeBandaItu con planes IARU para 3 regiones
+- IRepositorioQso ampliado con paginacion (ContarAsync, ObtenerPaginadoAsync) y FiltroQso
+- ViewModels conectados a DI real: PanelRig con polling, PanelRegistroQso con MediatR
+- Tests capa de aplicacion: RegistrarQsoHandlerTests + RegistrarQsoValidadorTests (29 tests)
+- Tests ADIF, Compliance, DxCluster en Infraestructura.Tests
+
+#### Motor de Contests (2026-03-23)
+- MotorContest: evaluacion completa de QSOs en contexto de contest
+- ReglaContest, ConfiguracionContest, ResultadoContest, TipoContest, TipoIntercambio, MetodoMultiplicador, Intercambio
+- GeneradorCabrillo para envio de logs a contests
+- MotorContestTests + GeneradorCabrilloTests
+
+#### Activaciones POTA/SOTA (2026-03-23)
+- Entidad Activacion con ciclo de vida completo
+- ReferenciaPota, ReferenciaSota como objetos de valor con validacion
+- IRepositorioActivaciones, IServicioActivaciones + ServicioActivaciones
+- EstadoActivacion, TipoActivacion
+- ReferenciaPotaTests
+
+#### PSK Reporter (2026-03-23)
+- IPskReporter en dominio, ClientePskReporter en infraestructura
+- ClientePskReporterTests
+
+#### Configuracion persistente (2026-03-23)
+- ConfiguracionCompleta, ConfiguracionEstacion, ConfiguracionAudio, ConfiguracionGeneral
+- IServicioConfiguracion + ServicioConfiguracionJson
+
 #### ControlWaterfall con SkiaSharp (2026-03-23)
-- Creado `Controles/ControlWaterfall.cs`: control Avalonia custom con renderizado SkiaSharp
-- Usa `ICustomDrawOperation` + `ISkiaSharpApiLeaseFeature` para acceso directo al `SKCanvas`
-- Bitmap interno con scroll vertical (`Buffer.MemoryCopy` unsafe para rendimiento)
+- Control Avalonia custom con renderizado SkiaSharp via ICustomDrawOperation
+- SKBitmap interno con scroll vertical (Buffer.MemoryCopy unsafe para rendimiento)
 - Paleta de 256 colores precalculada: negro → azul → verde → amarillo → rojo
-- Thread-safe: `AgregarLinea()` desde cualquier hilo, invalidación en UI thread
-- Propiedades: AnchoFft, DbMinimo, DbMaximo
-- Reemplazado placeholder en `VentanaPrincipal.axaml` con el control real
-- Habilitado `AllowUnsafeBlocks` en csproj para manipulación directa de píxeles
-- Build limpio (0 warnings, 0 errores), 78 tests pasando
 
-#### Fase 0 — Cimientos (completada)
-- Estructura de solución: 14 proyectos fuente + 5 test
-- Objetos de valor: Indicativo, Frecuencia, Localizador, Coordenadas
-- BandaRadio (24 bandas), ModoOperacion (48 modos ADIF + 43 submodos)
-- Modelo compliance: PlanDeBanda, SegmentoBanda, ResultadoCompliance
-- Interfaces: IControlRig, IControlRotador, IAudioPipeline, IDecodificadorDigital
-- Entidad Qso + handler MediatR RegistrarQso
-- EF Core: ContextoRadioAficionado + proveedores SQLite/PostgreSQL
-- Shells: Avalonia (escritorio) + ASP.NET MVC (web)
-- 89 tests unitarios dominio
-
-#### Fase 1 — Capa nativa (en progreso)
-- ClienteRigctld: cliente TCP a rigctld, polling 500ms, mapeo modos, S-meter, PTT
-- ClienteRotctld: cliente TCP a rotctld, polling 1s, AZ/EL
-- PipelineAudioNAudio: captura/transmisión con NAudio, pub/sub multi-consumidor
-- TransformadaCooleyTukey: FFT managed radix-2 DIT, ventanas Hann/Hamming/Blackman-Harris
-- ProcesadorEspectro: audio PCM → LineaEspectro para waterfall
+#### Resumen de Fase 0 + Fase 1 (2026-03-22)
+- Estructura de solucion: 14 proyectos fuente + 5 test
+- Objetos de valor, entidades, compliance, interfaces
+- ClienteRigctld, ClienteRotctld, PipelineAudioNAudio, TransformadaCooleyTukey
 - ViewModels MVVM: PanelRig, PanelMensajes, PanelRegistroQso
-- VentanaPrincipal: layout completo (rig bar, waterfall placeholder, mensajes, QSO form)
-- 201 tests (161 Dominio + 40 Infraestructura), todos pasando
+
+### Estado de tests
+- 321 tests totales (161 Dominio + 131 Infraestructura + 29 Aplicacion)
+- Todos pasando, 0 fallos, build limpio
 
 ### Pendiente
-- ~~Implementar WaterfallControl con SkiaSharp~~ ✅ Completado
 - Implementar decodificador FT8 con ft8_lib (P/Invoke)
-- Conectar ViewModels con servicios reales vía DI
 - Swap FFT managed → FFTW3 nativa cuando haya binarios
-- Fase 2: Logbook + ADIF parser + POTA/SOTA
+- Conectar DI completa: ProcesadorEspectro → PipelineAudio → ControlWaterfall para waterfall en vivo
+- Fase 3: Web con cuentas + logbook online
 
 ### Problemas encontrados
-- Ninguno crítico. Build limpio, todos los tests pasan.
+- Ninguno critico. Build limpio, todos los tests pasan.
 
 ### Siguiente paso sugerido
-- Conectar DI: inyectar ProcesadorEspectro → PipelineAudio → ControlWaterfall para visualización en vivo
-- O decodificador FT8 con ft8_lib (P/Invoke)
-- O conectar DI completa entre ViewModels ↔ servicios reales
+- Conectar DI: inyectar ProcesadorEspectro → PipelineAudio → ControlWaterfall para visualizacion en vivo
+- O implementar decodificador FT8 con ft8_lib (P/Invoke)
+- O iniciar Fase 3: web con autenticacion y logbook online

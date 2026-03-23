@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using RadioAficionado.Dominio.Activaciones;
 using RadioAficionado.Dominio.Entidades;
 
 namespace RadioAficionado.Infraestructura.Persistencia;
@@ -12,6 +13,11 @@ public class ContextoRadioAficionado : DbContext
     /// Tabla de contactos de radio (QSOs).
     /// </summary>
     public DbSet<Qso> Qsos => Set<Qso>();
+
+    /// <summary>
+    /// Tabla de activaciones de radio (POTA, SOTA, WWFF, IOTA).
+    /// </summary>
+    public DbSet<Activacion> Activaciones => Set<Activacion>();
 
     /// <summary>
     /// Crea una nueva instancia del contexto.

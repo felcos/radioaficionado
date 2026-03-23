@@ -1,8 +1,10 @@
 using Microsoft.Extensions.DependencyInjection;
 using RadioAficionado.Dominio.Interfaces;
 using RadioAficionado.Infraestructura.Compliance;
+using RadioAficionado.Infraestructura.Configuracion;
 using RadioAficionado.Infraestructura.DxCluster;
 using RadioAficionado.Infraestructura.Persistencia;
+using RadioAficionado.Infraestructura.PskReporter;
 
 namespace RadioAficionado.Infraestructura;
 
@@ -22,6 +24,9 @@ public static class ConfiguracionServicios
         servicios.AddScoped<IUnidadDeTrabajo, UnidadDeTrabajo>();
         servicios.AddSingleton<IDxCluster, ClienteDxCluster>();
         servicios.AddSingleton<IServicioCompliance, ServicioCompliance>();
+        servicios.AddSingleton<ConfiguracionPskReporter>();
+        servicios.AddSingleton<IPskReporter, ClientePskReporter>();
+        servicios.AddSingleton<IServicioConfiguracion, ServicioConfiguracionJson>();
 
         return servicios;
     }

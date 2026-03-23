@@ -95,5 +95,6 @@ public class App : Application
         servicios.AddTransient<PanelRegistroQsoViewModel>();
         servicios.AddTransient<PanelLogbookViewModel>();
         servicios.AddTransient<PanelDxClusterViewModel>();
+        servicios.AddTransient<ConfiguracionViewModel>();
     }
 }

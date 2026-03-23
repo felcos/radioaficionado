@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Microsoft.Extensions.DependencyInjection;
 using RadioAficionado.Escritorio.ViewModels;
 
@@ -17,5 +18,17 @@ public partial class VentanaPrincipal : Window
     {
         InitializeComponent();
         DataContext = App.Servicios!.GetRequiredService<VentanaPrincipalViewModel>();
+
+        Button botonConfig = this.FindControl<Button>("BotonConfiguracion")!;
+        botonConfig.Click += AbrirConfiguracion;
+    }
+
+    /// <summary>
+    /// Abre la ventana de configuración como diálogo modal.
+    /// </summary>
+    private async void AbrirConfiguracion(object? sender, RoutedEventArgs e)
+    {
+        VentanaConfiguracion ventana = new VentanaConfiguracion();
+        await ventana.ShowDialog(this).ConfigureAwait(false);
     }
 }

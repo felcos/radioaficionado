@@ -18,7 +18,7 @@
     <DockPanel>
         <!-- Barra superior: Control del Rig -->
         <Border DockPanel.Dock="Top" Background="#16213e" Padding="10" CornerRadius="0">
-            <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto">
+            <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto">
                 <!-- Estado de conexión y botón -->
                 <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
                     <TextBlock Text="{Binding EstadoConexion}" Foreground="White" VerticalAlignment="Center" />
@@ -61,6 +61,17 @@
                         Width="70"
                         FontWeight="Bold"
                         Margin="10,0,0,0" />
+
+                <!-- Configuración -->
+                <Button Grid.Column="5"
+                        x:Name="BotonConfiguracion"
+                        Content="Config"
+                        Background="#533483"
+                        Foreground="White"
+                        FontWeight="Bold"
+                        Padding="12,4"
+                        Margin="10,0,0,0"
+                        VerticalAlignment="Center" />
             </Grid>
         </Border>
 

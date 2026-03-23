@@ -1,0 +1,208 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:RadioAficionado.Escritorio.ViewModels"
+        x:Class="RadioAficionado.Escritorio.Vistas.VentanaConfiguracion"
+        x:DataType="vm:ConfiguracionViewModel"
+        Title="Configuración — RadioAficionado"
+        Width="700"
+        Height="550"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        Background="#1a1a2e">
+
+    <Window.Styles>
+        <Style Selector="TextBlock.etiqueta">
+            <Setter Property="Foreground" Value="#aaaaaa" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,0,8,0" />
+        </Style>
+        <Style Selector="TextBox">
+            <Setter Property="Background" Value="#0f3460" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderBrush" Value="#533483" />
+            <Setter Property="Margin" Value="0,3" />
+        </Style>
+        <Style Selector="NumericUpDown">
+            <Setter Property="Background" Value="#0f3460" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderBrush" Value="#533483" />
+            <Setter Property="Margin" Value="0,3" />
+        </Style>
+        <Style Selector="ComboBox">
+            <Setter Property="Background" Value="#0f3460" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderBrush" Value="#533483" />
+            <Setter Property="Margin" Value="0,3" />
+        </Style>
+        <Style Selector="CheckBox">
+            <Setter Property="Foreground" Value="#aaaaaa" />
+            <Setter Property="Margin" Value="0,4" />
+        </Style>
+        <Style Selector="TabItem">
+            <Setter Property="Foreground" Value="#aaaaaa" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="FontSize" Value="12" />
+        </Style>
+        <Style Selector="TabItem:selected">
+            <Setter Property="Foreground" Value="#e94560" />
+        </Style>
+    </Window.Styles>
+
+    <DockPanel>
+        <!-- Barra inferior: Botones Guardar / Cancelar + Estado -->
+        <Border DockPanel.Dock="Bottom" Background="#16213e" Padding="12,8">
+            <Grid ColumnDefinitions="*,Auto,Auto">
+                <TextBlock Grid.Column="0"
+                           Text="{Binding MensajeEstado}"
+                           Foreground="#e94560"
+                           VerticalAlignment="Center"
+                           FontStyle="Italic" />
+                <Button Grid.Column="1"
+                        Content="Guardar"
+                        Command="{Binding GuardarCommand}"
+                        Background="#e94560"
+                        Foreground="White"
+                        FontWeight="Bold"
+                        Padding="20,8"
+                        Margin="0,0,8,0" />
+                <Button Grid.Column="2"
+                        Content="Cancelar"
+                        Command="{Binding CancelarCommand}"
+                        Background="#533483"
+                        Foreground="White"
+                        Padding="20,8" />
+            </Grid>
+        </Border>
+
+        <!-- Pestañas de configuración -->
+        <TabControl SelectedIndex="{Binding PestanaActiva}" Margin="8">
+
+            <!-- Pestaña: Estación -->
+            <TabItem Header="Estación">
+                <ScrollViewer Padding="16">
+                    <Grid ColumnDefinitions="150,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" HorizontalAlignment="Stretch">
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Indicativo:" Classes="etiqueta" />
+                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding IndicativoPropio}" Watermark="EA4ABC" />
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Nombre:" Classes="etiqueta" />
+                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding NombreOperador}" Watermark="Nombre del operador" />
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Localizador:" Classes="etiqueta" />
+                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Localizador}" Watermark="IN80DK" />
+
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Región ITU:" Classes="etiqueta" />
+                        <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding RegionesItu}" SelectedItem="{Binding RegionItu}" HorizontalAlignment="Stretch" />
+
+                        <TextBlock Grid.Row="4" Grid.Column="0" Text="Nivel licencia:" Classes="etiqueta" />
+                        <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{Binding NivelesLicencia}" SelectedItem="{Binding NivelLicencia}" HorizontalAlignment="Stretch" />
+
+                        <TextBlock Grid.Row="5" Grid.Column="0" Text="Potencia máx (W):" Classes="etiqueta" />
+                        <NumericUpDown Grid.Row="5" Grid.Column="1" Value="{Binding PotenciaMaximaVatios}" Minimum="1" Maximum="5000" Increment="10" />
+                    </Grid>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Pestaña: Radio (Rig) -->
+            <TabItem Header="Radio">
+                <ScrollViewer Padding="16">
+                    <Grid ColumnDefinitions="150,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" HorizontalAlignment="Stretch">
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Host rigctld:" Classes="etiqueta" />
+                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding RigHost}" Watermark="localhost" />
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Puerto:" Classes="etiqueta" />
+                        <NumericUpDown Grid.Row="1" Grid.Column="1" Value="{Binding RigPuerto}" Minimum="1" Maximum="65535" />
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Polling (ms):" Classes="etiqueta" />
+                        <NumericUpDown Grid.Row="2" Grid.Column="1" Value="{Binding RigIntervaloPollingMs}" Minimum="100" Maximum="10000" Increment="100" />
+
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Potencia máx (W):" Classes="etiqueta" />
+                        <NumericUpDown Grid.Row="3" Grid.Column="1" Value="{Binding RigPotenciaMaximaVatios}" Minimum="1" Maximum="5000" Increment="10" FormatString="F1" />
+
+                        <TextBlock Grid.Row="4" Grid.Column="0" Text="Timeout (ms):" Classes="etiqueta" />
+                        <NumericUpDown Grid.Row="4" Grid.Column="1" Value="{Binding RigTimeoutMs}" Minimum="1000" Maximum="60000" Increment="1000" />
+                    </Grid>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Pestaña: Rotador -->
+            <TabItem Header="Rotador">
+                <ScrollViewer Padding="16">
+                    <Grid ColumnDefinitions="150,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" HorizontalAlignment="Stretch">
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Host rotctld:" Classes="etiqueta" />
+                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding RotadorHost}" Watermark="localhost" />
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Puerto:" Classes="etiqueta" />
+                        <NumericUpDown Grid.Row="1" Grid.Column="1" Value="{Binding RotadorPuerto}" Minimum="1" Maximum="65535" />
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Polling (ms):" Classes="etiqueta" />
+                        <NumericUpDown Grid.Row="2" Grid.Column="1" Value="{Binding RotadorIntervaloPollingMs}" Minimum="100" Maximum="10000" Increment="100" />
+
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Umbral cambio (°):" Classes="etiqueta" />
+                        <NumericUpDown Grid.Row="3" Grid.Column="1" Value="{Binding RotadorUmbralCambioGrados}" Minimum="0.1" Maximum="10" Increment="0.1" FormatString="F1" />
+
+                        <TextBlock Grid.Row="4" Grid.Column="0" Text="Timeout (ms):" Classes="etiqueta" />
+                        <NumericUpDown Grid.Row="4" Grid.Column="1" Value="{Binding RotadorTimeoutMs}" Minimum="1000" Maximum="60000" Increment="1000" />
+                    </Grid>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Pestaña: Audio -->
+            <TabItem Header="Audio">
+                <ScrollViewer Padding="16">
+                    <Grid ColumnDefinitions="150,*" RowDefinitions="Auto,Auto,Auto" HorizontalAlignment="Stretch">
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Entrada:" Classes="etiqueta" />
+                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding DispositivoEntrada}" Watermark="Nombre del dispositivo de entrada" />
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Salida:" Classes="etiqueta" />
+                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding DispositivoSalida}" Watermark="Nombre del dispositivo de salida" />
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Muestreo (Hz):" Classes="etiqueta" />
+                        <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding FrecuenciasMuestreoDisponibles}" SelectedItem="{Binding FrecuenciaMuestreo}" HorizontalAlignment="Stretch" />
+                    </Grid>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Pestaña: DX Cluster -->
+            <TabItem Header="DX Cluster">
+                <ScrollViewer Padding="16">
+                    <Grid ColumnDefinitions="150,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" HorizontalAlignment="Stretch">
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Servidor:" Classes="etiqueta" />
+                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding DxClusterServidor}" Watermark="dxc.ve7cc.net" />
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Puerto:" Classes="etiqueta" />
+                        <NumericUpDown Grid.Row="1" Grid.Column="1" Value="{Binding DxClusterPuerto}" Minimum="1" Maximum="65535" />
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Indicativo:" Classes="etiqueta" />
+                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding DxClusterIndicativo}" Watermark="Tu indicativo" />
+
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Timeout (ms):" Classes="etiqueta" />
+                        <NumericUpDown Grid.Row="3" Grid.Column="1" Value="{Binding DxClusterTimeoutMs}" Minimum="1000" Maximum="60000" Increment="1000" />
+
+                        <TextBlock Grid.Row="4" Grid.Column="0" Text="Reconexión (ms):" Classes="etiqueta" />
+                        <NumericUpDown Grid.Row="4" Grid.Column="1" Value="{Binding DxClusterRetrasoReconexionMs}" Minimum="1000" Maximum="60000" Increment="1000" />
+
+                        <TextBlock Grid.Row="5" Grid.Column="0" Text="Max reintentos:" Classes="etiqueta" />
+                        <NumericUpDown Grid.Row="5" Grid.Column="1" Value="{Binding DxClusterMaxIntentosReconexion}" Minimum="0" Maximum="100" />
+                    </Grid>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Pestaña: General -->
+            <TabItem Header="General">
+                <ScrollViewer Padding="16">
+                    <StackPanel Spacing="8">
+                        <Grid ColumnDefinitions="150,*" RowDefinitions="Auto,Auto">
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Ruta BD:" Classes="etiqueta" />
+                            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding RutaBaseDatos}" Watermark="Ruta de la base de datos" />
+
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Idioma:" Classes="etiqueta" />
+                            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding IdiomaInterfaz}" Watermark="es" />
+                        </Grid>
+                        <CheckBox Content="Iniciar minimizado" IsChecked="{Binding IniciarMinimizado}" />
+                        <CheckBox Content="Mostrar notificaciones" IsChecked="{Binding MostrarNotificaciones}" />
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</Window>

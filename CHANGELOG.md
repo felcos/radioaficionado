@@ -1,12 +1,88 @@
 # Changelog — RadioAficionado
 
+## [0.7.0] — 2026-03-23 — Motor de Contests + POTA/SOTA + PSK Reporter + Configuracion
+
+### feat: Motor de Contests (Dominio/Contests)
+- MotorContest: evaluacion completa de QSOs en contexto de contest
+- ReglaContest, ConfiguracionContest, ResultadoContest
+- TipoContest, TipoIntercambio, MetodoMultiplicador, Intercambio
+- Archivos: Dominio/Contests/*.cs
+
+### feat: GeneradorCabrillo (Infraestructura/Contests)
+- Generador de logs en formato Cabrillo para envio a contests
+- Archivos: Infraestructura/Contests/GeneradorCabrillo.cs
+
+### feat: Activaciones POTA/SOTA (Dominio + Infraestructura)
+- Entidad Activacion (Dominio/Activaciones/Activacion.cs)
+- Objetos de valor: ReferenciaPota, ReferenciaSota, EstadoActivacion, TipoActivacion
+- Interfaces: IRepositorioActivaciones, IServicioActivaciones
+- Implementacion: ServicioActivaciones (Infraestructura/Activaciones/)
+- Archivos: Dominio/Activaciones/*, ObjetosDeValor/ReferenciaPota.cs, ReferenciaSota.cs, EstadoActivacion.cs, TipoActivacion.cs
+
+### feat: PSK Reporter (Dominio + Infraestructura)
+- Interfaz IPskReporter en Dominio/Interfaces
+- ClientePskReporter en Infraestructura/PskReporter/
+- Archivos: Dominio/Interfaces/IPskReporter.cs, Infraestructura/PskReporter/ClientePskReporter.cs
+
+### feat: Configuracion persistente (Dominio + Infraestructura)
+- Modelos: ConfiguracionCompleta, ConfiguracionEstacion, ConfiguracionAudio, ConfiguracionGeneral
+- IServicioConfiguracion en Dominio/Interfaces
+- ServicioConfiguracionJson en Infraestructura/Configuracion/
+- Archivos: Dominio/Configuracion/*.cs, Infraestructura/Configuracion/ServicioConfiguracionJson.cs
+
+### test: 321 tests (161 Dominio + 131 Infraestructura + 29 Aplicacion)
+- MotorContestTests: tests del motor de contests (Dominio.Tests/Contests/)
+- ReferenciaPotaTests: validacion de referencias POTA (Dominio.Tests/Activaciones/)
+- GeneradorCabrilloTests: tests del generador Cabrillo (Infraestructura.Tests/Contests/)
+- ClientePskReporterTests: tests del cliente PSK Reporter (Infraestructura.Tests/PskReporter/)
+
+## [0.6.0] — 2026-03-23 — Logbook + DX Cluster + Compliance + ADIF
+
+### feat: ADIF parser/generador (Infraestructura/Adif)
+- RegistroAdif: modelo de registro ADIF con campos tipados
+- ParserAdif: parser completo de archivos ADIF (.adi)
+- GeneradorAdif: generador de archivos ADIF con header
+- ConvertidorAdifQso: conversion bidireccional entre RegistroAdif y Qso
+- Archivos: Infraestructura/Adif/*.cs
+
+### feat: Logbook UI (Escritorio)
+- PanelLogbookViewModel: DataGrid paginado, filtros, import/export ADIF
+- PanelLogbook.axaml: vista con DataGrid, controles de paginacion y filtros
+- FiltroQso: objeto de valor para filtrado de QSOs
+- IRepositorioQso ampliado con paginacion (ContarAsync, ObtenerPaginadoAsync)
+- Archivos: Escritorio/ViewModels/PanelLogbookViewModel.cs, Escritorio/Vistas/PanelLogbook.axaml*
+
+### feat: DX Cluster (Dominio + Infraestructura + Escritorio)
+- IDxCluster: interfaz en Dominio/Interfaces
+- ClienteDxCluster: cliente TCP/Telnet en Infraestructura/DxCluster
+- PanelDxClusterViewModel: ViewModel con filtros, spots en tiempo real
+- PanelDxCluster.axaml: vista con DataGrid de spots
+- Archivos: Dominio/Interfaces/IDxCluster.cs, Infraestructura/DxCluster/ClienteDxCluster.cs, Escritorio/ViewModels/PanelDxClusterViewModel.cs, Escritorio/Vistas/PanelDxCluster.axaml*
+
+### feat: ServicioCompliance regulatorio (Infraestructura/Compliance)
+- PlanDeBandaItu: planes de banda IARU para 3 regiones
+- ServicioCompliance: verificacion de frecuencia/modo contra plan de banda
+- Archivos: Dominio/Compliance/PlanDeBandaItu.cs, Infraestructura/Compliance/ServicioCompliance.cs
+
+### feat: ViewModels conectados a DI real (Escritorio)
+- PanelRigViewModel: polling real al rig con timer
+- PanelRegistroQsoViewModel: registro de QSOs via MediatR
+- VentanaPrincipalViewModel: navegacion entre paneles
+- Archivos: Escritorio/ViewModels/*.cs
+
+### test: Tests ADIF + Compliance + DX Cluster + Aplicacion
+- ConvertidorAdifQsoTests, GeneradorAdifTests, ParserAdifTests (Infraestructura.Tests/Adif/)
+- ServicioComplianceTests (Infraestructura.Tests/Compliance/)
+- ClienteDxClusterTests (Infraestructura.Tests/DxCluster/)
+- RegistrarQsoHandlerTests, RegistrarQsoValidadorTests (Aplicacion.Tests/Qsos/)
+
 ## [0.5.0] — 2026-03-23 — ControlWaterfall con SkiaSharp
 
 ### feat: ControlWaterfall (Escritorio/Controles)
-- Control Avalonia custom con renderizado SkiaSharp vía ICustomDrawOperation
+- Control Avalonia custom con renderizado SkiaSharp via ICustomDrawOperation
 - SKBitmap interno con scroll vertical (unsafe Buffer.MemoryCopy)
 - Paleta de 256 colores precalculada: negro → azul → verde → amarillo → rojo
-- Método AgregarLinea(LineaEspectro) thread-safe (~25 FPS)
+- Metodo AgregarLinea(LineaEspectro) thread-safe (~25 FPS)
 - Propiedades: AnchoFft, DbMinimo, DbMaximo
 - Reemplazado placeholder en VentanaPrincipal.axaml
 - Archivos: Controles/ControlWaterfall.cs, Vistas/VentanaPrincipal.axaml
@@ -15,8 +91,8 @@
 
 ### test: 201 tests (161 Dominio + 40 Infraestructura)
 - TransformadaCooleyTukeyTests: 10 tests (seno puro, silencio, tamaños, dispose)
-- ProcesadorEspectroTests: 10 tests (PCM, bloques, solapamiento, validación)
-- VentanasDspTests: 10 tests (Hann, Hamming, Blackman-Harris extremos/centro/simetría)
+- ProcesadorEspectroTests: 10 tests (PCM, bloques, solapamiento, validacion)
+- VentanasDspTests: 10 tests (Hann, Hamming, Blackman-Harris extremos/centro/simetria)
 - MapeadorModosTests: 30 tests (29 modos rigctld, S-meter dBm→S, VFO)
 
 ### feat: UI escritorio completa
@@ -28,28 +104,28 @@
 
 ### feat: ClienteRigctld (Nativo.Rig)
 - Cliente TCP a rigctld con polling 500ms, SemaphoreSlim thread-safe
-- MapeadorModos: conversión bidireccional rigctld ↔ ModoOperacion/SubModoOperacion
-- S-meter: conversión dBm → unidades S
-- ConfiguracionRig: host, puerto, intervalo, potencia máxima
+- MapeadorModos: conversion bidireccional rigctld ↔ ModoOperacion/SubModoOperacion
+- S-meter: conversion dBm → unidades S
+- ConfiguracionRig: host, puerto, intervalo, potencia maxima
 
 ### feat: TransformadaCooleyTukey (Nativo.Dsp)
 - FFT managed radix-2 DIT con twiddle factors pre-computados
 - ITransformadaFourier: interfaz para swap futuro a FFTW3 nativa
-- ProcesadorEspectro: PCM 16-bit → LineaEspectro (magnitudes dB, resolución)
+- ProcesadorEspectro: PCM 16-bit → LineaEspectro (magnitudes dB, resolucion)
 - VentanasDsp: Hann, Hamming, Blackman-Harris
 
 ### feat: PipelineAudioNAudio (Nativo.Audio)
-- Captura/transmisión con NAudio WaveInEvent/WaveOutEvent
-- Pipeline pub/sub para múltiples consumidores simultáneos
-- Enumeración de dispositivos de entrada/salida
+- Captura/transmision con NAudio WaveInEvent/WaveOutEvent
+- Pipeline pub/sub para multiples consumidores simultaneos
+- Enumeracion de dispositivos de entrada/salida
 
 ### feat: ClienteRotctld (Nativo.Rotador)
 - Cliente TCP a rotctld con polling 1s
-- Soporte AZ/EL, detección de cambio por umbral
+- Soporte AZ/EL, deteccion de cambio por umbral
 
 ## [0.1.0] — 2026-03-22 — Fase 0: Cimientos
 
-### feat: Estructura de solución completa (14 proyectos + 5 test)
+### feat: Estructura de solucion completa (14 proyectos + 5 test)
 - Clean Architecture compartida entre escritorio y web
 - Proyectos: Compartido, Dominio, Aplicacion, Infraestructura (+Sqlite, +Postgres), Nativo.Dsp, Nativo.ModosDigitales, Nativo.Audio, Nativo.Rig, Nativo.Rotador, IA, Escritorio, Web
 
