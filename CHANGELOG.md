@@ -1,5 +1,38 @@
 # Changelog — RadioAficionado
 
+## [1.3.0] — 2026-03-23 — CW Decoder + APRS + Satelites + QSL Generator
+
+### feat: Decodificador CW (Nativo.ModosDigitales/Cw)
+- DecodificadorCw: decodificacion de Morse a texto usando filtro Goertzel
+- FiltroGoertzel: deteccion de tono a frecuencia especifica (alternativa liviana a FFT)
+- TablaMorse: tabla completa de simbolos Morse internacionales
+- ConfiguracionCw: velocidad WPM, frecuencia de tono, umbral de deteccion
+- Archivos: Nativo.ModosDigitales/Cw/DecodificadorCw.cs, FiltroGoertzel.cs, TablaMorse.cs, ConfiguracionCw.cs
+
+### feat: APRS — Automatic Packet Reporting System (Dominio + Infraestructura)
+- Dominio/Aprs: PaqueteAprs, PosicionAprs, MensajeAprs, ObjetoAprs, TipoPaqueteAprs (enum), ConfiguracionAprs
+- IServicioAprs: interfaz en Dominio/Interfaces
+- ClienteAprsIs: cliente TCP al servidor APRS-IS (Infraestructura/Aprs)
+- ParserAprs: parser de paquetes APRS en formato AX.25/TCP
+- Archivos: Dominio/Aprs/*.cs, Dominio/Interfaces/IServicioAprs.cs, Infraestructura/Aprs/ClienteAprsIs.cs, Infraestructura/Aprs/ParserAprs.cs
+
+### feat: Satelites amateur (Dominio + Infraestructura + Escritorio)
+- Dominio/Satelites: SateliteAmateur, TransponderSatelite, PasoSatelite, PosicionSatelite
+- IServicioSatelites: interfaz en Dominio/Interfaces
+- Infraestructura/Satelites: CatalogoSatelites (~30 satelites amateur), CalculadorOrbital (prediccion de pasos), Tle (parser Two-Line Elements), ServicioSatelites
+- PanelSatelitesViewModel: prediccion de pasos, tracking en tiempo real
+- Archivos: Dominio/Satelites/*.cs, Infraestructura/Satelites/*.cs, Escritorio/ViewModels/PanelSatelitesViewModel.cs
+
+### feat: Generador de tarjetas QSL (Dominio + Infraestructura)
+- Dominio/Qsl: PlantillaQsl, DatosQsl, FormatoExportacion (enum: PNG, PDF, SVG)
+- IGeneradorQsl: interfaz en Dominio/Interfaces
+- GeneradorQslSkia: generador de tarjetas QSL con SkiaSharp (Infraestructura/Qsl)
+- Archivos: Dominio/Qsl/*.cs, Dominio/Interfaces/IGeneradorQsl.cs, Infraestructura/Qsl/GeneradorQslSkia.cs
+
+### test: 724 tests (308 Dominio + 344 Infraestructura + 31 Web + 29 Aplicacion + 12 Escritorio)
+- Nuevos: FiltroGoertzelTests, DecodificadorCwTests, ParserAprsTests, CatalogoSatelitesTests, CalculadorOrbitalTests, GeneradorQslSkiaTests
+- 0 fallos, 0 omitidos
+
 ## [1.2.0] — 2026-03-23 — Identity + API REST + Sincronizacion + Mapa + Foro + Estadisticas + Tests completos
 
 ### feat: API REST para sincronizacion escritorio-web (Web/Api)

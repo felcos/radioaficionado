@@ -1,0 +1,196 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:RadioAficionado.Escritorio.ViewModels"
+             x:Class="RadioAficionado.Escritorio.Vistas.PanelSatelites"
+             x:DataType="vm:PanelSatelitesViewModel">
+
+    <Border Background="#16213e" CornerRadius="4" Padding="8">
+        <Grid ColumnDefinitions="300,*">
+            <!-- Panel izquierdo: Lista de satélites y transponders -->
+            <DockPanel Grid.Column="0" Margin="0,0,6,0">
+                <!-- Título -->
+                <TextBlock DockPanel.Dock="Top" Text="Catálogo de Satélites"
+                           Foreground="White" FontWeight="Bold" FontSize="14" Margin="0,0,0,6" />
+
+                <!-- Transponders del satélite seleccionado -->
+                <Border DockPanel.Dock="Bottom" Background="#0f3460" CornerRadius="4" Padding="6" Margin="0,6,0,0" MinHeight="120">
+                    <DockPanel>
+                        <TextBlock DockPanel.Dock="Top" Text="Transponders" Foreground="#e94560" FontWeight="Bold" FontSize="12" Margin="0,0,0,4" />
+                        <ListBox ItemsSource="{Binding Transponders}" Background="Transparent" MaxHeight="100">
+                            <ListBox.Styles>
+                                <Style Selector="ListBoxItem">
+                                    <Setter Property="Padding" Value="4,2" />
+                                    <Setter Property="MinHeight" Value="20" />
+                                </Style>
+                            </ListBox.Styles>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate x:DataType="vm:TransponderVm">
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <StackPanel Grid.Column="0" Spacing="1">
+                                            <TextBlock Text="{Binding Nombre}" Foreground="White" FontSize="11" FontWeight="SemiBold" />
+                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                <TextBlock Foreground="#888888" FontSize="10" FontFamily="Consolas">
+                                                    <TextBlock.Text>
+                                                        <MultiBinding StringFormat="↑{0}  ↓{1}">
+                                                            <Binding Path="EnlaceSubida" />
+                                                            <Binding Path="EnlaceBajada" />
+                                                        </MultiBinding>
+                                                    </TextBlock.Text>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </StackPanel>
+                                        <Border Grid.Column="1" Background="#e94560" CornerRadius="3" Padding="4,1" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Modo}" Foreground="White" FontSize="10" />
+                                        </Border>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </DockPanel>
+                </Border>
+
+                <!-- Lista de satélites -->
+                <ListBox ItemsSource="{Binding Satelites}"
+                         SelectedItem="{Binding SateliteSeleccionado}"
+                         Background="Transparent"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListBox.Styles>
+                        <Style Selector="ListBoxItem">
+                            <Setter Property="Padding" Value="6,3" />
+                            <Setter Property="MinHeight" Value="28" />
+                        </Style>
+                        <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter">
+                            <Setter Property="Background" Value="#22e94560" />
+                        </Style>
+                        <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
+                            <Setter Property="Background" Value="#33e94560" />
+                        </Style>
+                    </ListBox.Styles>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate x:DataType="vm:SateliteVm">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <StackPanel Grid.Column="0" Spacing="1">
+                                    <TextBlock Text="{Binding Nombre}" Foreground="#e94560" FontWeight="Bold" FontSize="12" />
+                                    <TextBlock Foreground="#888888" FontSize="10" FontFamily="Consolas">
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0} — NORAD {1}">
+                                                <Binding Path="Indicativo" />
+                                                <Binding Path="NumeroNorad" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </StackPanel>
+                                <Border Grid.Column="1" CornerRadius="3" Padding="4,1" VerticalAlignment="Center"
+                                        IsVisible="{Binding Activo}" Background="#1b5e20">
+                                    <TextBlock Text="Activo" Foreground="#81c784" FontSize="10" />
+                                </Border>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+
+            <!-- Panel derecho: Tracking y pasos -->
+            <DockPanel Grid.Column="1">
+                <!-- Barra superior: Ubicación del observador -->
+                <Border DockPanel.Dock="Top" Background="#0f3460" CornerRadius="4" Padding="8" Margin="0,0,0,6">
+                    <Grid ColumnDefinitions="Auto,100,Auto,100,Auto,Auto" RowDefinitions="Auto">
+                        <TextBlock Grid.Column="0" Text="Lat:" Foreground="#aaaaaa" VerticalAlignment="Center" Margin="0,0,5,0" />
+                        <TextBox Grid.Column="1" Text="{Binding LatitudObservador}"
+                                 FontFamily="Consolas" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="2" Text="  Lon:" Foreground="#aaaaaa" VerticalAlignment="Center" Margin="5,0,5,0" />
+                        <TextBox Grid.Column="3" Text="{Binding LongitudObservador}"
+                                 FontFamily="Consolas" VerticalAlignment="Center" />
+                        <Button Grid.Column="4" Content="Calcular Pasos"
+                                Command="{Binding ActualizarPasosCommand}"
+                                Margin="10,0,0,0" VerticalAlignment="Center" />
+                        <Button Grid.Column="5" Content="Posición Actual"
+                                Command="{Binding ActualizarPosicionCommand}"
+                                Margin="6,0,0,0" VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+
+                <!-- Panel de posición actual -->
+                <Border DockPanel.Dock="Top" Background="#0a0a23" CornerRadius="4" Padding="8" Margin="0,0,0,6">
+                    <Grid ColumnDefinitions="*,*,*,*,*,*" RowDefinitions="Auto,Auto">
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Próximo AOS" Foreground="#888888" FontSize="10" HorizontalAlignment="Center" />
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="Próximo LOS" Foreground="#888888" FontSize="10" HorizontalAlignment="Center" />
+                        <TextBlock Grid.Row="0" Grid.Column="2" Text="Elev. Máx" Foreground="#888888" FontSize="10" HorizontalAlignment="Center" />
+                        <TextBlock Grid.Row="0" Grid.Column="3" Text="Azimut" Foreground="#888888" FontSize="10" HorizontalAlignment="Center" />
+                        <TextBlock Grid.Row="0" Grid.Column="4" Text="Elevación" Foreground="#888888" FontSize="10" HorizontalAlignment="Center" />
+                        <TextBlock Grid.Row="0" Grid.Column="5" Text="Distancia" Foreground="#888888" FontSize="10" HorizontalAlignment="Center" />
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding ProximoAos}"
+                                   Foreground="#00ff88" FontFamily="Consolas" FontSize="13" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,2,0,0" />
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ProximoLos}"
+                                   Foreground="#ffcc00" FontFamily="Consolas" FontSize="13" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,2,0,0" />
+                        <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding ProximoElevacionMaxima}"
+                                   Foreground="#e94560" FontFamily="Consolas" FontSize="13" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,2,0,0" />
+                        <TextBlock Grid.Row="1" Grid.Column="3" Text="{Binding AzimutActual}"
+                                   Foreground="White" FontFamily="Consolas" FontSize="13" HorizontalAlignment="Center" Margin="0,2,0,0" />
+                        <TextBlock Grid.Row="1" Grid.Column="4" Text="{Binding ElevacionActual}"
+                                   Foreground="White" FontFamily="Consolas" FontSize="13" HorizontalAlignment="Center" Margin="0,2,0,0" />
+                        <TextBlock Grid.Row="1" Grid.Column="5" Text="{Binding DistanciaActual}"
+                                   Foreground="White" FontFamily="Consolas" FontSize="13" HorizontalAlignment="Center" Margin="0,2,0,0" />
+                    </Grid>
+                </Border>
+
+                <!-- Barra de estado inferior -->
+                <Border DockPanel.Dock="Bottom" Background="#0a0a23" CornerRadius="2" Padding="6,3" Margin="0,4,0,0">
+                    <TextBlock Text="{Binding TextoEstado}"
+                               Foreground="#888888"
+                               FontSize="11"
+                               FontFamily="Consolas" />
+                </Border>
+
+                <!-- Encabezado de columnas de pasos -->
+                <Border DockPanel.Dock="Top" Background="#0a0a23" CornerRadius="2" Padding="6,4" Margin="0,0,0,2">
+                    <Grid ColumnDefinitions="75,75,65,60,60,60">
+                        <TextBlock Grid.Column="0" Text="AOS" Foreground="#888888" FontWeight="Bold" FontSize="11" FontFamily="Consolas" />
+                        <TextBlock Grid.Column="1" Text="LOS" Foreground="#888888" FontWeight="Bold" FontSize="11" FontFamily="Consolas" />
+                        <TextBlock Grid.Column="2" Text="Elev." Foreground="#e94560" FontWeight="Bold" FontSize="11" FontFamily="Consolas" />
+                        <TextBlock Grid.Column="3" Text="Durac." Foreground="#888888" FontWeight="Bold" FontSize="11" FontFamily="Consolas" />
+                        <TextBlock Grid.Column="4" Text="Az AOS" Foreground="#888888" FontWeight="Bold" FontSize="11" FontFamily="Consolas" />
+                        <TextBlock Grid.Column="5" Text="Az LOS" Foreground="#888888" FontWeight="Bold" FontSize="11" FontFamily="Consolas" />
+                    </Grid>
+                </Border>
+
+                <!-- Lista de pasos predichos -->
+                <ListBox ItemsSource="{Binding PasosPredichos}"
+                         Background="Transparent"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListBox.Styles>
+                        <Style Selector="ListBoxItem">
+                            <Setter Property="Padding" Value="6,2" />
+                            <Setter Property="MinHeight" Value="24" />
+                        </Style>
+                        <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter">
+                            <Setter Property="Background" Value="#22e94560" />
+                        </Style>
+                        <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
+                            <Setter Property="Background" Value="#33e94560" />
+                        </Style>
+                    </ListBox.Styles>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate x:DataType="vm:PasoSateliteVm">
+                            <Grid ColumnDefinitions="75,75,65,60,60,60">
+                                <TextBlock Grid.Column="0" Text="{Binding HoraAos}"
+                                           Foreground="#00ff88" FontFamily="Consolas" FontSize="12" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="1" Text="{Binding HoraLos}"
+                                           Foreground="#ffcc00" FontFamily="Consolas" FontSize="12" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="2" Text="{Binding ElevacionMaxima}"
+                                           Foreground="#e94560" FontWeight="Bold" FontFamily="Consolas" FontSize="12" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="3" Text="{Binding Duracion}"
+                                           Foreground="#aaaaaa" FontFamily="Consolas" FontSize="12" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="4" Text="{Binding AzimutAos}"
+                                           Foreground="#888888" FontFamily="Consolas" FontSize="12" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="5" Text="{Binding AzimutLos}"
+                                           Foreground="#888888" FontFamily="Consolas" FontSize="12" VerticalAlignment="Center" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+        </Grid>
+    </Border>
+</UserControl>

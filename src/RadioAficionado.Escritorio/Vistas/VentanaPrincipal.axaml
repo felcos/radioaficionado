@@ -196,6 +196,16 @@
             <TabItem Header="DXCC">
                 <vistas:PanelDxcc DataContext="{Binding PanelDxcc}" />
             </TabItem>
+
+            <!-- Pestaña 7: Satélites -->
+            <TabItem Header="Satélites">
+                <vistas:PanelSatelites DataContext="{Binding PanelSatelites}" />
+            </TabItem>
+
+            <!-- Pestaña 8: APRS -->
+            <TabItem Header="APRS">
+                <vistas:PanelAprs DataContext="{Binding PanelAprs}" />
+            </TabItem>
         </TabControl>
     </DockPanel>
 </Window>

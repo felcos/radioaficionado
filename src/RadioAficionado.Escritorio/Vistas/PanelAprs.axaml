@@ -1,0 +1,148 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:RadioAficionado.Escritorio.ViewModels"
+             x:Class="RadioAficionado.Escritorio.Vistas.PanelAprs"
+             x:DataType="vm:PanelAprsViewModel">
+
+    <Border Background="#16213e" CornerRadius="4" Padding="8">
+        <DockPanel>
+            <!-- Barra superior: Conexión APRS-IS -->
+            <Border DockPanel.Dock="Top" Background="#0f3460" CornerRadius="4" Padding="8" Margin="0,0,0,6">
+                <Grid RowDefinitions="Auto,Auto,Auto">
+                    <!-- Fila 1: Servidor, Puerto, Botón -->
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="6">
+                        <TextBlock Text="Servidor:" Foreground="#aaaaaa" VerticalAlignment="Center" />
+                        <TextBox Text="{Binding ServidorAprs}"
+                                 Watermark="rotate.aprs2.net"
+                                 MinWidth="200"
+                                 FontFamily="Consolas"
+                                 VerticalAlignment="Center" />
+                        <TextBlock Text="Puerto:" Foreground="#aaaaaa" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        <TextBox Text="{Binding PuertoAprs}"
+                                 MinWidth="60"
+                                 FontFamily="Consolas"
+                                 VerticalAlignment="Center" />
+                        <Button Content="{Binding TextoBotonConexion}"
+                                Command="{Binding AlternarConexionCommand}"
+                                MinWidth="100"
+                                Margin="10,0,0,0"
+                                VerticalAlignment="Center"
+                                HorizontalContentAlignment="Center" />
+                    </StackPanel>
+
+                    <!-- Fila 2: Indicativo, Passcode, Filtro -->
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="6" Margin="0,6,0,0">
+                        <TextBlock Text="Indicativo:" Foreground="#aaaaaa" VerticalAlignment="Center" />
+                        <TextBox Text="{Binding IndicativoPropio}"
+                                 Watermark="TU INDICATIVO"
+                                 MinWidth="120"
+                                 FontFamily="Consolas"
+                                 VerticalAlignment="Center" />
+                        <TextBlock Text="Passcode:" Foreground="#aaaaaa" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        <TextBox Text="{Binding Passcode}"
+                                 MinWidth="70"
+                                 FontFamily="Consolas"
+                                 VerticalAlignment="Center" />
+                        <TextBlock Text="Filtro:" Foreground="#aaaaaa" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        <TextBox Text="{Binding Filtro}"
+                                 Watermark="r/40.41/-3.70/200"
+                                 MinWidth="180"
+                                 FontFamily="Consolas"
+                                 VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <!-- Fila 3: Posición y envío -->
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="6" Margin="0,6,0,0">
+                        <TextBlock Text="Lat:" Foreground="#aaaaaa" VerticalAlignment="Center" />
+                        <TextBox Text="{Binding LatitudObservador}"
+                                 MinWidth="80"
+                                 FontFamily="Consolas"
+                                 VerticalAlignment="Center" />
+                        <TextBlock Text="Lon:" Foreground="#aaaaaa" VerticalAlignment="Center" Margin="6,0,0,0" />
+                        <TextBox Text="{Binding LongitudObservador}"
+                                 MinWidth="80"
+                                 FontFamily="Consolas"
+                                 VerticalAlignment="Center" />
+                        <TextBlock Text="Comentario:" Foreground="#aaaaaa" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        <TextBox Text="{Binding ComentarioPosicion}"
+                                 MinWidth="150"
+                                 VerticalAlignment="Center" />
+                        <Button Content="Enviar Posición"
+                                Command="{Binding EnviarPosicionCommand}"
+                                Margin="10,0,0,0"
+                                VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding TotalPaquetes, StringFormat=Paquetes: {0}}"
+                                   Foreground="#888888"
+                                   VerticalAlignment="Center"
+                                   Margin="10,0,0,0" />
+                        <TextBlock Text="Buscar:" Foreground="#aaaaaa" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        <TextBox Text="{Binding FiltroLocal}"
+                                 Watermark="Filtrar..."
+                                 MinWidth="100"
+                                 FontFamily="Consolas"
+                                 VerticalAlignment="Center" />
+                        <Button Content="Limpiar"
+                                Command="{Binding LimpiarPaquetesCommand}"
+                                VerticalAlignment="Center"
+                                Margin="6,0,0,0" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Barra de estado inferior -->
+            <Border DockPanel.Dock="Bottom" Background="#0a0a23" CornerRadius="2" Padding="6,3" Margin="0,4,0,0">
+                <TextBlock Text="{Binding TextoEstado}"
+                           Foreground="#888888"
+                           FontSize="11"
+                           FontFamily="Consolas" />
+            </Border>
+
+            <!-- Encabezado de columnas -->
+            <Border DockPanel.Dock="Top" Background="#0a0a23" CornerRadius="2" Padding="6,4" Margin="0,0,0,2">
+                <Grid ColumnDefinitions="65,100,80,*,150">
+                    <TextBlock Grid.Column="0" Text="Hora" Foreground="#888888" FontWeight="Bold" FontSize="11" FontFamily="Consolas" />
+                    <TextBlock Grid.Column="1" Text="Origen" Foreground="#e94560" FontWeight="Bold" FontSize="11" FontFamily="Consolas" />
+                    <TextBlock Grid.Column="2" Text="Tipo" Foreground="#888888" FontWeight="Bold" FontSize="11" FontFamily="Consolas" />
+                    <TextBlock Grid.Column="3" Text="Contenido" Foreground="#888888" FontWeight="Bold" FontSize="11" FontFamily="Consolas" />
+                    <TextBlock Grid.Column="4" Text="Ruta" Foreground="#888888" FontWeight="Bold" FontSize="11" FontFamily="Consolas" />
+                </Grid>
+            </Border>
+
+            <!-- Lista de paquetes APRS -->
+            <ListBox ItemsSource="{Binding PaquetesRecibidos}"
+                     Background="Transparent"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListBox.Styles>
+                    <Style Selector="ListBoxItem">
+                        <Setter Property="Padding" Value="6,2" />
+                        <Setter Property="MinHeight" Value="24" />
+                    </Style>
+                    <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter">
+                        <Setter Property="Background" Value="#22e94560" />
+                    </Style>
+                    <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
+                        <Setter Property="Background" Value="#33e94560" />
+                    </Style>
+                </ListBox.Styles>
+                <ListBox.ItemTemplate>
+                    <DataTemplate x:DataType="vm:PaqueteAprsVm">
+                        <Grid ColumnDefinitions="65,100,80,*,150">
+                            <TextBlock Grid.Column="0" Text="{Binding Hora}"
+                                       Foreground="#666666" FontFamily="Consolas" FontSize="12" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="1" Text="{Binding Origen}"
+                                       Foreground="#e94560" FontWeight="Bold" FontFamily="Consolas" FontSize="12" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="2" Text="{Binding Tipo}"
+                                       Foreground="#ffcc00" FontFamily="Consolas" FontSize="12" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="3" Text="{Binding Contenido}"
+                                       Foreground="White" FontFamily="Consolas" FontSize="11" VerticalAlignment="Center"
+                                       TextTrimming="CharacterEllipsis" />
+                            <TextBlock Grid.Column="4" Text="{Binding Ruta}"
+                                       Foreground="#888888" FontFamily="Consolas" FontSize="10" VerticalAlignment="Center"
+                                       TextTrimming="CharacterEllipsis" />
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </DockPanel>
+    </Border>
+</UserControl>

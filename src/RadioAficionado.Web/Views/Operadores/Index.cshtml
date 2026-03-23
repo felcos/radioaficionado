@@ -1,0 +1,201 @@
+@model OperadoresIndexViewModel
+@{
+    ViewData["Title"] = "Operadores";
+}
+
+<h1 class="h3 text-ra-acento mb-4">Directorio de Operadores</h1>
+
+<!-- Búsqueda -->
+<div class="card bg-ra-tarjeta border-ra-borde mb-4">
+    <div class="card-body">
+        <form method="get" asp-controller="Operadores" asp-action="Index">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-9">
+                    <label for="busqueda" class="form-label text-ra-suave small">Buscar por indicativo o nombre</label>
+                    <input type="text" class="form-control bg-ra-input border-ra-borde text-light"
+                           id="busqueda" name="busqueda"
+                           value="@Model.Busqueda"
+                           placeholder="Ej: EA4ABC, Juan..." />
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-ra-acento w-100">Buscar</button>
+                </div>
+                <div class="col-md-1">
+                    @if (!string.IsNullOrWhiteSpace(Model.Busqueda))
+                    {
+                        <a asp-controller="Operadores" asp-action="Index"
+                           class="btn btn-outline-secondary w-100" title="Limpiar búsqueda">
+                            Limpiar
+                        </a>
+                    }
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Información de resultados -->
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <span class="text-ra-suave small">
+        @if (Model.TotalElementos > 0)
+        {
+            @:Mostrando @((Model.PaginaActual - 1) * Model.TamanoPagina + 1)-@Math.Min(Model.PaginaActual * Model.TamanoPagina, Model.TotalElementos)
+            @:de @Model.TotalElementos operadores
+        }
+        else
+        {
+            @:0 operadores encontrados
+        }
+    </span>
+    @if (Model.TotalPaginas > 1)
+    {
+        <span class="text-ra-suave small">
+            Página @Model.PaginaActual de @Model.TotalPaginas
+        </span>
+    }
+</div>
+
+<!-- Grid de operadores -->
+@if (Model.Operadores.Count > 0)
+{
+    <div class="row g-3">
+        @foreach (OperadorResumenViewModel operador in Model.Operadores)
+        {
+            <div class="col-md-6 col-lg-4">
+                <a asp-controller="Operadores" asp-action="Perfil" asp-route-indicativo="@operador.Indicativo"
+                   class="text-decoration-none">
+                    <div class="card bg-ra-tarjeta border-ra-borde h-100 card-hover-ra">
+                        <div class="card-body">
+                            <h5 class="card-title text-ra-acento mb-1">@operador.Indicativo</h5>
+                            <p class="text-light mb-2">@operador.Nombre</p>
+                            <div class="d-flex justify-content-between text-ra-suave small">
+                                <span>
+                                    @if (!string.IsNullOrWhiteSpace(operador.Localizador))
+                                    {
+                                        @:Loc: @operador.Localizador
+                                    }
+                                    else
+                                    {
+                                        @:Loc: —
+                                    }
+                                </span>
+                                <span>@operador.TotalQsos QSOs</span>
+                            </div>
+                            <div class="text-ra-suave small mt-1">
+                                Miembro desde @operador.FechaRegistro.ToString("MMM yyyy", new System.Globalization.CultureInfo("es-ES"))
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+
+    <!-- Paginación -->
+    @if (Model.TotalPaginas > 1)
+    {
+        <nav aria-label="Paginación de operadores" class="mt-4">
+            <ul class="pagination justify-content-center">
+                @if (Model.PaginaActual > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link bg-ra-tarjeta border-ra-borde text-ra-acento"
+                           asp-controller="Operadores" asp-action="Index"
+                           asp-route-pagina="@(Model.PaginaActual - 1)"
+                           asp-route-busqueda="@Model.Busqueda">
+                            Anterior
+                        </a>
+                    </li>
+                }
+
+                @{
+                    int inicioRango = Math.Max(1, Model.PaginaActual - 2);
+                    int finRango = Math.Min(Model.TotalPaginas, Model.PaginaActual + 2);
+                }
+
+                @if (inicioRango > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link bg-ra-tarjeta border-ra-borde text-light"
+                           asp-controller="Operadores" asp-action="Index"
+                           asp-route-pagina="1"
+                           asp-route-busqueda="@Model.Busqueda">
+                            1
+                        </a>
+                    </li>
+                    @if (inicioRango > 2)
+                    {
+                        <li class="page-item disabled">
+                            <span class="page-link bg-ra-tarjeta border-ra-borde text-ra-suave">...</span>
+                        </li>
+                    }
+                }
+
+                @for (int i = inicioRango; i <= finRango; i++)
+                {
+                    bool esActual = i == Model.PaginaActual;
+                    <li class="page-item @(esActual ? "active" : "")">
+                        @if (esActual)
+                        {
+                            <span class="page-link bg-ra-acento-solido border-ra-acento text-dark fw-bold">@i</span>
+                        }
+                        else
+                        {
+                            <a class="page-link bg-ra-tarjeta border-ra-borde text-light"
+                               asp-controller="Operadores" asp-action="Index"
+                               asp-route-pagina="@i"
+                               asp-route-busqueda="@Model.Busqueda">
+                                @i
+                            </a>
+                        }
+                    </li>
+                }
+
+                @if (finRango < Model.TotalPaginas)
+                {
+                    @if (finRango < Model.TotalPaginas - 1)
+                    {
+                        <li class="page-item disabled">
+                            <span class="page-link bg-ra-tarjeta border-ra-borde text-ra-suave">...</span>
+                        </li>
+                    }
+                    <li class="page-item">
+                        <a class="page-link bg-ra-tarjeta border-ra-borde text-light"
+                           asp-controller="Operadores" asp-action="Index"
+                           asp-route-pagina="@Model.TotalPaginas"
+                           asp-route-busqueda="@Model.Busqueda">
+                            @Model.TotalPaginas
+                        </a>
+                    </li>
+                }
+
+                @if (Model.PaginaActual < Model.TotalPaginas)
+                {
+                    <li class="page-item">
+                        <a class="page-link bg-ra-tarjeta border-ra-borde text-ra-acento"
+                           asp-controller="Operadores" asp-action="Index"
+                           asp-route-pagina="@(Model.PaginaActual + 1)"
+                           asp-route-busqueda="@Model.Busqueda">
+                            Siguiente
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+}
+else
+{
+    <div class="card bg-ra-tarjeta border-ra-borde p-5 text-center">
+        <p class="text-ra-suave mb-0">
+            @if (!string.IsNullOrWhiteSpace(Model.Busqueda))
+            {
+                @:No se encontraron operadores que coincidan con "@Model.Busqueda".
+            }
+            else
+            {
+                @:No hay operadores registrados aún.
+            }
+        </p>
+    </div>
+}

@@ -54,6 +54,16 @@ public partial class VentanaPrincipalViewModel : ViewModelBase
     public PanelDxccViewModel PanelDxcc { get; }
 
     /// <summary>
+    /// Panel de satélites amateur con tracking y predicción de pasos.
+    /// </summary>
+    public PanelSatelitesViewModel PanelSatelites { get; }
+
+    /// <summary>
+    /// Panel de APRS para recepción de paquetes en tiempo real.
+    /// </summary>
+    public PanelAprsViewModel PanelAprs { get; }
+
+    /// <summary>
     /// Estado de conexión con el radio.
     /// </summary>
     [ObservableProperty]
@@ -66,7 +76,7 @@ public partial class VentanaPrincipalViewModel : ViewModelBase
     private string _titulo = "RadioAficionado v0.1";
 
     /// <summary>
-    /// Pestaña activa: 0 = Operación, 1 = Logbook, 2 = DX Cluster, 3 = Contest, 4 = Activaciones, 5 = Propagación, 6 = DXCC.
+    /// Pestaña activa: 0 = Operación, 1 = Logbook, 2 = DX Cluster, 3 = Contest, 4 = Activaciones, 5 = Propagación, 6 = DXCC, 7 = Satélites, 8 = APRS.
     /// </summary>
     [ObservableProperty]
     private int _pestanaActiva;
@@ -83,6 +93,8 @@ public partial class VentanaPrincipalViewModel : ViewModelBase
     /// <param name="panelActivaciones">ViewModel del panel de activaciones POTA/SOTA.</param>
     /// <param name="panelPropagacion">ViewModel del panel de propagación HF.</param>
     /// <param name="panelDxcc">ViewModel del panel de tracking DXCC.</param>
+    /// <param name="panelSatelites">ViewModel del panel de satélites amateur.</param>
+    /// <param name="panelAprs">ViewModel del panel de APRS.</param>
     public VentanaPrincipalViewModel(
         PanelRigViewModel panelRig,
         PanelMensajesViewModel panelMensajes,
@@ -92,7 +104,9 @@ public partial class VentanaPrincipalViewModel : ViewModelBase
         PanelContestViewModel panelContest,
         PanelActivacionesViewModel panelActivaciones,
         PanelPropagacionViewModel panelPropagacion,
-        PanelDxccViewModel panelDxcc)
+        PanelDxccViewModel panelDxcc,
+        PanelSatelitesViewModel panelSatelites,
+        PanelAprsViewModel panelAprs)
     {
         PanelRig = panelRig ?? throw new ArgumentNullException(nameof(panelRig));
         PanelMensajes = panelMensajes ?? throw new ArgumentNullException(nameof(panelMensajes));
@@ -103,5 +117,7 @@ public partial class VentanaPrincipalViewModel : ViewModelBase
         PanelActivaciones = panelActivaciones ?? throw new ArgumentNullException(nameof(panelActivaciones));
         PanelPropagacion = panelPropagacion ?? throw new ArgumentNullException(nameof(panelPropagacion));
         PanelDxcc = panelDxcc ?? throw new ArgumentNullException(nameof(panelDxcc));
+        PanelSatelites = panelSatelites ?? throw new ArgumentNullException(nameof(panelSatelites));
+        PanelAprs = panelAprs ?? throw new ArgumentNullException(nameof(panelAprs));
     }
 }

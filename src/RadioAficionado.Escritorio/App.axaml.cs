@@ -124,6 +124,8 @@ public class App : Application
         servicios.AddTransient<PanelActivacionesViewModel>();
         servicios.AddTransient<PanelPropagacionViewModel>();
         servicios.AddTransient<PanelDxccViewModel>();
+        servicios.AddTransient<PanelSatelitesViewModel>();
+        servicios.AddTransient<PanelAprsViewModel>();
         servicios.AddTransient<ConfiguracionViewModel>();
     }
 }

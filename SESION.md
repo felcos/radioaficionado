@@ -45,10 +45,23 @@
 - IServicioSincronizacion: sincronizacion bidireccional escritorio ↔ API web
 - ServicioSincronizacion: cliente HTTP con envio/recepcion de QSOs
 - EstadoSincronizacionViewModel: indicador de estado en escritorio
-- Tests: ServicioSincronizacionTests, QsoApiControllerTests, InicioControllerTests, LogbookControllerTests, PanelLogbookViewModelTests
+
+#### Fase 4 — CW Decoder + APRS + Satelites + QSL (2026-03-23)
+- DecodificadorCw: decodificacion Morse a texto con FiltroGoertzel y TablaMorse
+- ConfiguracionCw: velocidad WPM, frecuencia de tono, umbral
+- APRS completo: PaqueteAprs, PosicionAprs, MensajeAprs, ObjetoAprs, TipoPaqueteAprs, ConfiguracionAprs
+- ClienteAprsIs: cliente TCP al servidor APRS-IS
+- ParserAprs: parser de paquetes APRS
+- Satelites amateur: SateliteAmateur, TransponderSatelite, PasoSatelite, PosicionSatelite
+- CatalogoSatelites (~30 satelites), CalculadorOrbital (prediccion de pasos con TLE)
+- Tle: parser de Two-Line Elements, ServicioSatelites
+- PanelSatelitesViewModel: prediccion de pasos y tracking en tiempo real
+- Generador QSL: PlantillaQsl, DatosQsl, FormatoExportacion (PNG/PDF/SVG)
+- GeneradorQslSkia: generacion de tarjetas QSL con SkiaSharp
+- Tests nuevos: FiltroGoertzelTests, DecodificadorCwTests, ParserAprsTests, CatalogoSatelitesTests, CalculadorOrbitalTests, GeneradorQslSkiaTests
 
 ### Estado de tests
-- **608 tests totales** (308 Dominio + 228 Infraestructura + 31 Web + 29 Aplicacion + 12 Escritorio)
+- **724 tests totales** (308 Dominio + 344 Infraestructura + 31 Web + 29 Aplicacion + 12 Escritorio)
 - Todos pasando, 0 fallos, 0 omitidos
 - 5 proyectos de test cubriendo todas las capas
 
@@ -58,6 +71,8 @@
 - Implementar decodificador FT8 con ft8_lib (P/Invoke)
 - Swap FFT managed → FFTW3 nativa cuando haya binarios
 - Conectar DI completa: ProcesadorEspectro → PipelineAudio → ControlWaterfall para waterfall en vivo
+- Vista de Panel de Satelites (.axaml) en escritorio
+- Mas modos digitales: FT4, RTTY, PSK31, JS8Call
 
 ### Problemas encontrados
 - Web: errores de compilacion menores en namespaces de ViewModels — no afectan tests

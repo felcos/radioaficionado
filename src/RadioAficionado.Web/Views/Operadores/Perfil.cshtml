@@ -1,0 +1,170 @@
+@model PerfilPublicoViewModel
+@{
+    ViewData["Title"] = $"{Model.Indicativo} — Perfil";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+
+        <!-- Cabecera del perfil -->
+        <div class="card bg-ra-tarjeta border-ra-borde mb-4">
+            <div class="card-body p-4">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1 class="display-5 fw-bold text-ra-acento mb-1">@Model.Indicativo</h1>
+                        <h2 class="h4 text-light mb-2">@Model.Nombre</h2>
+                        @if (!string.IsNullOrWhiteSpace(Model.Localizador))
+                        {
+                            <span class="badge bg-secondary fs-6 me-2">@Model.Localizador</span>
+                        }
+                        @if (Model.RegionItu.HasValue)
+                        {
+                            <span class="badge bg-secondary fs-6">
+                                ITU Región @Model.RegionItu
+                                @(Model.RegionItu switch
+                                {
+                                    1 => "— Europa, África, Oriente Medio",
+                                    2 => "— América",
+                                    3 => "— Asia, Oceanía",
+                                    _ => ""
+                                })
+                            </span>
+                        }
+                        <div class="text-ra-suave mt-2">
+                            Miembro desde @Model.FechaRegistro.ToString("d 'de' MMMM 'de' yyyy", new System.Globalization.CultureInfo("es-ES"))
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                        <div class="d-flex flex-column align-items-md-end gap-2">
+                            <div class="text-center text-md-end">
+                                <span class="display-6 fw-bold text-ra-acento">@Model.TotalQsos</span>
+                                <br />
+                                <span class="text-ra-suave small">QSOs totales</span>
+                            </div>
+                            <div class="text-center text-md-end">
+                                <span class="h4 fw-bold text-light">@Model.IndicativosUnicos</span>
+                                <br />
+                                <span class="text-ra-suave small">Indicativos únicos</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Biografía -->
+            <div class="col-md-8">
+                <div class="card bg-ra-tarjeta border-ra-borde h-100">
+                    <div class="card-header border-ra-borde">
+                        <h3 class="h5 mb-0 text-ra-acento">Biografía</h3>
+                    </div>
+                    <div class="card-body">
+                        @if (!string.IsNullOrWhiteSpace(Model.Biografia))
+                        {
+                            <p class="text-light mb-0">@Model.Biografia</p>
+                        }
+                        else
+                        {
+                            <p class="text-ra-suave fst-italic mb-0">Este operador no ha añadido una biografía todavía.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bandas favoritas -->
+            <div class="col-md-4">
+                <div class="card bg-ra-tarjeta border-ra-borde h-100">
+                    <div class="card-header border-ra-borde">
+                        <h3 class="h5 mb-0 text-ra-acento">Bandas favoritas</h3>
+                    </div>
+                    <div class="card-body">
+                        @if (Model.BandasFavoritas.Count > 0)
+                        {
+                            <ul class="list-unstyled mb-0">
+                                @foreach (BandaFavoritaViewModel banda in Model.BandasFavoritas)
+                                {
+                                    int porcentaje = Model.TotalQsos > 0
+                                        ? (int)Math.Round((double)banda.CantidadQsos / Model.TotalQsos * 100)
+                                        : 0;
+                                    <li class="mb-3">
+                                        <div class="d-flex justify-content-between text-light small mb-1">
+                                            <span>@banda.Nombre</span>
+                                            <span>@banda.CantidadQsos QSOs (@porcentaje%)</span>
+                                        </div>
+                                        <div class="progress" style="height: 6px;">
+                                            <div class="progress-bar bg-ra-acento-solido" role="progressbar"
+                                                 style="width: @porcentaje%"
+                                                 aria-valuenow="@porcentaje" aria-valuemin="0" aria-valuemax="100">
+                                            </div>
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <p class="text-ra-suave fst-italic mb-0">Sin QSOs registrados.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Últimos QSOs -->
+        <div class="card bg-ra-tarjeta border-ra-borde mt-4">
+            <div class="card-header border-ra-borde">
+                <h3 class="h5 mb-0 text-ra-acento">Últimos contactos</h3>
+            </div>
+            <div class="card-body">
+                @if (Model.UltimosQsos.Count > 0)
+                {
+                    <div class="table-responsive">
+                        <table class="table table-dark table-striped table-hover tabla-ra mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Fecha/Hora (UTC)</th>
+                                    <th>Indicativo contacto</th>
+                                    <th>Frecuencia</th>
+                                    <th>Banda</th>
+                                    <th>Modo</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (QsoResumenViewModel qso in Model.UltimosQsos)
+                                {
+                                    <tr>
+                                        <td>@qso.FechaHora.ToString("dd/MM/yyyy HH:mm")</td>
+                                        <td class="fw-bold text-ra-acento">@qso.IndicativoContacto</td>
+                                        <td>@qso.Frecuencia</td>
+                                        <td>@(qso.Banda ?? "—")</td>
+                                        <td><span class="badge bg-ra-modo">@qso.Modo</span></td>
+                                        <td>
+                                            <a asp-controller="Logbook" asp-action="Detalle" asp-route-id="@qso.Id"
+                                               class="btn btn-sm btn-outline-ra-acento">
+                                                Ver
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-ra-suave fst-italic mb-0">Este operador no tiene contactos registrados.</p>
+                }
+            </div>
+        </div>
+
+        <!-- Enlace para volver -->
+        <div class="mt-4">
+            <a asp-controller="Operadores" asp-action="Index" class="btn btn-outline-secondary">
+                Volver al directorio
+            </a>
+        </div>
+
+    </div>
+</div>
