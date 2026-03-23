@@ -4,6 +4,14 @@
 
 ### Lo que se hizo
 
+#### Tracking DXCC y Premios (2026-03-23)
+- EntidadDxcc (record inmutable) con número, nombre, prefijo, continente, zonas CQ/ITU, coordenadas, flag eliminada
+- CatalogoDxcc estático con ~170 entidades + prefijos alternativos para los países más activos
+- ConfirmacionQso + TipoConfirmacion para cruzar con QSOs
+- EstadisticasDxcc: trabajadas, confirmadas, por banda, por modo, faltantes, resumen completo
+- 27 tests nuevos (15 catálogo + 12 estadísticas), todos pasando
+- Build limpio, 0 errores, 0 warnings
+
 #### Fase 2 completada — Logbook, ADIF, DX Cluster, Compliance (2026-03-23)
 - ADIF parser/generador completo: RegistroAdif, ParserAdif, GeneradorAdif, ConvertidorAdifQso
 - Logbook UI: PanelLogbookViewModel con DataGrid paginado, filtros, import/export ADIF
@@ -27,6 +35,15 @@
 - EstadoActivacion, TipoActivacion
 - ReferenciaPotaTests
 
+#### Panel de Activaciones UI (2026-03-23)
+- PanelActivacionesViewModel con CommunityToolkit.Mvvm
+- ActivacionVm para historial, cronometro de activacion en curso
+- Comandos: CrearActivacion, IniciarActivacion, CompletarActivacion, CancelarActivacion
+- PanelActivaciones.axaml con tema oscuro, compiled bindings
+- RepositorioActivaciones (EF Core) con ObtenerTodasAsync
+- CancelarAsync y ObtenerTodasAsync añadidos a IServicioActivaciones/ServicioActivaciones
+- Registrado en DI, integrado como pestaña "Activaciones" en VentanaPrincipal
+
 #### PSK Reporter (2026-03-23)
 - IPskReporter en dominio, ClientePskReporter en infraestructura
 - ClientePskReporterTests
@@ -47,7 +64,7 @@
 - ViewModels MVVM: PanelRig, PanelMensajes, PanelRegistroQso
 
 ### Estado de tests
-- 321 tests totales (161 Dominio + 131 Infraestructura + 29 Aplicacion)
+- 550 tests totales (308 Dominio + 213 Infraestructura + 29 Aplicacion)
 - Todos pasando, 0 fallos, build limpio
 
 ### Pendiente

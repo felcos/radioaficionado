@@ -34,6 +34,16 @@ public partial class VentanaPrincipalViewModel : ViewModelBase
     public PanelDxClusterViewModel PanelDxCluster { get; }
 
     /// <summary>
+    /// Panel de concursos de radioaficionado.
+    /// </summary>
+    public PanelContestViewModel PanelContest { get; }
+
+    /// <summary>
+    /// Panel de activaciones POTA/SOTA/WWFF/IOTA.
+    /// </summary>
+    public PanelActivacionesViewModel PanelActivaciones { get; }
+
+    /// <summary>
     /// Estado de conexión con el radio.
     /// </summary>
     [ObservableProperty]
@@ -46,7 +56,7 @@ public partial class VentanaPrincipalViewModel : ViewModelBase
     private string _titulo = "RadioAficionado v0.1";
 
     /// <summary>
-    /// Pestaña activa: 0 = Operación, 1 = Logbook, 2 = DX Cluster.
+    /// Pestaña activa: 0 = Operación, 1 = Logbook, 2 = DX Cluster, 3 = Contest, 4 = Activaciones.
     /// </summary>
     [ObservableProperty]
     private int _pestanaActiva;
@@ -59,17 +69,23 @@ public partial class VentanaPrincipalViewModel : ViewModelBase
     /// <param name="panelRegistroQso">ViewModel del panel de registro de QSO.</param>
     /// <param name="panelLogbook">ViewModel del panel de logbook.</param>
     /// <param name="panelDxCluster">ViewModel del panel de DX Cluster.</param>
+    /// <param name="panelContest">ViewModel del panel de concursos.</param>
+    /// <param name="panelActivaciones">ViewModel del panel de activaciones POTA/SOTA.</param>
     public VentanaPrincipalViewModel(
         PanelRigViewModel panelRig,
         PanelMensajesViewModel panelMensajes,
         PanelRegistroQsoViewModel panelRegistroQso,
         PanelLogbookViewModel panelLogbook,
-        PanelDxClusterViewModel panelDxCluster)
+        PanelDxClusterViewModel panelDxCluster,
+        PanelContestViewModel panelContest,
+        PanelActivacionesViewModel panelActivaciones)
     {
         PanelRig = panelRig ?? throw new ArgumentNullException(nameof(panelRig));
         PanelMensajes = panelMensajes ?? throw new ArgumentNullException(nameof(panelMensajes));
         PanelRegistroQso = panelRegistroQso ?? throw new ArgumentNullException(nameof(panelRegistroQso));
         PanelLogbook = panelLogbook ?? throw new ArgumentNullException(nameof(panelLogbook));
         PanelDxCluster = panelDxCluster ?? throw new ArgumentNullException(nameof(panelDxCluster));
+        PanelContest = panelContest ?? throw new ArgumentNullException(nameof(panelContest));
+        PanelActivaciones = panelActivaciones ?? throw new ArgumentNullException(nameof(panelActivaciones));
     }
 }

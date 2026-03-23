@@ -176,6 +176,16 @@
             <TabItem Header="DX Cluster">
                 <vistas:PanelDxCluster DataContext="{Binding PanelDxCluster}" />
             </TabItem>
+
+            <!-- Pestaña 3: Contest -->
+            <TabItem Header="Contest">
+                <vistas:PanelContest DataContext="{Binding PanelContest}" />
+            </TabItem>
+
+            <!-- Pestaña 4: Activaciones POTA/SOTA -->
+            <TabItem Header="Activaciones">
+                <vistas:PanelActivaciones DataContext="{Binding PanelActivaciones}" />
+            </TabItem>
         </TabControl>
     </DockPanel>
 </Window>

@@ -1,5 +1,44 @@
 # Changelog — RadioAficionado
 
+## [0.8.0] — 2026-03-23 — Tracking DXCC y Premios
+
+### feat: Catálogo DXCC (Dominio/Dxcc)
+- EntidadDxcc (record): Numero, Nombre, Prefijo, Continente, ZonaCq, ZonaItu, Latitud, Longitud, Eliminada
+- CatalogoDxcc: catálogo estático con ~170 entidades DXCC (todas las más activas + eliminadas históricas)
+- Búsqueda por prefijo (exacta + progresiva), por indicativo, listado completo, solo activas
+- Prefijos alternativos registrados para USA, Rusia, Japón, Alemania, China, Canadá, Brasil, Argentina, España, Francia, Italia, Inglaterra, Australia, México, India, Corea
+- ConfirmacionQso + TipoConfirmacion (LoTW, QSL física, eQSL, directa, bureau)
+- Archivos: Dominio/Dxcc/EntidadDxcc.cs, CatalogoDxcc.cs, ConfirmacionQso.cs
+
+### feat: Estadísticas DXCC (Dominio/Dxcc)
+- EstadisticasDxcc: cálculo de entidades trabajadas, confirmadas, por banda, por modo, faltantes
+- ResumenDxcc (record): TotalTrabajadas, TotalConfirmadas, PorBanda, PorModo, PorContinente
+- Archivo: Dominio/Dxcc/EstadisticasDxcc.cs
+
+### test: Tests DXCC (56 tests nuevos)
+- CatalogoDxccTests: 15 tests (búsqueda por prefijo principal/alternativo, por indicativo, nulo/vacío/inexistente, eliminadas, continentes, zonas CQ/ITU, case-insensitive)
+- EstadisticasDxccTests: 12 tests (trabajadas, confirmadas, por banda, por modo, faltantes, resumen, null checks)
+- Archivos: Dominio.Tests/Dxcc/CatalogoDxccTests.cs, EstadisticasDxccTests.cs
+
+## [0.7.1] — 2026-03-23 — Panel de Activaciones POTA/SOTA UI
+
+### feat: Panel de Activaciones (Escritorio)
+- PanelActivacionesViewModel con comandos Crear/Iniciar/Completar/Cancelar
+- ActivacionVm para representacion visual del historial
+- Cronometro en tiempo real para activacion en curso
+- PanelActivaciones.axaml con tema oscuro, 3 secciones: nueva, en curso, historial
+- Archivos: Escritorio/ViewModels/PanelActivacionesViewModel.cs, Escritorio/Vistas/PanelActivaciones.axaml(.cs)
+
+### feat: RepositorioActivaciones (Infraestructura)
+- Implementacion EF Core de IRepositorioActivaciones con Include de QSOs
+- ObtenerTodasAsync, ObtenerActivaAsync, ObtenerPorTipoAsync, ObtenerPorIdAsync
+- Archivo: Infraestructura/Persistencia/RepositorioActivaciones.cs
+
+### feat: CancelarAsync + ObtenerTodasAsync en servicio de activaciones
+- Añadidos a IServicioActivaciones y ServicioActivaciones
+- Añadido ObtenerTodasAsync a IRepositorioActivaciones
+- Registros de DI: IRepositorioActivaciones, IServicioActivaciones
+
 ## [0.7.0] — 2026-03-23 — Motor de Contests + POTA/SOTA + PSK Reporter + Configuracion
 
 ### feat: Motor de Contests (Dominio/Contests)

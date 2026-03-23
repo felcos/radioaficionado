@@ -118,6 +118,29 @@ public class ServicioActivaciones : IServicioActivaciones
     }
 
     /// <inheritdoc />
+    public async Task<Activacion> CancelarAsync(Guid idActivacion, CancellationToken ct = default)
+    {
+        Activacion? activacion = await _repositorioActivaciones.ObtenerPorIdAsync(idActivacion, ct);
+
+        if (activacion is null)
+        {
+            throw new InvalidOperationException(
+                $"No se encontró la activación con Id '{idActivacion}'.");
+        }
+
+        activacion.CancelarActivacion();
+
+        await _repositorioActivaciones.ActualizarAsync(activacion, ct);
+        await _unidadDeTrabajo.GuardarCambiosAsync(ct);
+
+        _logger.Information(
+            "Activación {IdActivacion} ({Referencia}) cancelada",
+            activacion.Id, activacion.Referencia);
+
+        return activacion;
+    }
+
+    /// <inheritdoc />
     public async Task<IReadOnlyList<Activacion>> ObtenerActivacionesAsync(
         TipoActivacion tipo,
         CancellationToken ct = default)
@@ -129,5 +152,11 @@ public class ServicioActivaciones : IServicioActivaciones
     public async Task<Activacion?> ObtenerActivacionActualAsync(CancellationToken ct = default)
     {
         return await _repositorioActivaciones.ObtenerActivaAsync(ct);
+    }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyList<Activacion>> ObtenerTodasAsync(CancellationToken ct = default)
+    {
+        return await _repositorioActivaciones.ObtenerTodasAsync(ct);
     }
 }

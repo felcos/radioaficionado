@@ -44,4 +44,11 @@ public interface IRepositorioActivaciones
     /// <param name="ct">Token de cancelación.</param>
     /// <returns>La activación en estado EnCurso, o null si no hay ninguna.</returns>
     Task<Activacion?> ObtenerActivaAsync(CancellationToken ct);
+
+    /// <summary>
+    /// Obtiene todas las activaciones sin filtrar por tipo.
+    /// </summary>
+    /// <param name="ct">Token de cancelación.</param>
+    /// <returns>Lista de solo lectura con todas las activaciones.</returns>
+    Task<IReadOnlyList<Activacion>> ObtenerTodasAsync(CancellationToken ct);
 }

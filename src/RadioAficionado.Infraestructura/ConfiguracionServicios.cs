@@ -2,8 +2,11 @@ using Microsoft.Extensions.DependencyInjection;
 using RadioAficionado.Dominio.Interfaces;
 using RadioAficionado.Infraestructura.Compliance;
 using RadioAficionado.Infraestructura.Configuracion;
+using RadioAficionado.Infraestructura.Confirmaciones;
 using RadioAficionado.Infraestructura.DxCluster;
 using RadioAficionado.Infraestructura.Persistencia;
+using RadioAficionado.Infraestructura.Activaciones;
+using RadioAficionado.Infraestructura.Propagacion;
 using RadioAficionado.Infraestructura.PskReporter;
 
 namespace RadioAficionado.Infraestructura;
@@ -21,12 +24,27 @@ public static class ConfiguracionServicios
     public static IServiceCollection AgregarCapaDeInfraestructura(this IServiceCollection servicios)
     {
         servicios.AddScoped<IRepositorioQso, RepositorioQso>();
+        servicios.AddScoped<IRepositorioActivaciones, RepositorioActivaciones>();
         servicios.AddScoped<IUnidadDeTrabajo, UnidadDeTrabajo>();
+        servicios.AddScoped<IServicioActivaciones, ServicioActivaciones>();
         servicios.AddSingleton<IDxCluster, ClienteDxCluster>();
         servicios.AddSingleton<IServicioCompliance, ServicioCompliance>();
         servicios.AddSingleton<ConfiguracionPskReporter>();
         servicios.AddSingleton<IPskReporter, ClientePskReporter>();
         servicios.AddSingleton<IServicioConfiguracion, ServicioConfiguracionJson>();
+
+        // Confirmaciones externas (LoTW, eQSL, Club Log)
+        servicios.AddSingleton<ConfiguracionLoTW>();
+        servicios.AddSingleton<ConfiguracionEQsl>();
+        servicios.AddSingleton<ConfiguracionClubLog>();
+        servicios.AddHttpClient<IClienteLoTW, ClienteLoTW>();
+        servicios.AddHttpClient<IClienteEQsl, ClienteEQsl>();
+        servicios.AddHttpClient<IClienteClubLog, ClienteClubLog>();
+        servicios.AddScoped<IServicioConfirmaciones, ServicioConfirmaciones>();
+
+        // Propagacion HF
+        servicios.AddSingleton<ConfiguracionPropagacion>();
+        servicios.AddSingleton<IServicioPropagacion, ServicioPropagacion>();
 
         return servicios;
     }

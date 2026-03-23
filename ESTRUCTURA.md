@@ -15,6 +15,7 @@
 - Activaciones: Activacion (entidad para POTA/SOTA)
 - Compliance: PlanDeBanda, SegmentoBanda, ResultadoCompliance, TipoSegmento, TipoViolacion, PlanDeBandaItu (planes IARU 3 regiones)
 - Contests: MotorContest, ReglaContest, ConfiguracionContest, ResultadoContest, TipoContest, TipoIntercambio, MetodoMultiplicador, Intercambio
+- Dxcc: EntidadDxcc, CatalogoDxcc (~170 entidades + prefijos alternativos), ConfirmacionQso, TipoConfirmacion, EstadisticasDxcc, ResumenDxcc
 - Configuracion: ConfiguracionCompleta, ConfiguracionEstacion, ConfiguracionAudio, ConfiguracionGeneral
 - Interfaces: IRepositorioQso, IRepositorioActivaciones, IUnidadDeTrabajo, IControlRig, IControlRotador, IAudioPipeline, IDecodificadorDigital, IRegistroDecodificadores, IServicioCompliance, IDxCluster, IPskReporter, IServicioActivaciones, IServicioConfiguracion
 
@@ -75,8 +76,8 @@
 #### Web (RadioAficionado.Web) → Dominio, Aplicacion, Infraestructura, Infraestructura.Postgres, Compartido
 - ASP.NET MVC con Razor Views
 
-### Tests (321 tests, todos pasando)
-- Dominio.Tests (161): Indicativo, Frecuencia, Localizador, Coordenadas, BandaRadio, ModoOperacion, Qso, PlanDeBanda, MapeadorModos, ReferenciaPota, MotorContest
+### Tests (550+ tests, todos pasando)
+- Dominio.Tests (308): Indicativo, Frecuencia, Localizador, Coordenadas, BandaRadio, ModoOperacion, Qso, PlanDeBanda, MapeadorModos, ReferenciaPota, MotorContest, CatalogoDxcc, EstadisticasDxcc
 - Infraestructura.Tests (131): TransformadaCooleyTukey, ProcesadorEspectro, VentanasDsp, ParserAdif, GeneradorAdif, ConvertidorAdifQso, ServicioCompliance, ClienteDxCluster, ClientePskReporter, GeneradorCabrillo
 - Aplicacion.Tests (29): RegistrarQsoHandler, RegistrarQsoValidador
 
@@ -105,7 +106,8 @@
 - ✅ Activaciones POTA/SOTA (Activacion, ReferenciaPota, ReferenciaSota, ServicioActivaciones)
 - ✅ PSK Reporter (IPskReporter, ClientePskReporter)
 - ✅ Configuracion persistente JSON (ConfiguracionCompleta, ServicioConfiguracionJson)
-- ✅ 321 tests unitarios (161 + 131 + 29)
+- ✅ Tracking DXCC (CatalogoDxcc, EstadisticasDxcc, ConfirmacionQso)
+- ✅ 550 tests unitarios (308 + 213 + 29)
 - 🔨 Decodificador FT8 (ft8_lib P/Invoke)
 - 🔨 Swap FFT managed → FFTW3 nativa
 - 📋 Fase 3: Web con cuentas + logbook online

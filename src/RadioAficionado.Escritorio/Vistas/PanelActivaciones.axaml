@@ -1,0 +1,145 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:RadioAficionado.Escritorio.ViewModels"
+             x:Class="RadioAficionado.Escritorio.Vistas.PanelActivaciones"
+             x:DataType="vm:PanelActivacionesViewModel">
+
+    <Border Background="#16213e" CornerRadius="4" Padding="8">
+        <DockPanel>
+            <!-- Barra de estado inferior -->
+            <Border DockPanel.Dock="Bottom" Background="#0a0a23" CornerRadius="4" Padding="8,4" Margin="0,6,0,0">
+                <TextBlock Text="{Binding TextoEstado}" Foreground="#888888" FontSize="11" />
+            </Border>
+
+            <Grid RowDefinitions="Auto,Auto,*">
+                <!-- Sección 1: Crear nueva activación -->
+                <Border Grid.Row="0" Background="#0f3460" CornerRadius="4" Padding="10" Margin="0,0,0,6">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Nueva Activación" Foreground="White" FontWeight="Bold" FontSize="14" />
+                        <Grid ColumnDefinitions="Auto,150,Auto,*,Auto">
+                            <TextBlock Grid.Column="0" Text="Tipo:" Foreground="#aaaaaa" VerticalAlignment="Center" Margin="0,0,8,0" />
+                            <ComboBox Grid.Column="1"
+                                      ItemsSource="{Binding TiposDisponibles}"
+                                      SelectedItem="{Binding TipoSeleccionado}"
+                                      MinWidth="120"
+                                      VerticalAlignment="Center" />
+
+                            <TextBlock Grid.Column="2" Text="  Referencia:" Foreground="#aaaaaa" VerticalAlignment="Center" Margin="8,0,8,0" />
+                            <TextBox Grid.Column="3"
+                                     Text="{Binding ReferenciaIngresada}"
+                                     Watermark="Ej: EA-0001, EA4/MD-001"
+                                     VerticalAlignment="Center" />
+
+                            <Button Grid.Column="4"
+                                    Content="Crear"
+                                    Command="{Binding CrearActivacionCommand}"
+                                    Background="#e94560"
+                                    Foreground="White"
+                                    FontWeight="Bold"
+                                    Padding="16,6"
+                                    Margin="8,0,0,0"
+                                    VerticalAlignment="Center" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Sección 2: Activación en curso / planificada -->
+                <Border Grid.Row="1" Background="#0f3460" CornerRadius="4" Padding="10" Margin="0,0,0,6"
+                        IsVisible="{Binding HayActivacionEnCurso}">
+                    <StackPanel Spacing="8">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock Grid.Column="0" Text="Activación Actual" Foreground="White" FontWeight="Bold" FontSize="14" />
+                            <Border Grid.Column="1" Background="#e94560" CornerRadius="4" Padding="8,2">
+                                <TextBlock Text="{Binding EstadoEnCurso}" Foreground="White" FontSize="11" FontWeight="Bold" />
+                            </Border>
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,*,*,*" Margin="0,4,0,0">
+                            <!-- Tipo -->
+                            <StackPanel Grid.Column="0" Spacing="2">
+                                <TextBlock Text="Tipo" Foreground="#888888" FontSize="11" />
+                                <TextBlock Text="{Binding TipoEnCurso}" Foreground="White" FontWeight="Bold" FontSize="16" />
+                            </StackPanel>
+
+                            <!-- Referencia -->
+                            <StackPanel Grid.Column="1" Spacing="2">
+                                <TextBlock Text="Referencia" Foreground="#888888" FontSize="11" />
+                                <TextBlock Text="{Binding ReferenciaEnCurso}" Foreground="#e94560" FontWeight="Bold" FontSize="16" />
+                            </StackPanel>
+
+                            <!-- QSOs -->
+                            <StackPanel Grid.Column="2" Spacing="2">
+                                <TextBlock Text="QSOs" Foreground="#888888" FontSize="11" />
+                                <TextBlock Text="{Binding TotalQsosEnActivacion}" Foreground="White" FontWeight="Bold" FontSize="16" />
+                            </StackPanel>
+
+                            <!-- Tiempo -->
+                            <StackPanel Grid.Column="3" Spacing="2">
+                                <TextBlock Text="Tiempo" Foreground="#888888" FontSize="11" />
+                                <TextBlock Text="{Binding TiempoTranscurrido}" Foreground="White" FontWeight="Bold" FontSize="16"
+                                           FontFamily="Consolas" />
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Botones de acción -->
+                        <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,4,0,0" HorizontalAlignment="Right">
+                            <Button Content="Iniciar"
+                                    Command="{Binding IniciarActivacionCommand}"
+                                    Background="#27ae60"
+                                    Foreground="White"
+                                    FontWeight="Bold"
+                                    Padding="16,6" />
+                            <Button Content="Completar"
+                                    Command="{Binding CompletarActivacionCommand}"
+                                    Background="#2980b9"
+                                    Foreground="White"
+                                    FontWeight="Bold"
+                                    Padding="16,6" />
+                            <Button Content="Cancelar"
+                                    Command="{Binding CancelarActivacionCommand}"
+                                    Background="#c0392b"
+                                    Foreground="White"
+                                    FontWeight="Bold"
+                                    Padding="16,6" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- Sección 3: Historial de activaciones -->
+                <Border Grid.Row="2" Background="#0f3460" CornerRadius="4" Padding="10">
+                    <DockPanel>
+                        <TextBlock DockPanel.Dock="Top" Text="Historial de Activaciones" Foreground="White" FontWeight="Bold" FontSize="14" Margin="0,0,0,8" />
+
+                        <!-- Encabezados -->
+                        <Border DockPanel.Dock="Top" Background="#1a1a2e" CornerRadius="2" Padding="8,4" Margin="0,0,0,4">
+                            <Grid ColumnDefinitions="80,120,140,60,100">
+                                <TextBlock Grid.Column="0" Text="Tipo" Foreground="#888888" FontSize="11" FontWeight="Bold" />
+                                <TextBlock Grid.Column="1" Text="Referencia" Foreground="#888888" FontSize="11" FontWeight="Bold" />
+                                <TextBlock Grid.Column="2" Text="Fecha" Foreground="#888888" FontSize="11" FontWeight="Bold" />
+                                <TextBlock Grid.Column="3" Text="QSOs" Foreground="#888888" FontSize="11" FontWeight="Bold" />
+                                <TextBlock Grid.Column="4" Text="Estado" Foreground="#888888" FontSize="11" FontWeight="Bold" />
+                            </Grid>
+                        </Border>
+
+                        <!-- Lista de activaciones -->
+                        <ListBox ItemsSource="{Binding Historial}" Background="Transparent">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate x:DataType="vm:ActivacionVm">
+                                    <Grid ColumnDefinitions="80,120,140,60,100">
+                                        <Border Grid.Column="0" Background="#533483" CornerRadius="3" Padding="4,2" HorizontalAlignment="Left">
+                                            <TextBlock Text="{Binding Tipo}" Foreground="White" FontSize="11" />
+                                        </Border>
+                                        <TextBlock Grid.Column="1" Text="{Binding Referencia}" Foreground="#e94560" FontWeight="Bold" FontSize="12" VerticalAlignment="Center" />
+                                        <TextBlock Grid.Column="2" Text="{Binding Fecha}" Foreground="#aaaaaa" FontSize="11" FontFamily="Consolas" VerticalAlignment="Center" />
+                                        <TextBlock Grid.Column="3" Text="{Binding QsoCount}" Foreground="White" FontSize="12" VerticalAlignment="Center" />
+                                        <TextBlock Grid.Column="4" Text="{Binding Estado}" Foreground="#aaaaaa" FontSize="11" VerticalAlignment="Center" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </DockPanel>
+                </Border>
+            </Grid>
+        </DockPanel>
+    </Border>
+</UserControl>

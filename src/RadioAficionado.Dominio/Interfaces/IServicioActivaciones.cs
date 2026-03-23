@@ -52,9 +52,24 @@ public interface IServicioActivaciones
     Task<IReadOnlyList<Activacion>> ObtenerActivacionesAsync(TipoActivacion tipo, CancellationToken ct = default);
 
     /// <summary>
+    /// Cancela una activación planificada o en curso.
+    /// </summary>
+    /// <param name="idActivacion">Identificador de la activación a cancelar.</param>
+    /// <param name="ct">Token de cancelación.</param>
+    /// <returns>La activación cancelada.</returns>
+    Task<Activacion> CancelarAsync(Guid idActivacion, CancellationToken ct = default);
+
+    /// <summary>
     /// Obtiene la activación actualmente en curso, si existe.
     /// </summary>
     /// <param name="ct">Token de cancelación.</param>
     /// <returns>La activación en curso, o null si no hay ninguna.</returns>
     Task<Activacion?> ObtenerActivacionActualAsync(CancellationToken ct = default);
+
+    /// <summary>
+    /// Obtiene todas las activaciones sin filtrar por tipo.
+    /// </summary>
+    /// <param name="ct">Token de cancelación.</param>
+    /// <returns>Lista de solo lectura con todas las activaciones.</returns>
+    Task<IReadOnlyList<Activacion>> ObtenerTodasAsync(CancellationToken ct = default);
 }

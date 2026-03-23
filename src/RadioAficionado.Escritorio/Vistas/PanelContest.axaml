@@ -1,0 +1,181 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:RadioAficionado.Escritorio.ViewModels"
+             xmlns:contests="using:RadioAficionado.Dominio.Contests"
+             x:Class="RadioAficionado.Escritorio.Vistas.PanelContest"
+             x:DataType="vm:PanelContestViewModel">
+
+    <Border Background="#16213e" CornerRadius="4" Padding="8">
+        <DockPanel>
+            <!-- Barra superior: selector de contest y botones -->
+            <Border DockPanel.Dock="Top" Background="#0f3460" CornerRadius="4" Padding="8" Margin="0,0,0,6">
+                <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto">
+                    <TextBlock Grid.Column="0" Text="Contest:" Foreground="#aaaaaa"
+                               VerticalAlignment="Center" Margin="0,0,8,0" />
+
+                    <ComboBox Grid.Column="1"
+                              ItemsSource="{Binding ContestsDisponibles}"
+                              SelectedItem="{Binding ContestSeleccionado}"
+                              MinWidth="300"
+                              VerticalAlignment="Center">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="contests:ReglaContest">
+                                <TextBlock Text="{Binding Nombre}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <Button Grid.Column="2"
+                            Content="Iniciar"
+                            Command="{Binding IniciarContestCommand}"
+                            Background="#27ae60"
+                            Foreground="White"
+                            FontWeight="Bold"
+                            Padding="16,6"
+                            Margin="8,0,0,0"
+                            VerticalAlignment="Center" />
+
+                    <Button Grid.Column="3"
+                            Content="Finalizar"
+                            Command="{Binding FinalizarContestCommand}"
+                            Background="#e94560"
+                            Foreground="White"
+                            FontWeight="Bold"
+                            Padding="16,6"
+                            Margin="8,0,0,0"
+                            VerticalAlignment="Center" />
+
+                    <Button Grid.Column="4"
+                            Content="Exportar Cabrillo"
+                            Command="{Binding ExportarCabrilloCommand}"
+                            Background="#533483"
+                            Foreground="White"
+                            FontWeight="Bold"
+                            Padding="16,6"
+                            Margin="8,0,0,0"
+                            VerticalAlignment="Center" />
+                </Grid>
+            </Border>
+
+            <!-- Panel de puntuación en vivo -->
+            <Border DockPanel.Dock="Top" Background="#0f3460" CornerRadius="4" Padding="12" Margin="0,0,0,6">
+                <StackPanel>
+                    <!-- Nombre del contest activo -->
+                    <TextBlock Text="{Binding NombreContestActivo}"
+                               Foreground="#e94560"
+                               FontSize="16"
+                               FontWeight="Bold"
+                               Margin="0,0,0,8" />
+
+                    <!-- Indicadores de puntuación -->
+                    <Grid ColumnDefinitions="*,*,*,*,*">
+                        <!-- QSOs Válidos -->
+                        <StackPanel Grid.Column="0" HorizontalAlignment="Center">
+                            <TextBlock Text="QSOs" Foreground="#aaaaaa" FontSize="11"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock Text="{Binding QsosValidos}"
+                                       Foreground="White" FontSize="28" FontWeight="Bold"
+                                       FontFamily="Consolas" HorizontalAlignment="Center" />
+                        </StackPanel>
+
+                        <!-- Puntos -->
+                        <StackPanel Grid.Column="1" HorizontalAlignment="Center">
+                            <TextBlock Text="Puntos" Foreground="#aaaaaa" FontSize="11"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock Text="{Binding Puntos}"
+                                       Foreground="White" FontSize="28" FontWeight="Bold"
+                                       FontFamily="Consolas" HorizontalAlignment="Center" />
+                        </StackPanel>
+
+                        <!-- Multiplicadores -->
+                        <StackPanel Grid.Column="2" HorizontalAlignment="Center">
+                            <TextBlock Text="Mults" Foreground="#aaaaaa" FontSize="11"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock Text="{Binding Multiplicadores}"
+                                       Foreground="White" FontSize="28" FontWeight="Bold"
+                                       FontFamily="Consolas" HorizontalAlignment="Center" />
+                        </StackPanel>
+
+                        <!-- Puntuación Final -->
+                        <StackPanel Grid.Column="3" HorizontalAlignment="Center">
+                            <TextBlock Text="Score" Foreground="#aaaaaa" FontSize="11"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock Text="{Binding PuntuacionFinal, StringFormat={}{0:N0}}"
+                                       Foreground="#e94560" FontSize="28" FontWeight="Bold"
+                                       FontFamily="Consolas" HorizontalAlignment="Center" />
+                        </StackPanel>
+
+                        <!-- Tasa QSOs/hora -->
+                        <StackPanel Grid.Column="4" HorizontalAlignment="Center">
+                            <TextBlock Text="Rate/h" Foreground="#aaaaaa" FontSize="11"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock Text="{Binding TasaQsosPorHora, StringFormat={}{0:F1}}"
+                                       Foreground="#27ae60" FontSize="28" FontWeight="Bold"
+                                       FontFamily="Consolas" HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Estadísticas secundarias -->
+                    <StackPanel Orientation="Horizontal" Spacing="20" Margin="0,6,0,0"
+                                HorizontalAlignment="Center">
+                        <TextBlock Foreground="#888888" FontSize="11">
+                            <Run Text="Duplicados: " />
+                            <Run Text="{Binding QsosDuplicados}" Foreground="#f39c12" />
+                        </TextBlock>
+                        <TextBlock Foreground="#888888" FontSize="11">
+                            <Run Text="Inválidos: " />
+                            <Run Text="{Binding QsosInvalidos}" Foreground="#e74c3c" />
+                        </TextBlock>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Barra de estado -->
+            <Border DockPanel.Dock="Bottom" Padding="8,4" Margin="0,6,0,0">
+                <TextBlock Text="{Binding MensajeEstado}" Foreground="#888888" FontSize="11" />
+            </Border>
+
+            <!-- Lista de QSOs del contest -->
+            <Border Background="#1a1a2e" CornerRadius="4" Padding="4">
+                <DockPanel>
+                    <!-- Cabecera de la tabla -->
+                    <Border DockPanel.Dock="Top" Background="#0f3460" CornerRadius="4,4,0,0" Padding="8,6">
+                        <Grid ColumnDefinitions="70,120,80,60,60,60,60">
+                            <TextBlock Grid.Column="0" Text="Hora" Foreground="#aaaaaa" FontWeight="Bold" FontSize="11" />
+                            <TextBlock Grid.Column="1" Text="Indicativo" Foreground="#aaaaaa" FontWeight="Bold" FontSize="11" />
+                            <TextBlock Grid.Column="2" Text="Banda" Foreground="#aaaaaa" FontWeight="Bold" FontSize="11" />
+                            <TextBlock Grid.Column="3" Text="Modo" Foreground="#aaaaaa" FontWeight="Bold" FontSize="11" />
+                            <TextBlock Grid.Column="4" Text="TX" Foreground="#aaaaaa" FontWeight="Bold" FontSize="11" />
+                            <TextBlock Grid.Column="5" Text="RX" Foreground="#aaaaaa" FontWeight="Bold" FontSize="11" />
+                            <TextBlock Grid.Column="6" Text="Pts" Foreground="#aaaaaa" FontWeight="Bold" FontSize="11" />
+                        </Grid>
+                    </Border>
+
+                    <!-- Lista scrollable de QSOs -->
+                    <ListBox ItemsSource="{Binding QsosDelContest}" Background="Transparent">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="vm:QsoContestVm">
+                                <Grid ColumnDefinitions="70,120,80,60,60,60,60">
+                                    <TextBlock Grid.Column="0" Text="{Binding Hora}"
+                                               Foreground="#888888" FontFamily="Consolas" FontSize="11" />
+                                    <TextBlock Grid.Column="1" Text="{Binding Indicativo}"
+                                               Foreground="#e94560" FontWeight="Bold" FontFamily="Consolas" FontSize="11" />
+                                    <TextBlock Grid.Column="2" Text="{Binding Banda}"
+                                               Foreground="#aaaaaa" FontFamily="Consolas" FontSize="11" />
+                                    <TextBlock Grid.Column="3" Text="{Binding Modo}"
+                                               Foreground="#aaaaaa" FontFamily="Consolas" FontSize="11" />
+                                    <TextBlock Grid.Column="4" Text="{Binding SenalEnviada}"
+                                               Foreground="#aaaaaa" FontFamily="Consolas" FontSize="11" />
+                                    <TextBlock Grid.Column="5" Text="{Binding SenalRecibida}"
+                                               Foreground="#aaaaaa" FontFamily="Consolas" FontSize="11" />
+                                    <TextBlock Grid.Column="6" Text="{Binding Puntos}"
+                                               Foreground="#27ae60" FontWeight="Bold" FontFamily="Consolas" FontSize="11" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </DockPanel>
+            </Border>
+        </DockPanel>
+    </Border>
+</UserControl>
