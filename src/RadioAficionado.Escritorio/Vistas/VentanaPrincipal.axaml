@@ -186,6 +186,16 @@
             <TabItem Header="Activaciones">
                 <vistas:PanelActivaciones DataContext="{Binding PanelActivaciones}" />
             </TabItem>
+
+            <!-- Pestaña 5: Propagación HF -->
+            <TabItem Header="Propagación">
+                <vistas:PanelPropagacion DataContext="{Binding PanelPropagacion}" />
+            </TabItem>
+
+            <!-- Pestaña 6: DXCC Tracking -->
+            <TabItem Header="DXCC">
+                <vistas:PanelDxcc DataContext="{Binding PanelDxcc}" />
+            </TabItem>
         </TabControl>
     </DockPanel>
 </Window>

@@ -1,0 +1,161 @@
+@model InicioViewModel
+@{
+    ViewData["Title"] = "Inicio";
+}
+
+<!-- Hero Section -->
+<section class="text-center py-5 mb-4">
+    <h1 class="display-4 fw-bold">
+        <span class="text-ra-acento">Radio</span>Aficionado
+    </h1>
+    <p class="lead text-ra-suave mt-3">
+        Logbook público de contactos de radio. Registra, explora y comparte tus QSOs con la comunidad.
+    </p>
+    <div class="mt-4">
+        <a asp-controller="Logbook" asp-action="Index" class="btn btn-ra-acento btn-lg">
+            Ver Logbook Completo
+        </a>
+    </div>
+</section>
+
+<!-- Estadísticas -->
+<section class="mb-5">
+    <h2 class="h4 text-ra-acento mb-4 text-center">Estadísticas del Logbook</h2>
+    <div class="row g-3">
+        <div class="col-6 col-md-3">
+            <div class="card bg-ra-tarjeta border-ra-borde text-center h-100">
+                <div class="card-body">
+                    <div class="display-6 fw-bold text-ra-acento">@Model.TotalQsos</div>
+                    <div class="text-ra-suave small mt-1">QSOs Totales</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card bg-ra-tarjeta border-ra-borde text-center h-100">
+                <div class="card-body">
+                    <div class="display-6 fw-bold text-ra-acento">@Model.TotalIndicativosUnicos</div>
+                    <div class="text-ra-suave small mt-1">Indicativos Únicos</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card bg-ra-tarjeta border-ra-borde text-center h-100">
+                <div class="card-body">
+                    <div class="display-6 fw-bold text-ra-acento">@Model.TotalBandas</div>
+                    <div class="text-ra-suave small mt-1">Bandas Activas</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card bg-ra-tarjeta border-ra-borde text-center h-100">
+                <div class="card-body">
+                    <div class="display-6 fw-bold text-ra-acento">@Model.TotalModos</div>
+                    <div class="text-ra-suave small mt-1">Modos Utilizados</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @if (Model.UltimoQso.HasValue)
+    {
+        <p class="text-center text-ra-suave mt-3 small">
+            Último contacto: @Model.UltimoQso.Value.ToString("dd/MM/yyyy HH:mm") UTC
+        </p>
+    }
+</section>
+
+<!-- Últimos QSOs -->
+@if (Model.UltimosQsos.Count > 0)
+{
+    <section class="mb-5">
+        <h2 class="h4 text-ra-acento mb-4 text-center">Últimos Contactos</h2>
+        <div class="table-responsive">
+            <table class="table table-dark table-striped table-hover tabla-ra">
+                <thead>
+                    <tr>
+                        <th>Fecha/Hora (UTC)</th>
+                        <th>Indicativo Propio</th>
+                        <th>Indicativo Contacto</th>
+                        <th>Frecuencia</th>
+                        <th>Banda</th>
+                        <th>Modo</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (QsoResumenViewModel qso in Model.UltimosQsos)
+                    {
+                        <tr>
+                            <td>@qso.FechaHora.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td class="fw-bold">@qso.IndicativoPropio</td>
+                            <td class="fw-bold text-ra-acento">@qso.IndicativoContacto</td>
+                            <td>@qso.Frecuencia</td>
+                            <td>@(qso.Banda ?? "—")</td>
+                            <td><span class="badge bg-ra-modo">@qso.Modo</span></td>
+                            <td>
+                                <a asp-controller="Logbook" asp-action="Detalle" asp-route-id="@qso.Id"
+                                   class="btn btn-sm btn-outline-ra-acento">
+                                    Ver
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="text-center mt-3">
+            <a asp-controller="Logbook" asp-action="Index" class="btn btn-outline-ra-acento">
+                Ver todos los contactos
+            </a>
+        </div>
+    </section>
+}
+else
+{
+    <section class="mb-5 text-center">
+        <div class="card bg-ra-tarjeta border-ra-borde p-5">
+            <p class="text-ra-suave mb-0">
+                Aún no hay contactos registrados en el logbook. Los QSOs aparecerán aquí cuando se añadan.
+            </p>
+        </div>
+    </section>
+}
+
+<!-- Features -->
+<section class="mb-5">
+    <h2 class="h4 text-ra-acento mb-4 text-center">Características</h2>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card bg-ra-tarjeta border-ra-borde h-100">
+                <div class="card-body text-center">
+                    <div class="display-6 mb-2">73</div>
+                    <h3 class="h5 text-ra-acento">Logbook Público</h3>
+                    <p class="text-ra-suave small">
+                        Consulta todos los contactos con paginación, filtros por banda, modo e indicativo.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-ra-tarjeta border-ra-borde h-100">
+                <div class="card-body text-center">
+                    <div class="display-6 mb-2">CQ</div>
+                    <h3 class="h5 text-ra-acento">Formato ADIF</h3>
+                    <p class="text-ra-suave small">
+                        Compatible con el estándar ADIF 3.1.4 para modos y submodos de operación.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-ra-tarjeta border-ra-borde h-100">
+                <div class="card-body text-center">
+                    <div class="display-6 mb-2">DX</div>
+                    <h3 class="h5 text-ra-acento">Estadísticas</h3>
+                    <p class="text-ra-suave small">
+                        Visualiza tus estadísticas: contactos totales, bandas activas, modos utilizados.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

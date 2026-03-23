@@ -1,48 +1,52 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - RadioAficionado.Web</title>
-    <script type="importmap"></script>
+    <title>@ViewData["Title"] - RadioAficionado</title>
+    <meta name="description" content="Logbook público de radioaficionado. Registro de contactos de radio (QSOs)." />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/RadioAficionado.Web.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/sitio.css" asp-append-version="true" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">RadioAficionado.Web</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-ra-oscuro border-bottom border-ra-acento sticky-top">
+            <div class="container">
+                <a class="navbar-brand fw-bold" asp-controller="Inicio" asp-action="Index">
+                    <span class="text-ra-acento">Radio</span>Aficionado
+                </a>
+                <button class="navbar-toggler" type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarPrincipal"
+                        aria-controls="navbarPrincipal"
+                        aria-expanded="false"
+                        aria-label="Abrir navegación">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <div class="collapse navbar-collapse" id="navbarPrincipal">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-controller="Inicio" asp-action="Index">Inicio</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link" asp-controller="Logbook" asp-action="Index">Logbook</a>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - RadioAficionado.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <main class="container py-4">
+        @RenderBody()
+    </main>
+
+    <footer class="bg-ra-oscuro border-top border-ra-acento mt-auto py-3">
+        <div class="container text-center text-ra-suave">
+            <p class="mb-0">&copy; @DateTime.UtcNow.Year - <span class="text-ra-acento">Radio</span>Aficionado - Logbook de contactos de radio</p>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)

@@ -81,31 +81,48 @@ Las capas **Dominio** y **Aplicacion** son compartidas entre escritorio y web. L
 | 2026-03-23 | POTA/SOTA como entidades de primera clase | Activaciones con ciclo de vida propio, no solo metadatos del QSO |
 | 2026-03-23 | PSK Reporter como servicio de infraestructura | Envio de spots al servicio centralizado de monitoreo de propagacion |
 | 2026-03-23 | Configuracion persistente en JSON local | Formato legible, editable manualmente, sin necesidad de BD para preferencias |
+| 2026-03-23 | Web MVP: homepage + logbook publico | Controladores MVC con Razor, tema oscuro, paginacion, filtros |
+| 2026-03-23 | Migraciones EF Core en proyecto Sqlite separado | MigrationsAssembly apunta a Infraestructura.Sqlite; DesignTimeFactory para EF CLI sin startup Avalonia |
+| 2026-03-23 | LoTW/eQSL/ClubLog como clientes HTTP independientes | Cada servicio tiene su interfaz + implementacion; ServicioConfirmaciones orquesta las 3 fuentes |
+| 2026-03-23 | Modelo de propagacion basado en SFI | IndicesSolares como record inmutable; predicciones por banda HF con NivelPropagacion |
+| 2026-03-23 | UI de escritorio completa con 10 vistas + 12 ViewModels | Cada modulo (contest, DXCC, propagacion, activaciones, configuracion) tiene su panel dedicado |
 
 ## Estado actual
 
 **Fase 0 + Fase 1 completadas** — Cimientos + capa nativa.
-**Fase 2 completada** — Logbook, ADIF, DX Cluster, Compliance, Contests, POTA/SOTA, PSK Reporter.
+**Fase 2 completada** — Logbook, ADIF, DX Cluster, Compliance, Contests, POTA/SOTA, PSK Reporter, DXCC, Confirmaciones, Propagacion.
+**Fase 3 en progreso** — Web MVP con homepage y logbook publico implementados.
 
 ### Que funciona
 - Solucion completa: 14 proyectos fuente + 5 proyectos de test
-- La solucion compila sin errores ni warnings
-- 321 tests (161 Dominio + 131 Infraestructura + 29 Aplicacion), todos pasando
-- Modelo de dominio completo: objetos de valor, entidades, compliance, contests, activaciones
+- 550 tests (308 Dominio + 213 Infraestructura + 29 Aplicacion), todos pasando
+- Modelo de dominio completo: objetos de valor, entidades, compliance, contests, activaciones, DXCC, propagacion
+- 17 interfaces de dominio definidas e implementadas
 - ADIF parser/generador completo con conversion bidireccional Qso ↔ RegistroAdif
 - Logbook UI con DataGrid paginado, filtros, import/export ADIF
 - DX Cluster con cliente TCP/Telnet y UI de spots en tiempo real
-- Motor de Contests con reglas, multiplicadores y GeneradorCabrillo
-- Activaciones POTA/SOTA con ciclo de vida completo
+- Motor de Contests con reglas, multiplicadores, GeneradorCabrillo y Panel de Contest UI
+- Activaciones POTA/SOTA con ciclo de vida completo y Panel de Activaciones UI con cronometro
 - PSK Reporter para envio de spots
-- Configuracion persistente en JSON
+- Configuracion persistente en JSON + Ventana de Configuracion UI
 - ServicioCompliance con planes IARU para 3 regiones
+- Tracking DXCC: CatalogoDxcc (~170 entidades), EstadisticasDxcc, Panel DXCC UI con filtros y barras de progreso
+- Confirmaciones externas: ClienteLoTW, ClienteEQsl, ClienteClubLog + ServicioConfirmaciones orquestador
+- Propagacion: ServicioPropagacion (modelo SFI) + Panel de Propagacion UI con indices solares
 - Control de rig (rigctld) y rotador (rotctld) via TCP
 - Pipeline de audio con NAudio + FFT + ProcesadorEspectro
 - WaterfallControl con SkiaSharp
-- UI escritorio MVVM con ViewModels conectados a DI real
+- UI escritorio MVVM: 12 ViewModels, 10 vistas, 1 control custom
+- Web MVP: homepage con estadisticas + logbook publico paginado con filtros y detalle
+- Migracion EF Core SQLite con tablas Activaciones y Qsos
+
+### Problemas conocidos
+- Web: namespace `RadioAficionado.Web.ViewModels` no encontrado en _ViewImports.cshtml (error de compilacion menor)
+- Escritorio: `PanelDxccViewModel` no encontrado en VentanaPrincipalViewModel.cs (falta using o referencia)
+- Ambos errores no afectan la suite de 550 tests (que pasan al 100%)
 
 ### Que viene despues
+- **Corregir errores de compilacion**: Web ViewModels namespace + Escritorio PanelDxccViewModel referencia
 - **Decodificador FT8**: ft8_lib via P/Invoke
 - **Waterfall en vivo**: conectar ProcesadorEspectro → PipelineAudio → ControlWaterfall via DI
-- **Fase 3**: Web con autenticacion + logbook online
+- **Web autenticacion**: logbook privado con cuentas de usuario

@@ -1,0 +1,226 @@
+/* ============================================================
+   RadioAficionado — Tema oscuro personalizado
+   ============================================================ */
+
+:root {
+    --ra-fondo: #0d1117;
+    --ra-fondo-secundario: #161b22;
+    --ra-tarjeta: #1c2128;
+    --ra-borde: #30363d;
+    --ra-acento: #58a6ff;
+    --ra-acento-hover: #79c0ff;
+    --ra-texto: #c9d1d9;
+    --ra-texto-suave: #8b949e;
+    --ra-input: #21262d;
+    --ra-modo-bg: #1f6feb;
+    --ra-exito: #3fb950;
+    --ra-advertencia: #d29922;
+}
+
+/* --- Base --- */
+html {
+    font-size: 14px;
+    min-height: 100%;
+    position: relative;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+body {
+    background-color: var(--ra-fondo);
+    color: var(--ra-texto);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+}
+
+/* --- Navegación --- */
+.bg-ra-oscuro {
+    background-color: var(--ra-fondo-secundario) !important;
+}
+
+.border-ra-acento {
+    border-color: var(--ra-borde) !important;
+}
+
+.navbar-brand {
+    font-size: 1.3rem;
+    letter-spacing: 0.5px;
+}
+
+.nav-link {
+    color: var(--ra-texto) !important;
+    transition: color 0.2s ease;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+    color: var(--ra-acento) !important;
+}
+
+/* --- Colores de texto personalizados --- */
+.text-ra-acento {
+    color: var(--ra-acento) !important;
+}
+
+.text-ra-suave {
+    color: var(--ra-texto-suave) !important;
+}
+
+/* --- Tarjetas --- */
+.bg-ra-tarjeta {
+    background-color: var(--ra-tarjeta) !important;
+}
+
+.border-ra-borde {
+    border-color: var(--ra-borde) !important;
+}
+
+.card {
+    border-radius: 8px;
+}
+
+/* --- Tablas --- */
+.tabla-ra {
+    --bs-table-bg: var(--ra-tarjeta);
+    --bs-table-striped-bg: var(--ra-fondo-secundario);
+    --bs-table-hover-bg: rgba(88, 166, 255, 0.08);
+    border-color: var(--ra-borde);
+}
+
+.tabla-ra thead th {
+    background-color: var(--ra-fondo-secundario);
+    color: var(--ra-texto-suave);
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom-color: var(--ra-borde);
+}
+
+.tabla-ra td {
+    border-color: var(--ra-borde);
+    vertical-align: middle;
+}
+
+/* --- Badges --- */
+.bg-ra-modo {
+    background-color: var(--ra-modo-bg) !important;
+    font-weight: 500;
+}
+
+/* --- Botones --- */
+.btn-ra-acento {
+    background-color: var(--ra-acento);
+    border-color: var(--ra-acento);
+    color: #0d1117;
+    font-weight: 600;
+}
+
+.btn-ra-acento:hover,
+.btn-ra-acento:focus {
+    background-color: var(--ra-acento-hover);
+    border-color: var(--ra-acento-hover);
+    color: #0d1117;
+}
+
+.btn-outline-ra-acento {
+    border-color: var(--ra-acento);
+    color: var(--ra-acento);
+}
+
+.btn-outline-ra-acento:hover,
+.btn-outline-ra-acento:focus {
+    background-color: var(--ra-acento);
+    border-color: var(--ra-acento);
+    color: #0d1117;
+}
+
+/* --- Formularios --- */
+.bg-ra-input {
+    background-color: var(--ra-input) !important;
+}
+
+.form-control.bg-ra-input:focus,
+.form-select.bg-ra-input:focus {
+    background-color: var(--ra-input);
+    border-color: var(--ra-acento);
+    box-shadow: 0 0 0 0.2rem rgba(88, 166, 255, 0.25);
+    color: var(--ra-texto);
+}
+
+.form-control::placeholder {
+    color: var(--ra-texto-suave);
+}
+
+/* --- Paginación --- */
+.bg-ra-acento-solido {
+    background-color: var(--ra-acento) !important;
+}
+
+.page-link {
+    transition: all 0.2s ease;
+}
+
+.page-link:hover {
+    background-color: rgba(88, 166, 255, 0.15) !important;
+    color: var(--ra-acento) !important;
+}
+
+/* --- Breadcrumb --- */
+.breadcrumb {
+    background-color: transparent;
+    padding: 0;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    color: var(--ra-texto-suave);
+}
+
+/* --- Footer --- */
+footer {
+    background-color: var(--ra-fondo-secundario);
+}
+
+/* --- Definiciones (dl) --- */
+dt {
+    font-weight: 500;
+}
+
+dd {
+    margin-bottom: 0.75rem;
+}
+
+/* --- Focus --- */
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem var(--ra-fondo), 0 0 0 0.25rem var(--ra-acento);
+}
+
+/* --- Code --- */
+code {
+    color: var(--ra-acento);
+    font-size: 0.85em;
+}
+
+/* --- Responsive --- */
+@media (max-width: 767.98px) {
+    .tabla-ra {
+        font-size: 0.85rem;
+    }
+
+    .display-6 {
+        font-size: 1.5rem;
+    }
+}

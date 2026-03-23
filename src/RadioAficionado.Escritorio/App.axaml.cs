@@ -97,6 +97,8 @@ public class App : Application
         servicios.AddTransient<PanelDxClusterViewModel>();
         servicios.AddTransient<PanelContestViewModel>();
         servicios.AddTransient<PanelActivacionesViewModel>();
+        servicios.AddTransient<PanelPropagacionViewModel>();
+        servicios.AddTransient<PanelDxccViewModel>();
         servicios.AddTransient<ConfiguracionViewModel>();
     }
 }

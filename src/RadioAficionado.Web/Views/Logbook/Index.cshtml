@@ -1,0 +1,244 @@
+@model LogbookIndexViewModel
+@{
+    ViewData["Title"] = "Logbook";
+}
+
+<h1 class="h3 text-ra-acento mb-4">Logbook Público</h1>
+
+<!-- Filtros -->
+<div class="card bg-ra-tarjeta border-ra-borde mb-4">
+    <div class="card-body">
+        <form method="get" asp-controller="Logbook" asp-action="Index">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label for="indicativo" class="form-label text-ra-suave small">Indicativo</label>
+                    <input type="text" class="form-control bg-ra-input border-ra-borde text-light"
+                           id="indicativo" name="indicativo"
+                           value="@Model.FiltroIndicativo"
+                           placeholder="Buscar indicativo..." />
+                </div>
+                <div class="col-md-2">
+                    <label for="modo" class="form-label text-ra-suave small">Modo</label>
+                    <select class="form-select bg-ra-input border-ra-borde text-light"
+                            id="modo" name="modo">
+                        <option value="">Todos</option>
+                        @foreach (ModoOperacion modoItem in Model.ModosDisponibles)
+                        {
+                            bool seleccionado = Model.FiltroModo.HasValue && Model.FiltroModo.Value == modoItem;
+                            <option value="@modoItem" selected="@seleccionado">@modoItem</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label for="banda" class="form-label text-ra-suave small">Banda</label>
+                    <select class="form-select bg-ra-input border-ra-borde text-light"
+                            id="banda" name="banda">
+                        <option value="">Todas</option>
+                        @foreach (BandaRadio bandaItem in Model.BandasDisponibles)
+                        {
+                            bool seleccionado = Model.FiltroBanda.HasValue && Model.FiltroBanda.Value == bandaItem;
+                            <option value="@bandaItem" selected="@seleccionado">@bandaItem.ObtenerNombre()</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label for="fechaDesde" class="form-label text-ra-suave small">Desde</label>
+                    <input type="date" class="form-control bg-ra-input border-ra-borde text-light"
+                           id="fechaDesde" name="fechaDesde"
+                           value="@(Model.FiltroFechaDesde?.ToString("yyyy-MM-dd"))" />
+                </div>
+                <div class="col-md-2">
+                    <label for="fechaHasta" class="form-label text-ra-suave small">Hasta</label>
+                    <input type="date" class="form-control bg-ra-input border-ra-borde text-light"
+                           id="fechaHasta" name="fechaHasta"
+                           value="@(Model.FiltroFechaHasta?.ToString("yyyy-MM-dd"))" />
+                </div>
+                <div class="col-md-1">
+                    <button type="submit" class="btn btn-ra-acento w-100">Filtrar</button>
+                </div>
+            </div>
+            @if (!string.IsNullOrWhiteSpace(Model.FiltroIndicativo) || Model.FiltroModo.HasValue || Model.FiltroBanda.HasValue || Model.FiltroFechaDesde.HasValue || Model.FiltroFechaHasta.HasValue)
+            {
+                <div class="mt-2">
+                    <a asp-controller="Logbook" asp-action="Index" class="btn btn-sm btn-outline-secondary">
+                        Limpiar filtros
+                    </a>
+                </div>
+            }
+        </form>
+    </div>
+</div>
+
+<!-- Información de resultados -->
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <span class="text-ra-suave small">
+        Mostrando @((Model.PaginaActual - 1) * Model.TamanoPagina + 1)-@Math.Min(Model.PaginaActual * Model.TamanoPagina, Model.TotalElementos)
+        de @Model.TotalElementos contactos
+    </span>
+    @if (Model.TotalPaginas > 1)
+    {
+        <span class="text-ra-suave small">
+            Página @Model.PaginaActual de @Model.TotalPaginas
+        </span>
+    }
+</div>
+
+<!-- Tabla de QSOs -->
+@if (Model.Qsos.Count > 0)
+{
+    <div class="table-responsive">
+        <table class="table table-dark table-striped table-hover tabla-ra">
+            <thead>
+                <tr>
+                    <th>Fecha/Hora (UTC)</th>
+                    <th>Indicativo Propio</th>
+                    <th>Indicativo Contacto</th>
+                    <th>Frecuencia</th>
+                    <th>Banda</th>
+                    <th>Modo</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (QsoResumenViewModel qso in Model.Qsos)
+                {
+                    <tr>
+                        <td>@qso.FechaHora.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td class="fw-bold">@qso.IndicativoPropio</td>
+                        <td class="fw-bold text-ra-acento">@qso.IndicativoContacto</td>
+                        <td>@qso.Frecuencia</td>
+                        <td>@(qso.Banda ?? "—")</td>
+                        <td><span class="badge bg-ra-modo">@qso.Modo</span></td>
+                        <td>
+                            <a asp-controller="Logbook" asp-action="Detalle" asp-route-id="@qso.Id"
+                               class="btn btn-sm btn-outline-ra-acento">
+                                Ver
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Paginación -->
+    @if (Model.TotalPaginas > 1)
+    {
+        <nav aria-label="Paginación del logbook" class="mt-4">
+            <ul class="pagination justify-content-center">
+                @if (Model.PaginaActual > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link bg-ra-tarjeta border-ra-borde text-ra-acento"
+                           asp-controller="Logbook" asp-action="Index"
+                           asp-route-pagina="@(Model.PaginaActual - 1)"
+                           asp-route-indicativo="@Model.FiltroIndicativo"
+                           asp-route-modo="@Model.FiltroModo"
+                           asp-route-banda="@Model.FiltroBanda"
+                           asp-route-fechaDesde="@Model.FiltroFechaDesde"
+                           asp-route-fechaHasta="@Model.FiltroFechaHasta">
+                            Anterior
+                        </a>
+                    </li>
+                }
+
+                @{
+                    int inicioRango = Math.Max(1, Model.PaginaActual - 2);
+                    int finRango = Math.Min(Model.TotalPaginas, Model.PaginaActual + 2);
+                }
+
+                @if (inicioRango > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link bg-ra-tarjeta border-ra-borde text-light"
+                           asp-controller="Logbook" asp-action="Index"
+                           asp-route-pagina="1"
+                           asp-route-indicativo="@Model.FiltroIndicativo"
+                           asp-route-modo="@Model.FiltroModo"
+                           asp-route-banda="@Model.FiltroBanda"
+                           asp-route-fechaDesde="@Model.FiltroFechaDesde"
+                           asp-route-fechaHasta="@Model.FiltroFechaHasta">
+                            1
+                        </a>
+                    </li>
+                    @if (inicioRango > 2)
+                    {
+                        <li class="page-item disabled">
+                            <span class="page-link bg-ra-tarjeta border-ra-borde text-ra-suave">...</span>
+                        </li>
+                    }
+                }
+
+                @for (int i = inicioRango; i <= finRango; i++)
+                {
+                    bool esActual = i == Model.PaginaActual;
+                    <li class="page-item @(esActual ? "active" : "")">
+                        @if (esActual)
+                        {
+                            <span class="page-link bg-ra-acento-solido border-ra-acento text-dark fw-bold">@i</span>
+                        }
+                        else
+                        {
+                            <a class="page-link bg-ra-tarjeta border-ra-borde text-light"
+                               asp-controller="Logbook" asp-action="Index"
+                               asp-route-pagina="@i"
+                               asp-route-indicativo="@Model.FiltroIndicativo"
+                               asp-route-modo="@Model.FiltroModo"
+                               asp-route-banda="@Model.FiltroBanda"
+                               asp-route-fechaDesde="@Model.FiltroFechaDesde"
+                               asp-route-fechaHasta="@Model.FiltroFechaHasta">
+                                @i
+                            </a>
+                        }
+                    </li>
+                }
+
+                @if (finRango < Model.TotalPaginas)
+                {
+                    @if (finRango < Model.TotalPaginas - 1)
+                    {
+                        <li class="page-item disabled">
+                            <span class="page-link bg-ra-tarjeta border-ra-borde text-ra-suave">...</span>
+                        </li>
+                    }
+                    <li class="page-item">
+                        <a class="page-link bg-ra-tarjeta border-ra-borde text-light"
+                           asp-controller="Logbook" asp-action="Index"
+                           asp-route-pagina="@Model.TotalPaginas"
+                           asp-route-indicativo="@Model.FiltroIndicativo"
+                           asp-route-modo="@Model.FiltroModo"
+                           asp-route-banda="@Model.FiltroBanda"
+                           asp-route-fechaDesde="@Model.FiltroFechaDesde"
+                           asp-route-fechaHasta="@Model.FiltroFechaHasta">
+                            @Model.TotalPaginas
+                        </a>
+                    </li>
+                }
+
+                @if (Model.PaginaActual < Model.TotalPaginas)
+                {
+                    <li class="page-item">
+                        <a class="page-link bg-ra-tarjeta border-ra-borde text-ra-acento"
+                           asp-controller="Logbook" asp-action="Index"
+                           asp-route-pagina="@(Model.PaginaActual + 1)"
+                           asp-route-indicativo="@Model.FiltroIndicativo"
+                           asp-route-modo="@Model.FiltroModo"
+                           asp-route-banda="@Model.FiltroBanda"
+                           asp-route-fechaDesde="@Model.FiltroFechaDesde"
+                           asp-route-fechaHasta="@Model.FiltroFechaHasta">
+                            Siguiente
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+}
+else
+{
+    <div class="card bg-ra-tarjeta border-ra-borde p-5 text-center">
+        <p class="text-ra-suave mb-0">
+            No se encontraron contactos con los filtros seleccionados.
+        </p>
+    </div>
+}

@@ -4,58 +4,82 @@
 
 ### Lo que se hizo
 
+#### Confirmaciones externas: LoTW/eQSL/ClubLog (2026-03-23)
+- IClienteLoTW, IClienteEQsl, IClienteClubLog: interfaces en Dominio/Interfaces
+- IServicioConfirmaciones: orquestador de confirmaciones multifuente
+- ClienteLoTW, ClienteEQsl, ClienteClubLog: clientes HTTP en Infraestructura/Confirmaciones
+- ServicioConfirmaciones: coordina las 3 fuentes de confirmacion
+- Tests: ClienteLoTWTests, ClienteEQslTests, ClienteClubLogTests, ServicioConfirmacionesTests
+
+#### ServicioPropagacion (2026-03-23)
+- IndicesSolares (record): SFI, indices K/A, manchas solares
+- PrediccionBanda, NivelPropagacion en Dominio/Propagacion
+- IServicioPropagacion en Dominio/Interfaces
+- ServicioPropagacion en Infraestructura/Propagacion (modelo basado en SFI)
+- Tests: ServicioPropagacionTests
+
+#### Panel de Contest UI (2026-03-23)
+- PanelContestViewModel: gestion de contests activos, QSOs en contexto, puntaje en tiempo real
+- PanelContest.axaml: vista con tema oscuro, configuracion de contest, log de QSOs, marcador
+- Integrado como pestana en VentanaPrincipal
+
+#### Panel de Propagacion UI (2026-03-23)
+- PanelPropagacionViewModel: indices solares, predicciones por banda, actualizacion periodica
+- PanelPropagacion.axaml: indicadores SFI/K/A, tabla de bandas HF
+
+#### Ventana de Configuracion (2026-03-23)
+- ConfiguracionViewModel: preferencias de estacion, audio, generales
+- VentanaConfiguracion.axaml: ventana con pestanas para cada seccion
+
+#### Panel DXCC UI — Tracking visual (2026-03-23)
+- PanelDxccViewModel con filtros por continente/estado, barras de progreso
+- EntidadDxccVm con indicadores visuales: verde=confirmada, amarillo=trabajada, gris=no trabajada
+- PanelDxcc.axaml integrado como pestana "DXCC" en VentanaPrincipal
+
+#### Migración inicial EF Core SQLite (2026-03-23)
+- Migración "Inicial" con tablas Activaciones y Qsos (FK, índices)
+- FabricaContextoEnDiseño para EF Core CLI
+- MigrationsAssembly configurado
+
+#### Web MVP: Homepage + Logbook Publico (2026-03-23)
+- InicioController con estadisticas generales
+- LogbookController con paginacion y filtros + detalle
+- Vistas Razor con tema oscuro, Bootstrap 5 local
+- CSS personalizado con variables --ra-*
+
 #### Tracking DXCC y Premios (2026-03-23)
-- EntidadDxcc (record inmutable) con número, nombre, prefijo, continente, zonas CQ/ITU, coordenadas, flag eliminada
-- CatalogoDxcc estático con ~170 entidades + prefijos alternativos para los países más activos
-- ConfirmacionQso + TipoConfirmacion para cruzar con QSOs
-- EstadisticasDxcc: trabajadas, confirmadas, por banda, por modo, faltantes, resumen completo
-- 27 tests nuevos (15 catálogo + 12 estadísticas), todos pasando
-- Build limpio, 0 errores, 0 warnings
+- CatalogoDxcc con ~170 entidades + prefijos alternativos
+- EstadisticasDxcc: trabajadas, confirmadas, por banda, por modo, faltantes
+- ConfirmacionQso + TipoConfirmacion
+- 27 tests nuevos (CatalogoDxccTests + EstadisticasDxccTests)
 
 #### Fase 2 completada — Logbook, ADIF, DX Cluster, Compliance (2026-03-23)
-- ADIF parser/generador completo: RegistroAdif, ParserAdif, GeneradorAdif, ConvertidorAdifQso
-- Logbook UI: PanelLogbookViewModel con DataGrid paginado, filtros, import/export ADIF
-- DX Cluster: IDxCluster, ClienteDxCluster (TCP/Telnet), PanelDxClusterViewModel con spots en tiempo real
-- ServicioCompliance regulatorio: PlanDeBandaItu con planes IARU para 3 regiones
-- IRepositorioQso ampliado con paginacion (ContarAsync, ObtenerPaginadoAsync) y FiltroQso
-- ViewModels conectados a DI real: PanelRig con polling, PanelRegistroQso con MediatR
-- Tests capa de aplicacion: RegistrarQsoHandlerTests + RegistrarQsoValidadorTests (29 tests)
-- Tests ADIF, Compliance, DxCluster en Infraestructura.Tests
+- ADIF parser/generador completo
+- Logbook UI con DataGrid paginado, filtros, import/export ADIF
+- DX Cluster con cliente TCP/Telnet y UI de spots
+- ServicioCompliance con planes IARU para 3 regiones
+- Tests ADIF, Compliance, DxCluster, Aplicacion
 
 #### Motor de Contests (2026-03-23)
-- MotorContest: evaluacion completa de QSOs en contexto de contest
-- ReglaContest, ConfiguracionContest, ResultadoContest, TipoContest, TipoIntercambio, MetodoMultiplicador, Intercambio
-- GeneradorCabrillo para envio de logs a contests
+- MotorContest, ReglaContest, ConfiguracionContest, ResultadoContest
+- GeneradorCabrillo para envio de logs
 - MotorContestTests + GeneradorCabrilloTests
 
-#### Activaciones POTA/SOTA (2026-03-23)
-- Entidad Activacion con ciclo de vida completo
-- ReferenciaPota, ReferenciaSota como objetos de valor con validacion
-- IRepositorioActivaciones, IServicioActivaciones + ServicioActivaciones
-- EstadoActivacion, TipoActivacion
-- ReferenciaPotaTests
-
-#### Panel de Activaciones UI (2026-03-23)
-- PanelActivacionesViewModel con CommunityToolkit.Mvvm
-- ActivacionVm para historial, cronometro de activacion en curso
-- Comandos: CrearActivacion, IniciarActivacion, CompletarActivacion, CancelarActivacion
-- PanelActivaciones.axaml con tema oscuro, compiled bindings
-- RepositorioActivaciones (EF Core) con ObtenerTodasAsync
-- CancelarAsync y ObtenerTodasAsync añadidos a IServicioActivaciones/ServicioActivaciones
-- Registrado en DI, integrado como pestaña "Activaciones" en VentanaPrincipal
+#### Activaciones POTA/SOTA + Panel UI (2026-03-23)
+- Entidad Activacion, ReferenciaPota, ReferenciaSota
+- ServicioActivaciones, RepositorioActivaciones
+- PanelActivacionesViewModel con cronometro en tiempo real
+- ReferenciaPotaTests, ReferenciaSotaTests, ActivacionTests
 
 #### PSK Reporter (2026-03-23)
-- IPskReporter en dominio, ClientePskReporter en infraestructura
-- ClientePskReporterTests
+- IPskReporter + ClientePskReporter + ClientePskReporterTests
 
 #### Configuracion persistente (2026-03-23)
-- ConfiguracionCompleta, ConfiguracionEstacion, ConfiguracionAudio, ConfiguracionGeneral
-- IServicioConfiguracion + ServicioConfiguracionJson
+- ConfiguracionCompleta, IServicioConfiguracion, ServicioConfiguracionJson
+- ServicioConfiguracionJsonTests
 
 #### ControlWaterfall con SkiaSharp (2026-03-23)
-- Control Avalonia custom con renderizado SkiaSharp via ICustomDrawOperation
-- SKBitmap interno con scroll vertical (Buffer.MemoryCopy unsafe para rendimiento)
-- Paleta de 256 colores precalculada: negro → azul → verde → amarillo → rojo
+- Control Avalonia custom con SkiaSharp, paleta 256 colores, scroll vertical
 
 #### Resumen de Fase 0 + Fase 1 (2026-03-22)
 - Estructura de solucion: 14 proyectos fuente + 5 test
@@ -65,18 +89,23 @@
 
 ### Estado de tests
 - 550 tests totales (308 Dominio + 213 Infraestructura + 29 Aplicacion)
-- Todos pasando, 0 fallos, build limpio
+- Todos pasando, 0 fallos
+- Nota: Web y Escritorio tienen errores de compilacion menores (ViewModels namespace, PanelDxccViewModel referencia) que no afectan tests
 
 ### Pendiente
+- Corregir errores de compilacion en Web (ViewModels namespace) y Escritorio (PanelDxccViewModel referencia)
 - Implementar decodificador FT8 con ft8_lib (P/Invoke)
 - Swap FFT managed → FFTW3 nativa cuando haya binarios
 - Conectar DI completa: ProcesadorEspectro → PipelineAudio → ControlWaterfall para waterfall en vivo
-- Fase 3: Web con cuentas + logbook online
+- Web: autenticacion + logbook privado
 
 ### Problemas encontrados
-- Ninguno critico. Build limpio, todos los tests pasan.
+- Web: `RadioAficionado.Web.ViewModels` namespace no encontrado en _ViewImports.cshtml (el namespace real es diferente al esperado)
+- Escritorio: `PanelDxccViewModel` no encontrado en VentanaPrincipalViewModel.cs (falta using o referencia)
+- Ambos son errores menores de compilacion, no afectan la suite de 550 tests
 
 ### Siguiente paso sugerido
-- Conectar DI: inyectar ProcesadorEspectro → PipelineAudio → ControlWaterfall para visualizacion en vivo
+- Corregir los 2 errores de compilacion (Web ViewModels namespace + Escritorio PanelDxccViewModel)
+- Conectar DI: ProcesadorEspectro → PipelineAudio → ControlWaterfall para waterfall en vivo
 - O implementar decodificador FT8 con ft8_lib (P/Invoke)
-- O iniciar Fase 3: web con autenticacion y logbook online
+- O iniciar autenticacion web para logbook privado

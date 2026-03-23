@@ -1,5 +1,94 @@
 # Changelog — RadioAficionado
 
+## [1.0.0] — 2026-03-23 — Confirmaciones externas + Propagacion + Contest UI + Propagacion UI + Configuracion UI
+
+### feat: Clientes LoTW/eQSL/ClubLog + ServicioConfirmaciones (Dominio + Infraestructura)
+- IClienteLoTW, IClienteEQsl, IClienteClubLog: interfaces en Dominio/Interfaces
+- IServicioConfirmaciones: orquestador de confirmaciones multifuente
+- ClienteLoTW: cliente HTTP para subir/descargar QSOs de Logbook of The World
+- ClienteEQsl: cliente HTTP para subir/descargar QSOs de eQSL.cc
+- ClienteClubLog: cliente HTTP para subir QSOs a Club Log
+- ServicioConfirmaciones: coordina las 3 fuentes de confirmacion
+- Archivos: Dominio/Interfaces/ICliente*.cs, IServicioConfirmaciones.cs, Infraestructura/Confirmaciones/*.cs
+
+### feat: ServicioPropagacion (Dominio + Infraestructura)
+- IndicesSolares (record): SFI, indices K/A, manchas solares
+- PrediccionBanda: prediccion de apertura por banda HF
+- NivelPropagacion: enum con niveles de propagacion
+- IServicioPropagacion en Dominio/Interfaces
+- ServicioPropagacion en Infraestructura/Propagacion (modelo basado en SFI)
+- Archivos: Dominio/Propagacion/*.cs, Infraestructura/Propagacion/ServicioPropagacion.cs
+
+### feat: Panel de Contest UI (Escritorio)
+- PanelContestViewModel: gestion de contests activos, QSOs en contexto, puntaje en tiempo real
+- PanelContest.axaml: vista con tema oscuro, configuracion de contest, log de QSOs, marcador
+- Archivos: Escritorio/ViewModels/PanelContestViewModel.cs, Escritorio/Vistas/PanelContest.axaml(.cs)
+
+### feat: Panel de Propagacion UI (Escritorio)
+- PanelPropagacionViewModel: indices solares, predicciones por banda, actualizacion periodica
+- PanelPropagacion.axaml: vista con indicadores SFI/K/A, tabla de bandas HF
+- Archivos: Escritorio/ViewModels/PanelPropagacionViewModel.cs, Escritorio/Vistas/PanelPropagacion.axaml(.cs)
+
+### feat: Ventana de Configuracion (Escritorio)
+- ConfiguracionViewModel: gestion de preferencias de estacion, audio y generales
+- VentanaConfiguracion.axaml: ventana con pestanas para cada seccion de configuracion
+- Archivos: Escritorio/ViewModels/ConfiguracionViewModel.cs, Escritorio/Vistas/VentanaConfiguracion.axaml(.cs)
+
+### test: 550 tests (308 Dominio + 213 Infraestructura + 29 Aplicacion), todos pasando
+- ClienteLoTWTests, ClienteEQslTests, ClienteClubLogTests, ServicioConfirmacionesTests (Infraestructura.Tests/Confirmaciones/)
+- ServicioPropagacionTests (Infraestructura.Tests/Propagacion/)
+
+## [0.9.1] — 2026-03-23 — Migración inicial EF Core SQLite
+
+### feat: Migración inicial de base de datos (Infraestructura.Sqlite)
+- Migración "Inicial" con tablas Activaciones y Qsos, FK, índices
+- FabricaContextoEnDiseño (IDesignTimeDbContextFactory) para EF Core CLI
+- MigrationsAssembly configurado en ConfiguracionSqlite y FabricaContextoEnDiseño
+- Paquete Microsoft.EntityFrameworkCore.Design añadido al proyecto Sqlite
+- Archivos creados: FabricaContextoEnDiseño.cs, Migraciones/20260323100132_Inicial.cs (+Designer +Snapshot)
+- Archivos modificados: ConfiguracionSqlite.cs, RadioAficionado.Infraestructura.Sqlite.csproj
+
+## [0.9.0] — 2026-03-23 — Web MVP: Homepage + Logbook Publico
+
+### feat: Controladores MVC (Web/Controllers)
+- InicioController: pagina de inicio con estadisticas generales (total QSOs, indicativos unicos, bandas, modos, ultimos 5 contactos)
+- LogbookController: logbook publico con paginacion (25/pagina) y filtros (indicativo, modo, banda, rango de fechas) + vista de detalle de QSO
+- Archivos: Controllers/InicioController.cs, Controllers/LogbookController.cs
+
+### feat: ViewModels (Web/ViewModels)
+- InicioViewModel, QsoResumenViewModel: estadisticas y listado resumido
+- LogbookIndexViewModel: paginacion, filtros, listas de modos/bandas disponibles
+- QsoDetalleViewModel: detalle completo con duracion calculada
+- Archivos: ViewModels/InicioViewModel.cs, LogbookIndexViewModel.cs, QsoDetalleViewModel.cs
+
+### feat: Vistas Razor con tema oscuro (Web/Views)
+- _Layout.cshtml: layout responsive con navbar, footer, Bootstrap 5 local, tema oscuro
+- Inicio/Index.cshtml: hero section, 4 tarjetas de estadisticas, tabla de ultimos QSOs, seccion de features
+- Logbook/Index.cshtml: tabla paginada con filtros (indicativo, modo, banda, fechas), paginacion completa con ellipsis
+- Logbook/Detalle.cshtml: detalle de QSO con breadcrumb, datos del contacto, senales, potencia, notas, metadatos
+- Error.cshtml actualizado a espanol
+- Archivos: Views/Shared/_Layout.cshtml, Views/Inicio/Index.cshtml, Views/Logbook/Index.cshtml, Views/Logbook/Detalle.cshtml
+
+### feat: CSS tema oscuro (Web/wwwroot/css)
+- sitio.css: variables CSS personalizadas (--ra-*), tema oscuro consistente con colores azul/gris
+- Estilos para: navegacion, tarjetas, tablas, badges, botones, formularios, paginacion, responsive
+- Archivo: wwwroot/css/sitio.css
+
+### refactor: Program.cs
+- Ruta por defecto cambiada de Home a Inicio
+- ExceptionHandler apuntando a /Inicio/Error
+
+## [0.8.1] — 2026-03-23 — Panel DXCC UI
+
+### feat: Panel de tracking DXCC (Escritorio)
+- PanelDxccViewModel: carga datos desde IRepositorioQso, calcula estadísticas con EstadisticasDxcc
+- EntidadDxccVm con indicadores visuales: verde=confirmada, amarillo=trabajada, gris=no trabajada
+- Filtros reactivos: continente (Todos/AF/AS/EU/NA/OC/SA), estado (Todas/Trabajadas/NoTrabajadas/Confirmadas)
+- ResumenContinenteVm y ResumenBandaVm con barras de progreso
+- PanelDxcc.axaml: barra de estadísticas, filtros, DataGrid de entidades, panel lateral con resúmenes
+- Tema oscuro consistente, compiled bindings, integrado como pestaña "DXCC" en VentanaPrincipal
+- Archivos: Escritorio/ViewModels/PanelDxccViewModel.cs, Escritorio/Vistas/PanelDxcc.axaml(.cs)
+
 ## [0.8.0] — 2026-03-23 — Tracking DXCC y Premios
 
 ### feat: Catálogo DXCC (Dominio/Dxcc)

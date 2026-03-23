@@ -30,7 +30,7 @@ try
 
     if (!app.Environment.IsDevelopment())
     {
-        app.UseExceptionHandler("/Home/Error");
+        app.UseExceptionHandler("/Inicio/Error");
         app.UseHsts();
     }
 
@@ -42,7 +42,7 @@ try
 
     app.MapControllerRoute(
         name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}");
+        pattern: "{controller=Inicio}/{action=Index}/{id?}");
 
     app.Run();
 }

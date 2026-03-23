@@ -1,0 +1,162 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:RadioAficionado.Escritorio.ViewModels"
+             x:Class="RadioAficionado.Escritorio.Vistas.PanelDxcc"
+             x:DataType="vm:PanelDxccViewModel">
+
+    <Border Background="#16213e" CornerRadius="4" Padding="10">
+        <DockPanel>
+            <!-- Barra superior: Título y estadísticas generales -->
+            <Border DockPanel.Dock="Top" Background="#0f3460" CornerRadius="6" Padding="12,8" Margin="0,0,0,8">
+                <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto,Auto,Auto">
+                    <TextBlock Grid.Column="0" Text="DXCC Tracking" Foreground="White" FontWeight="Bold" FontSize="18" VerticalAlignment="Center" />
+
+                    <!-- Estadísticas principales -->
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center" Margin="15,0">
+                        <Border Background="#4caf50" CornerRadius="4" Padding="10,4">
+                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                <TextBlock Text="{Binding TotalTrabajadas}" Foreground="White" FontWeight="Bold" FontSize="16" />
+                                <TextBlock Text="{Binding TotalEntidades, StringFormat=/{0}}" Foreground="#ffffffcc" FontSize="12" VerticalAlignment="Bottom" Margin="0,0,0,1" />
+                            </StackPanel>
+                        </Border>
+                        <TextBlock Text="Trabajadas" Foreground="#aaaaaa" VerticalAlignment="Center" FontSize="12" />
+                        <TextBlock Text="{Binding PorcentajeTrabajadas, StringFormat=({0})}" Foreground="#4caf50" VerticalAlignment="Center" FontSize="12" FontWeight="Bold" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="4" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center" Margin="15,0">
+                        <Border Background="#e94560" CornerRadius="4" Padding="10,4">
+                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                <TextBlock Text="{Binding TotalConfirmadas}" Foreground="White" FontWeight="Bold" FontSize="16" />
+                                <TextBlock Text="{Binding TotalEntidades, StringFormat=/{0}}" Foreground="#ffffffcc" FontSize="12" VerticalAlignment="Bottom" Margin="0,0,0,1" />
+                            </StackPanel>
+                        </Border>
+                        <TextBlock Text="Confirmadas" Foreground="#aaaaaa" VerticalAlignment="Center" FontSize="12" />
+                        <TextBlock Text="{Binding PorcentajeConfirmadas, StringFormat=({0})}" Foreground="#e94560" VerticalAlignment="Center" FontSize="12" FontWeight="Bold" />
+                    </StackPanel>
+
+                    <!-- Botón recargar -->
+                    <Button Grid.Column="6"
+                            Content="Recargar"
+                            Command="{Binding CargarDatosCommand}"
+                            Background="#533483"
+                            Foreground="White"
+                            Padding="12,4"
+                            Margin="15,0,0,0"
+                            FontWeight="Bold"
+                            VerticalAlignment="Center" />
+                </Grid>
+            </Border>
+
+            <!-- Barra de filtros -->
+            <Border DockPanel.Dock="Top" Background="#0f3460" CornerRadius="4" Padding="8" Margin="0,0,0,6">
+                <Grid ColumnDefinitions="Auto,120,Auto,140,*,Auto">
+                    <TextBlock Grid.Column="0" Text="Continente:" Foreground="#aaaaaa" VerticalAlignment="Center" Margin="0,0,5,0" />
+                    <ComboBox Grid.Column="1"
+                              ItemsSource="{Binding OpcionesContinente}"
+                              SelectedItem="{Binding FiltroContinente}"
+                              Height="28"
+                              FontSize="12" />
+
+                    <TextBlock Grid.Column="2" Text="  Estado:" Foreground="#aaaaaa" VerticalAlignment="Center" Margin="5,0,5,0" />
+                    <ComboBox Grid.Column="3"
+                              ItemsSource="{Binding OpcionesEstado}"
+                              SelectedItem="{Binding FiltroEstado}"
+                              Height="28"
+                              FontSize="12" />
+
+                    <TextBlock Grid.Column="5"
+                               Text="{Binding MensajeEstado}"
+                               Foreground="#e94560"
+                               FontSize="11"
+                               VerticalAlignment="Center"
+                               IsVisible="{Binding MensajeEstado, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                </Grid>
+            </Border>
+
+            <!-- Panel lateral derecho: Resúmenes por continente y banda -->
+            <Border DockPanel.Dock="Right" Background="#0f3460" CornerRadius="4" Padding="8" Width="220" Margin="6,0,0,0">
+                <DockPanel>
+                    <!-- Resumen por continente -->
+                    <TextBlock DockPanel.Dock="Top" Text="Por continente" Foreground="White" FontWeight="Bold" FontSize="13" Margin="0,0,0,6" />
+                    <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding ResumenesPorContinente}" Margin="0,0,0,12">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:ResumenContinenteVm">
+                                <Grid ColumnDefinitions="40,*,Auto" Margin="0,2">
+                                    <TextBlock Grid.Column="0" Text="{Binding Continente}" Foreground="#e94560" FontWeight="Bold" FontSize="12" />
+                                    <ProgressBar Grid.Column="1"
+                                                 Value="{Binding Trabajadas}"
+                                                 Maximum="{Binding TotalEntidades}"
+                                                 Height="12"
+                                                 Foreground="#4caf50"
+                                                 Background="#1a1a2e"
+                                                 Margin="4,0" />
+                                    <TextBlock Grid.Column="2"
+                                               Foreground="#aaaaaa"
+                                               FontSize="11"
+                                               VerticalAlignment="Center">
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0}/{1}">
+                                                <Binding Path="Trabajadas" />
+                                                <Binding Path="TotalEntidades" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <!-- Resumen por banda -->
+                    <TextBlock DockPanel.Dock="Top" Text="Por banda" Foreground="White" FontWeight="Bold" FontSize="13" Margin="0,0,0,6" />
+                    <ItemsControl ItemsSource="{Binding ResumenesPorBanda}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:ResumenBandaVm">
+                                <Grid ColumnDefinitions="90,*,Auto" Margin="0,2">
+                                    <TextBlock Grid.Column="0" Text="{Binding NombreBanda}" Foreground="#aaaaaa" FontSize="11" />
+                                    <ProgressBar Grid.Column="1"
+                                                 Value="{Binding EntidadesTrabajadas}"
+                                                 Maximum="340"
+                                                 Height="10"
+                                                 Foreground="#e94560"
+                                                 Background="#1a1a2e"
+                                                 Margin="4,0" />
+                                    <TextBlock Grid.Column="2"
+                                               Text="{Binding EntidadesTrabajadas}"
+                                               Foreground="#aaaaaa"
+                                               FontSize="11"
+                                               VerticalAlignment="Center"
+                                               Width="25"
+                                               TextAlignment="Right" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </DockPanel>
+            </Border>
+
+            <!-- Tabla principal de entidades DXCC -->
+            <DataGrid ItemsSource="{Binding Entidades}"
+                      IsReadOnly="True"
+                      CanUserReorderColumns="True"
+                      CanUserResizeColumns="True"
+                      CanUserSortColumns="True"
+                      GridLinesVisibility="Horizontal"
+                      Background="#1a1a2e"
+                      Foreground="White"
+                      FontSize="12"
+                      FontFamily="Consolas"
+                      RowBackground="#1a1a2e"
+                      HeadersVisibility="Column"
+                      BorderThickness="0">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="#" Binding="{Binding Numero}" Width="50" />
+                    <DataGridTextColumn Header="Prefijo" Binding="{Binding Prefijo}" Width="70" />
+                    <DataGridTextColumn Header="Entidad" Binding="{Binding Nombre}" Width="*" />
+                    <DataGridTextColumn Header="Cont." Binding="{Binding Continente}" Width="55" />
+                    <DataGridTextColumn Header="Estado" Binding="{Binding TextoEstado}" Width="100" />
+                    <DataGridTextColumn Header="Bandas trabajadas" Binding="{Binding BandasTrabajadas}" Width="200" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+    </Border>
+</UserControl>

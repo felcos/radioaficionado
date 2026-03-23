@@ -21,7 +21,9 @@ public static class ConfiguracionSqlite
     {
         servicios.AddDbContext<ContextoRadioAficionado>(opciones =>
         {
-            opciones.UseSqlite(cadenaDeConexion);
+            opciones.UseSqlite(
+                cadenaDeConexion,
+                sqlite => sqlite.MigrationsAssembly("RadioAficionado.Infraestructura.Sqlite"));
         });
 
         return servicios;
