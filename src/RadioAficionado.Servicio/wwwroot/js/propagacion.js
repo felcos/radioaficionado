@@ -5,6 +5,7 @@
  */
 const Propagacion = (function () {
     let cargando = false;
+    let instanciaGrafico = null;
 
     function init() {
         const btnActualizar = document.getElementById('btn-actualizar-propagacion');
@@ -40,6 +41,7 @@ const Propagacion = (function () {
                 actualizarIndices(datos);
                 renderizarBandas(datos.bandas || []);
                 actualizarTimestamp(datos.actualizacion || '');
+                actualizarGrafico(datos.bandas || []);
                 cargando = false;
             })
             .catch(function () {
@@ -126,6 +128,110 @@ const Propagacion = (function () {
 
             tbody.appendChild(tr);
         }
+    }
+
+    /**
+     * Convierte nombre de condicion a valor numerico para el grafico.
+     * @param {string} condicion - Nombre de la condicion (Buena, Regular, Pobre, Cerrada).
+     * @returns {number} Valor numerico de 0 a 3.
+     */
+    function condicionANumero(condicion) {
+        if (!condicion) { return 0; }
+        const cond = condicion.toLowerCase();
+        if (cond === 'buena' || cond === 'excelente') { return 3; }
+        if (cond === 'regular') { return 2; }
+        if (cond === 'pobre' || cond === 'mala') { return 1; }
+        return 0;
+    }
+
+    /**
+     * Crea o actualiza el grafico de barras con las condiciones por banda.
+     * Requiere Chart.js cargado globalmente.
+     * @param {Array} bandas - Array de objetos { banda, dia, noche }.
+     */
+    function actualizarGrafico(bandas) {
+        const canvas = document.getElementById('grafico-propagacion');
+        if (!canvas || typeof Chart === 'undefined') { return; }
+
+        const etiquetas = [];
+        const datosDia = [];
+        const datosNoche = [];
+
+        for (let i = 0; i < bandas.length; i++) {
+            etiquetas.push(bandas[i].banda || '');
+            datosDia.push(condicionANumero(bandas[i].dia));
+            datosNoche.push(condicionANumero(bandas[i].noche));
+        }
+
+        if (instanciaGrafico) {
+            instanciaGrafico.destroy();
+            instanciaGrafico = null;
+        }
+
+        const contexto = canvas.getContext('2d');
+        instanciaGrafico = new Chart(contexto, {
+            type: 'bar',
+            data: {
+                labels: etiquetas,
+                datasets: [
+                    {
+                        label: 'Dia',
+                        data: datosDia,
+                        backgroundColor: 'rgba(34, 197, 94, 0.7)',
+                        borderColor: 'rgba(34, 197, 94, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Noche',
+                        data: datosNoche,
+                        backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#c9d1d9',
+                            font: { size: 11 }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (contextoTooltip) {
+                                const mapa = { 0: 'Cerrada', 1: 'Pobre', 2: 'Regular', 3: 'Buena' };
+                                const valor = contextoTooltip.raw;
+                                return contextoTooltip.dataset.label + ': ' + (mapa[valor] || valor);
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: { color: '#8b949e', font: { size: 10 } },
+                        grid: { color: '#21262d' }
+                    },
+                    y: {
+                        min: 0,
+                        max: 3,
+                        ticks: {
+                            stepSize: 1,
+                            color: '#8b949e',
+                            font: { size: 10 },
+                            callback: function (valor) {
+                                const mapa = { 0: 'Cerrada', 1: 'Pobre', 2: 'Regular', 3: 'Buena' };
+                                return mapa[valor] || valor;
+                            }
+                        },
+                        grid: { color: '#21262d' }
+                    }
+                }
+            }
+        });
     }
 
     function claseCondicion(condicion) {

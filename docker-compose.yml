@@ -1,0 +1,44 @@
+# Docker Compose para RadioAficionado — web + PostgreSQL
+# Uso: docker compose up -d
+# Para reconstruir: docker compose up -d --build
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: radioaficionado-web
+    ports:
+      - "5200:5200"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=radioaficionado;Username=radio;Password=radio_seguro_2026
+      - DxCluster__IndicativoPropio=
+      - DxCluster__Servidor=dxc.ve7cc.net
+      - DxCluster__Puerto=7300
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: postgres:17-alpine
+    container_name: radioaficionado-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: radioaficionado
+      POSTGRES_USER: radio
+      POSTGRES_PASSWORD: radio_seguro_2026
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U radio -d radioaficionado"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  pgdata:

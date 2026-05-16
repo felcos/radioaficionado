@@ -60,11 +60,28 @@ public sealed class ActivacionConfiguracion : IEntityTypeConfiguration<Activacio
         builder.Property(a => a.Notas)
             .HasMaxLength(2000);
 
+        // DateTimeOffset → string ISO 8601 para compatibilidad con SQLite ORDER BY
         builder.Property(a => a.FechaInicio)
+            .HasConversion(
+                v => v.ToString("O"),
+                v => DateTimeOffset.Parse(v))
             .IsRequired();
 
+        builder.Property(a => a.FechaFin)
+            .HasConversion(
+                v => v.HasValue ? v.Value.ToString("O") : null,
+                v => v != null ? DateTimeOffset.Parse(v) : (DateTimeOffset?)null);
+
         builder.Property(a => a.FechaCreacion)
+            .HasConversion(
+                v => v.ToString("O"),
+                v => DateTimeOffset.Parse(v))
             .IsRequired();
+
+        builder.Property(a => a.FechaModificacion)
+            .HasConversion(
+                v => v.HasValue ? v.Value.ToString("O") : null,
+                v => v != null ? DateTimeOffset.Parse(v) : (DateTimeOffset?)null);
 
         // --- Relación con QSOs ---
 

@@ -1,5 +1,43 @@
 # Changelog — RadioAficionado
 
+## [3.2.0] — 2026-05-16 — Graficos, ADIF drag-drop, Docker, CI/CD
+
+### feat: mapa mundial DXCC con Leaflet
+- Mapa Leaflet 1.9.4 (local) con tema oscuro (CARTO dark_all) debajo de la tabla DXCC
+- Marcadores circulares: verde para confirmados, amarillo para trabajados
+- Coordenadas deterministas por hash del numero de entidad dentro de limites continentales
+- Popups con nombre, prefijo y estado; se actualiza con filtros
+- Archivos: `Views/Paneles/_Dxcc.cshtml`, `wwwroot/js/dxcc.js`, `Views/Operacion/Dxcc.cshtml`
+
+### feat: grafico de propagacion con Chart.js
+- Chart.js 4.4.8 (local) grafico de barras con condiciones por banda
+- Barras verdes (dia) y azules (noche) con mapeo Buena=3, Regular=2, Pobre=1, Cerrada=0
+- Tooltips y eje Y con etiquetas legibles, tema oscuro
+- Archivos: `Views/Paneles/_Propagacion.cshtml`, `wwwroot/js/propagacion.js`, `Views/Operacion/Propagacion.cshtml`
+
+### feat: importar ADIF por drag-and-drop
+- Zona de drop con overlay visual sobre el panel de logbook
+- Detecta dragenter/dragleave/drop con contador para evitar parpadeo
+- Filtra extensiones .adi/.adif antes de enviar al endpoint existente
+- Archivos: `Views/Paneles/_Logbook.cshtml`, `wwwroot/js/logbook.js`, `wwwroot/css/paneles.css`
+
+### feat: Docker compose (web + PostgreSQL)
+- Dockerfile multi-stage: SDK para compilar, ASP.NET runtime para ejecutar
+- docker-compose.yml con servicio web (puerto 5200) y PostgreSQL 17
+- .dockerignore para excluir bin/obj/logs/tests
+- Archivos: `Dockerfile`, `docker-compose.yml`, `.dockerignore`
+
+### feat: CI/CD con GitHub Actions
+- Workflow `ci.yml`: compilar, testear con PostgreSQL, publicar resultados TRX
+- Job Docker: compilar imagen en push a main/develop con cache GHA
+- Archivos: `.github/workflows/ci.yml`
+
+### test: 17 tests nuevos para API controllers y DX Cluster parser
+- 8 tests para ClienteDxClusterTelnet (parseo de spots Telnet)
+- 4 tests para PropagacionApiController (indices reales y fallback)
+- 5 tests para DxccApiController (entidades, filtros, QSOs reales)
+- Archivos: `tests/RadioAficionado.Servicio.Tests/`
+
 ## [3.1.0] — 2026-05-15 — Paneles conectados, Log QSO, Tests integracion, Lanzador persistido
 
 ### fix: corregir clases CSS en DXCC JS

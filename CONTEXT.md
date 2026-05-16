@@ -125,10 +125,11 @@ Las capas **Dominio** y **Aplicacion** son compartidas entre escritorio, mobile 
 - **Fase 7** — Completitud: WSPR/FT2/Q65, SDR→Waterfall, modelos ONNX entrenables, auditoría completa (DI, CRUD, documentación interfaces)
 - **Fase 8 (en curso)** — Rig + Waterfall + FT8: conexión CAT serial robusta, audio USB del radio, waterfall en vivo conectado al audio real
 - **Fase 9 (completada 2026-05-15)** — Paneles conectados: DXCC progreso/filtro, propagación colores, Log QSO, Contest datos reales, Lanzador persistido, tests integración
+- **Fase 10 (completada 2026-05-16)** — Graficos + DevOps: Chart.js propagacion, Leaflet DXCC, ADIF drag-drop, Docker compose, CI/CD GitHub Actions
 
 ### Que funciona
 - Solucion completa: 19 proyectos fuente + 7 proyectos de test
-- **1309 tests** (308 Dominio + 676 Infraestructura + 67 Web + 29 Aplicacion + 12 Escritorio + 86 IA + 131 Servicio), **todos pasando, 0 fallos**
+- **1300 tests** (308 Dominio + 676 Infraestructura + 67 Web + 86 IA + 151 Servicio + 12 Escritorio), **todos pasando, 0 fallos**
 - Build limpio: 0 errores, 0 warnings propios
 - Modelo de dominio completo: objetos de valor, 5 entidades, compliance, contests, activaciones, DXCC, propagacion, foro, APRS, satelites, QSL, IA
 - 30 interfaces de dominio definidas, implementadas, registradas en DI y documentadas con XML completo
@@ -174,9 +175,8 @@ Las capas **Dominio** y **Aplicacion** son compartidas entre escritorio, mobile 
 - Warning NU1903: paquete transitivo Tmds.DBus.Protocol 0.20.0 tiene vulnerabilidad conocida (dependencia de Avalonia, no afecta funcionalidad)
 
 ### Que viene despues
-- **DX Cluster real**: conectar ClienteDxClusterTelnet al HubEstado con spots en tiempo real
-- **Graficos interactivos**: propagacion con Chart.js, mapa DXCC con Leaflet
-- **Docker compose**: web + PostgreSQL para deployment
-- **CI/CD**: GitHub Actions para build + tests automaticos
+- **Despliegue Docker**: verificar docker compose up en local y servidor
+- **CI/CD en GitHub**: push y validar pipeline
+- **Test end-to-end**: radio real conectada via rigctld
 - **SDR hardware testing**: probar con dispositivos RTL-SDR reales
 - **Mobile testing**: probar en emuladores Android/iOS

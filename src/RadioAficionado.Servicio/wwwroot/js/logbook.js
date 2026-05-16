@@ -40,6 +40,9 @@ const Logbook = (function () {
             });
         }
 
+        // Drag-and-drop para importar ADIF
+        configurarDragDrop();
+
         // Cargar QSOs al activar la pestana
         const tabLogbook = document.getElementById('tab-logbook');
         if (tabLogbook) {
@@ -49,6 +52,52 @@ const Logbook = (function () {
                 }
             });
         }
+    }
+
+    function configurarDragDrop() {
+        const contenedor = document.querySelector('.panel-logbook-contenido');
+        const dropzone = document.getElementById('logbook-dropzone');
+        if (!contenedor || !dropzone) { return; }
+
+        let contadorDrag = 0;
+
+        contenedor.addEventListener('dragenter', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            contadorDrag++;
+            dropzone.style.display = 'flex';
+        });
+
+        contenedor.addEventListener('dragover', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        });
+
+        contenedor.addEventListener('dragleave', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            contadorDrag--;
+            if (contadorDrag <= 0) {
+                contadorDrag = 0;
+                dropzone.style.display = 'none';
+            }
+        });
+
+        contenedor.addEventListener('drop', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            contadorDrag = 0;
+            dropzone.style.display = 'none';
+
+            const archivos = e.dataTransfer.files;
+            if (archivos.length === 0) { return; }
+
+            const archivo = archivos[0];
+            const nombre = archivo.name.toLowerCase();
+            if (nombre.endsWith('.adi') || nombre.endsWith('.adif')) {
+                importarAdif(archivo);
+            }
+        });
     }
 
     function cargarQsos(busqueda) {

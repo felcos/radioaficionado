@@ -74,11 +74,28 @@ public sealed class QsoConfiguracion : IEntityTypeConfiguration<Qso>
                 valor => valor != null ? new Localizador(valor) : (Localizador?)null)
             .HasMaxLength(8);
 
+        // DateTimeOffset → string ISO 8601 para compatibilidad con SQLite ORDER BY
         builder.Property(q => q.FechaHoraInicio)
+            .HasConversion(
+                v => v.ToString("O"),
+                v => DateTimeOffset.Parse(v))
             .IsRequired();
 
+        builder.Property(q => q.FechaHoraFin)
+            .HasConversion(
+                v => v.HasValue ? v.Value.ToString("O") : null,
+                v => v != null ? DateTimeOffset.Parse(v) : (DateTimeOffset?)null);
+
         builder.Property(q => q.FechaCreacion)
+            .HasConversion(
+                v => v.ToString("O"),
+                v => DateTimeOffset.Parse(v))
             .IsRequired();
+
+        builder.Property(q => q.FechaModificacion)
+            .HasConversion(
+                v => v.HasValue ? v.Value.ToString("O") : null,
+                v => v != null ? DateTimeOffset.Parse(v) : (DateTimeOffset?)null);
 
         builder.Property(q => q.Sincronizado)
             .HasDefaultValue(false)

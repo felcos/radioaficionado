@@ -265,6 +265,38 @@
     border-color: var(--color-acento);
 }
 
+/* Zona de drop para importar ADIF */
+.logbook-dropzone {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 255, 65, 0.08);
+    border: 2px dashed var(--color-acento);
+    border-radius: 8px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.logbook-dropzone-contenido {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: var(--color-acento);
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.logbook-dropzone-icono {
+    font-size: 3rem;
+}
+
+.panel-logbook-contenido {
+    position: relative;
+}
+
 /* ================================================================
    DX CLUSTER
    ================================================================ */
