@@ -6,6 +6,14 @@ namespace RadioAficionado.Dominio.Interfaces;
 /// Interfaz para la generación de tarjetas QSL digitales.
 /// Las tarjetas QSL son confirmaciones de contacto de radio, una tradición importante en radioafición.
 /// </summary>
+/// <remarks>
+/// <para><b>Para qué sirve:</b> Genera tarjetas QSL digitales personalizadas a partir de datos de un QSO y una plantilla visual. Exporta en formatos de imagen (PNG, JPEG).</para>
+/// <para><b>Cómo se usa:</b> Se inyecta por constructor. Se llama a <see cref="ObtenerPlantillasAsync"/> para listar diseños disponibles y a <see cref="GenerarAsync"/> para crear la tarjeta.</para>
+/// <para><b>Implementaciones:</b> <c>RadioAficionado.Infraestructura.Qsl.GeneradorQslSkia</c> (usa SkiaSharp para renderizado).</para>
+/// <para><b>Registro DI:</b> Registrada como Singleton en <c>RadioAficionado.Infraestructura.ConfiguracionServicios.AgregarCapaDeInfraestructura()</c>.</para>
+/// <para><b>Configuración necesaria:</b> Ninguna configuración externa. Las plantillas están embebidas.</para>
+/// <para><b>Dependencias:</b> SkiaSharp (paquete NuGet para renderizado de gráficos).</para>
+/// </remarks>
 public interface IGeneradorQsl
 {
     /// <summary>

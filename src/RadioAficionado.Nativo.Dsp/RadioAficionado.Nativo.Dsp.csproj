@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RadioAficionado.Compartido\RadioAficionado.Compartido.csproj" />
+    <ProjectReference Include="..\RadioAficionado.Dominio\RadioAficionado.Dominio.csproj" />
   </ItemGroup>
 
 </Project>

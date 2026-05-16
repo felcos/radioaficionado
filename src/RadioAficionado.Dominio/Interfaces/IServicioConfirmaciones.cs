@@ -49,6 +49,14 @@ public sealed record ConfirmacionQso(
 /// Servicio orquestador para gestionar la subida y consulta de confirmaciones de QSOs
 /// en servicios externos (LoTW, eQSL, ClubLog).
 /// </summary>
+/// <remarks>
+/// <para><b>Para qué sirve:</b> Orquesta la subida de QSOs y descarga de confirmaciones desde servicios externos de verificación (LoTW, eQSL, ClubLog). Abstrae los detalles de cada servicio detrás de una interfaz unificada.</para>
+/// <para><b>Cómo se usa:</b> Se inyecta por constructor. Se llama a <see cref="SubirQsosAsync"/> para enviar QSOs y a <see cref="ConsultarConfirmacionesAsync"/> para descargar confirmaciones.</para>
+/// <para><b>Implementaciones:</b> <c>RadioAficionado.Infraestructura.Confirmaciones.ServicioConfirmaciones</c>.</para>
+/// <para><b>Registro DI:</b> Registrada como Scoped en <c>RadioAficionado.Infraestructura.ConfiguracionServicios.AgregarCapaDeInfraestructura()</c>.</para>
+/// <para><b>Configuración necesaria:</b> Credenciales de cada servicio externo (<see cref="ConfiguracionLoTW"/>, <see cref="ConfiguracionEQsl"/>, <see cref="ConfiguracionClubLog"/>).</para>
+/// <para><b>Dependencias:</b> <see cref="IClienteLoTW"/>, <see cref="IClienteEQsl"/>, <see cref="IClienteClubLog"/>.</para>
+/// </remarks>
 public interface IServicioConfirmaciones
 {
     /// <summary>

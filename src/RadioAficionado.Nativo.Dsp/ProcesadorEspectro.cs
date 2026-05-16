@@ -32,7 +32,7 @@ public sealed class ProcesadorEspectro : IDisposable
         }
 
         _tasaDeMuestreoHz = tasaDeMuestreoHz;
-        _fft = new TransformadaCooleyTukey(tamanoFft);
+        _fft = FabricaTransformadaFourier.Crear(tamanoFft);
         _resolucionHz = (double)tasaDeMuestreoHz / tamanoFft;
         _frecuenciaMaxHz = (double)tasaDeMuestreoHz / 2.0;
     }

@@ -7,6 +7,14 @@ namespace RadioAficionado.Dominio.Interfaces;
 /// Servicio de dominio para gestionar activaciones de radio (POTA, SOTA, WWFF, IOTA).
 /// Coordina la creación, inicio, completado y consulta de activaciones.
 /// </summary>
+/// <remarks>
+/// <para><b>Para qué sirve:</b> Orquesta el ciclo de vida de activaciones de radio portátiles (POTA, SOTA, WWFF, IOTA): creación, inicio, registro de QSOs durante la activación y finalización.</para>
+/// <para><b>Cómo se usa:</b> Se inyecta por constructor. Se llama a <see cref="CrearActivacionAsync"/> para planificar, <see cref="IniciarAsync"/> para activar, y <see cref="CompletarAsync"/> para finalizar.</para>
+/// <para><b>Implementaciones:</b> <c>RadioAficionado.Infraestructura.Activaciones.ServicioActivaciones</c>.</para>
+/// <para><b>Registro DI:</b> Registrada como Scoped en <c>RadioAficionado.Infraestructura.ConfiguracionServicios.AgregarCapaDeInfraestructura()</c>.</para>
+/// <para><b>Configuración necesaria:</b> Ninguna configuración adicional. Opera con los repositorios registrados.</para>
+/// <para><b>Dependencias:</b> <see cref="IRepositorioActivaciones"/>, <see cref="IUnidadDeTrabajo"/>.</para>
+/// </remarks>
 public interface IServicioActivaciones
 {
     /// <summary>

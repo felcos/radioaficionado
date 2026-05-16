@@ -1,0 +1,43 @@
+<div class="panel-satelites-contenido">
+    <div class="satelites-toolbar">
+        <select class="form-select form-select-sm" id="satelites-seleccionar" style="width: auto; display: inline-block;">
+            <option value="">Seleccionar satelite...</option>
+            <option value="ISS">ISS (ZARYA)</option>
+            <option value="AO-91">AO-91 (Fox-1B)</option>
+            <option value="AO-92">AO-92 (Fox-1D)</option>
+            <option value="SO-50">SO-50 (SaudiSat-1C)</option>
+            <option value="RS-44">RS-44</option>
+            <option value="CAS-4A">CAS-4A</option>
+            <option value="CAS-4B">CAS-4B</option>
+            <option value="QO-100">QO-100 (Es'hail 2)</option>
+        </select>
+        <button class="btn btn-sm btn-outline-light" id="btn-sat-actualizar-tle">Actualizar TLE</button>
+    </div>
+    <div class="satelites-grid">
+        <div class="satelites-pases">
+            <h6>Proximos pases</h6>
+            <div class="satelites-timeline" id="satelites-timeline">
+                <!-- Los pases se generan dinamicamente via JS -->
+            </div>
+            <table class="table table-dark table-sm" id="tabla-pases">
+                <thead>
+                    <tr>
+                        <th>Satelite</th>
+                        <th>AOS</th>
+                        <th>LOS</th>
+                        <th>Max Elev</th>
+                        <th>Tipo</th>
+                    </tr>
+                </thead>
+                <tbody id="pases-tbody">
+                </tbody>
+            </table>
+        </div>
+        <div class="satelites-info">
+            <h6>Informacion del pase</h6>
+            <div id="sat-info-detalle">
+                <p class="text-muted">Seleccione un satelite para ver los pases.</p>
+            </div>
+        </div>
+    </div>
+</div>

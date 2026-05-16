@@ -11,8 +11,12 @@ using RadioAficionado.Infraestructura;
 using RadioAficionado.Infraestructura.Persistencia;
 using RadioAficionado.Infraestructura.Sqlite;
 using RadioAficionado.Nativo.Audio;
+using RadioAficionado.Nativo.Dsp;
 using RadioAficionado.Nativo.Rig;
 using RadioAficionado.Nativo.Rotador;
+using RadioAficionado.Nativo.Sdr;
+using RadioAficionado.Nativo.ModosDigitales;
+using RadioAficionado.IA;
 using RadioAficionado.Escritorio.ViewModels;
 using RadioAficionado.Escritorio.Vistas;
 
@@ -99,11 +103,8 @@ public class App : Application
         servicios.AgregarSqlite();
 
         // Servicios nativos
-        servicios.AddSingleton<IControlRig>(sp =>
-        {
-            ClienteRigctld cliente = new ClienteRigctld();
-            return cliente;
-        });
+        // IControlRig ya no se registra aqui — PanelRigViewModel crea
+        // ClienteCatSerial o ClienteRigctld segun la seleccion del usuario.
 
         servicios.AddSingleton<IControlRotador>(sp =>
         {
@@ -112,6 +113,10 @@ public class App : Application
         });
 
         servicios.AddSingleton<IAudioPipeline, PipelineAudioNAudio>();
+        servicios.AddSingleton<IServicioWaterfall, ServicioWaterfall>();
+        servicios.AgregarCapaDeSdr();
+        servicios.AgregarModosDigitales();
+        servicios.AgregarCapaDeIa();
 
         // ViewModels
         servicios.AddTransient<VentanaPrincipalViewModel>();
@@ -126,6 +131,9 @@ public class App : Application
         servicios.AddTransient<PanelDxccViewModel>();
         servicios.AddTransient<PanelSatelitesViewModel>();
         servicios.AddTransient<PanelAprsViewModel>();
+        servicios.AddTransient<PanelSdrViewModel>();
+        servicios.AddTransient<PanelWaterfallViewModel>();
+        servicios.AddTransient<EstadoSincronizacionViewModel>();
         servicios.AddTransient<ConfiguracionViewModel>();
     }
 }

@@ -6,206 +6,661 @@
         x:Class="RadioAficionado.Escritorio.Vistas.VentanaPrincipal"
         x:DataType="vm:VentanaPrincipalViewModel"
         Title="{Binding Titulo}"
-        Width="1400"
-        Height="900"
+        MinWidth="1024"
+        MinHeight="700"
+        WindowState="Maximized"
         WindowStartupLocation="CenterScreen"
-        Background="#1a1a2e">
+        Background="#0a0a0a">
 
     <Design.DataContext>
         <vm:VentanaPrincipalViewModel />
     </Design.DataContext>
 
+    <!-- ============================================================ -->
+    <!-- RECURSOS                                                      -->
+    <!-- ============================================================ -->
+    <Window.Resources>
+        <SolidColorBrush x:Key="FondoPanelOscuro" Color="#0d0d0d" />
+        <SolidColorBrush x:Key="FondoPanelMedio" Color="#1a1a1a" />
+        <SolidColorBrush x:Key="BordeMetalico" Color="#444444" />
+        <SolidColorBrush x:Key="AmbarLed" Color="#ff8c00" />
+        <SolidColorBrush x:Key="VerdeActivo" Color="#00ff41" />
+        <SolidColorBrush x:Key="RojoPtt" Color="#cc0000" />
+        <SolidColorBrush x:Key="TextoApagado" Color="#555555" />
+        <SolidColorBrush x:Key="TextoSec" Color="#888888" />
+    </Window.Resources>
+
+    <Window.Styles>
+        <!-- Banda -->
+        <Style Selector="ToggleButton.boton-banda">
+            <Setter Property="Background" Value="#222222" />
+            <Setter Property="Foreground" Value="#888888" />
+            <Setter Property="BorderBrush" Value="#444444" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="2" />
+            <Setter Property="Padding" Value="6,2" />
+            <Setter Property="FontFamily" Value="Consolas" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="MinWidth" Value="36" />
+            <Setter Property="MinHeight" Value="22" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+        <Style Selector="ToggleButton.boton-banda:checked">
+            <Setter Property="Background" Value="#ff8c00" />
+            <Setter Property="Foreground" Value="#000000" />
+            <Setter Property="BorderBrush" Value="#ffa500" />
+        </Style>
+        <Style Selector="ToggleButton.boton-banda:pointerover">
+            <Setter Property="Background" Value="#333333" />
+        </Style>
+        <Style Selector="ToggleButton.boton-banda:checked:pointerover">
+            <Setter Property="Background" Value="#ffaa33" />
+        </Style>
+
+        <!-- Modo -->
+        <Style Selector="ToggleButton.boton-modo">
+            <Setter Property="Background" Value="#222222" />
+            <Setter Property="Foreground" Value="#888888" />
+            <Setter Property="BorderBrush" Value="#3a3a3a" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="2" />
+            <Setter Property="Padding" Value="5,2" />
+            <Setter Property="FontFamily" Value="Consolas" />
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="MinWidth" Value="32" />
+            <Setter Property="MinHeight" Value="20" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+        <Style Selector="ToggleButton.boton-modo:checked">
+            <Setter Property="Background" Value="#00cc33" />
+            <Setter Property="Foreground" Value="#000000" />
+            <Setter Property="BorderBrush" Value="#00ff41" />
+        </Style>
+        <Style Selector="ToggleButton.boton-modo:pointerover">
+            <Setter Property="Background" Value="#333333" />
+        </Style>
+
+        <!-- PTT -->
+        <Style Selector="Button.boton-ptt">
+            <Setter Property="Background" Value="#880000" />
+            <Setter Property="Foreground" Value="#ffcccc" />
+            <Setter Property="BorderBrush" Value="#660000" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="ExtraBold" />
+            <Setter Property="FontFamily" Value="Consolas" />
+            <Setter Property="MinWidth" Value="52" />
+            <Setter Property="MinHeight" Value="36" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Padding" Value="10,4" />
+        </Style>
+        <Style Selector="Button.boton-ptt:pointerover">
+            <Setter Property="Background" Value="#cc0000" />
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+
+        <!-- Retro generico -->
+        <Style Selector="Button.boton-retro">
+            <Setter Property="Background" Value="#222222" />
+            <Setter Property="Foreground" Value="#bbbbbb" />
+            <Setter Property="BorderBrush" Value="#444444" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="2" />
+            <Setter Property="Padding" Value="6,2" />
+            <Setter Property="FontFamily" Value="Consolas" />
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+        <Style Selector="Button.boton-retro:pointerover">
+            <Setter Property="Background" Value="#333333" />
+        </Style>
+
+        <!-- Paso de sintonizacion -->
+        <Style Selector="Button.boton-paso">
+            <Setter Property="Background" Value="#1a1a1a" />
+            <Setter Property="Foreground" Value="#666666" />
+            <Setter Property="BorderBrush" Value="#333333" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="2" />
+            <Setter Property="Padding" Value="4,1" />
+            <Setter Property="FontFamily" Value="Consolas" />
+            <Setter Property="FontSize" Value="9" />
+            <Setter Property="MinWidth" Value="28" />
+            <Setter Property="MinHeight" Value="16" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+        <Style Selector="Button.boton-paso:pointerover">
+            <Setter Property="Background" Value="#2a2a2a" />
+            <Setter Property="Foreground" Value="#ff8c00" />
+        </Style>
+
+        <!-- Flecha sintonizacion -->
+        <Style Selector="Button.boton-flecha">
+            <Setter Property="Background" Value="#1a1a1a" />
+            <Setter Property="Foreground" Value="#ff8c00" />
+            <Setter Property="BorderBrush" Value="#333333" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="2" />
+            <Setter Property="FontFamily" Value="Consolas" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="MinWidth" Value="30" />
+            <Setter Property="MinHeight" Value="28" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+        <Style Selector="Button.boton-flecha:pointerover">
+            <Setter Property="Background" Value="#2a2a2a" />
+        </Style>
+
+        <!-- Slider -->
+        <Style Selector="Slider.perilla-retro">
+            <Setter Property="Foreground" Value="#ff8c00" />
+            <Setter Property="Background" Value="#1a1a1a" />
+            <Setter Property="MinHeight" Value="20" />
+        </Style>
+
+        <!-- Tabs compactos -->
+        <Style Selector="TabItem">
+            <Setter Property="Foreground" Value="#777777" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="FontFamily" Value="Consolas" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Padding" Value="8,3" />
+        </Style>
+        <Style Selector="TabItem:selected">
+            <Setter Property="Foreground" Value="#ff8c00" />
+        </Style>
+        <Style Selector="TabItem:pointerover">
+            <Setter Property="Foreground" Value="#cccccc" />
+        </Style>
+    </Window.Styles>
+
+    <!-- ============================================================ -->
+    <!-- LAYOUT PRINCIPAL                                              -->
+    <!-- ============================================================ -->
     <DockPanel>
-        <!-- Barra superior: Control del Rig -->
-        <Border DockPanel.Dock="Top" Background="#16213e" Padding="10" CornerRadius="0">
-            <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto">
-                <!-- Estado de conexión y botón -->
-                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                    <TextBlock Text="{Binding EstadoConexion}" Foreground="White" VerticalAlignment="Center" />
-                    <Button Content="Conectar" Command="{Binding PanelRig.ConectarCommand}" Margin="8,0" />
+
+        <!-- BARRA DE ESTADO INFERIOR -->
+        <Border DockPanel.Dock="Bottom"
+                Background="#0e0e0e"
+                BorderBrush="#2a2a2a"
+                BorderThickness="0,1,0,0"
+                Padding="8,2">
+            <Grid ColumnDefinitions="Auto,Auto,*,Auto">
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="5">
+                    <Ellipse Width="7" Height="7"
+                             Fill="#cc0000"
+                             IsVisible="{Binding !PanelRig.Conectado}" />
+                    <Ellipse Width="7" Height="7"
+                             Fill="#00ff41"
+                             IsVisible="{Binding PanelRig.Conectado}" />
+                    <TextBlock Text="{Binding PanelRig.TipoConexion}"
+                               Foreground="#888888" FontFamily="Consolas" FontSize="10"
+                               VerticalAlignment="Center" />
                 </StackPanel>
-
-                <!-- Display de frecuencia -->
-                <Border Grid.Column="1" Background="#0f3460" CornerRadius="8" Padding="15,5" Margin="10,0" HorizontalAlignment="Center">
-                    <TextBlock Text="{Binding PanelRig.FrecuenciaDisplay}"
-                               FontFamily="Consolas"
-                               FontSize="36"
-                               FontWeight="Bold"
-                               Foreground="#e94560"
-                               HorizontalAlignment="Center" />
-                </Border>
-
-                <!-- Modo y banda -->
-                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                    <Border Background="#e94560" CornerRadius="4" Padding="8,4">
-                        <TextBlock Text="{Binding PanelRig.ModoActual}" Foreground="White" FontWeight="Bold" />
-                    </Border>
-                    <Border Background="#533483" CornerRadius="4" Padding="8,4">
-                        <TextBlock Text="{Binding PanelRig.BandaActual}" Foreground="White" FontWeight="Bold" />
-                    </Border>
-                </StackPanel>
-
-                <!-- S-Meter -->
-                <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center" Margin="10,0">
-                    <TextBlock Text="S" Foreground="#aaaaaa" VerticalAlignment="Center" />
-                    <ProgressBar Value="{Binding PanelRig.NivelSenal}" Maximum="9" Width="80" Height="16" />
-                    <TextBlock Text="{Binding PanelRig.PotenciaVatios, StringFormat={}{0:F0}W}"
-                               Foreground="#aaaaaa" VerticalAlignment="Center" Margin="10,0,0,0" />
-                </StackPanel>
-
-                <!-- PTT -->
-                <Button Grid.Column="4"
-                        Content="{Binding PanelRig.TextoPtt}"
-                        Command="{Binding PanelRig.CambiarPttCommand}"
-                        Foreground="White"
-                        Width="70"
-                        FontWeight="Bold"
-                        Margin="10,0,0,0" />
-
-                <!-- Configuración -->
-                <Button Grid.Column="5"
-                        x:Name="BotonConfiguracion"
-                        Content="Config"
-                        Background="#533483"
-                        Foreground="White"
-                        FontWeight="Bold"
-                        Padding="12,4"
-                        Margin="10,0,0,0"
-                        VerticalAlignment="Center" />
+                <TextBlock Grid.Column="1" Text="  |  " Foreground="#333333" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="2"
+                           Text="{Binding PanelRig.EstadoConexionDetalle}"
+                           Foreground="#666666" FontFamily="Consolas" FontSize="10"
+                           VerticalAlignment="Center" />
+                <TextBlock Grid.Column="3"
+                           Text="{Binding HoraUtc}"
+                           Foreground="#ff8c00" FontFamily="Consolas" FontSize="11"
+                           FontWeight="Bold" VerticalAlignment="Center" />
             </Grid>
         </Border>
 
-        <!-- Inferior: Registro de QSO -->
-        <Border DockPanel.Dock="Bottom" Background="#16213e" Padding="10" Height="200">
-            <Grid ColumnDefinitions="*,*">
-                <!-- Formulario de QSO -->
-                <StackPanel Grid.Column="0" Spacing="6">
-                    <TextBlock Text="Registrar QSO" Foreground="White" FontWeight="Bold" FontSize="14" />
-                    <Grid ColumnDefinitions="Auto,*,Auto,80" RowDefinitions="Auto,Auto,Auto" HorizontalAlignment="Stretch">
-                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Indicativo:" Foreground="#aaaaaa" VerticalAlignment="Center" Margin="0,0,5,0" />
-                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding PanelRegistroQso.IndicativoContacto}" Margin="0,2" />
-                        <TextBlock Grid.Row="0" Grid.Column="2" Text="  RST TX:" Foreground="#aaaaaa" VerticalAlignment="Center" Margin="5,0" />
-                        <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding PanelRegistroQso.SenalEnviada}" Margin="0,2" />
+        <!-- ============================================================ -->
+        <!-- CABECERA COMPACTA — CONTROL DEL RADIO                        -->
+        <!-- ============================================================ -->
+        <Border DockPanel.Dock="Top"
+                Background="#0e0e0e"
+                BorderBrush="#2a2a2a"
+                BorderThickness="0,0,0,1"
+                Padding="6,4">
 
-                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Localizador:" Foreground="#aaaaaa" VerticalAlignment="Center" Margin="0,0,5,0" />
-                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding PanelRegistroQso.Localizador}" Margin="0,2" />
-                        <TextBlock Grid.Row="1" Grid.Column="2" Text="  RST RX:" Foreground="#aaaaaa" VerticalAlignment="Center" Margin="5,0" />
-                        <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding PanelRegistroQso.SenalRecibida}" Margin="0,2" />
+            <StackPanel Spacing="3">
+                <!-- FILA 1: [Conectar] [Frecuencia LED] [▼▲ Tune] [S-meter] [PTT] -->
+                <Grid ColumnDefinitions="Auto,Auto,*,Auto,Auto">
+                    <!-- Conectar -->
+                    <Button Grid.Column="0" Classes="boton-retro" Margin="0,0,4,0"
+                            Command="{Binding PanelRig.ConectarCommand}"
+                            VerticalAlignment="Center">
+                        <TextBlock Text="{Binding PanelRig.TextoBotonConexion}"
+                                   FontFamily="Consolas" FontSize="10" FontWeight="Bold" />
+                    </Button>
 
-                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Notas:" Foreground="#aaaaaa" VerticalAlignment="Center" Margin="0,0,5,0" />
-                        <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding PanelRegistroQso.Notas}" Margin="0,2" />
-                        <Button Grid.Row="2" Grid.Column="3" Content="Guardar" Command="{Binding PanelRegistroQso.GuardarQsoCommand}" HorizontalAlignment="Stretch" Margin="0,2" />
+                    <!-- CONFIG -->
+                    <Button Grid.Column="1" Classes="boton-retro" Margin="0,0,6,0"
+                            Command="{Binding PanelRig.MostrarConfiguracionCommand}"
+                            Content="⚙" FontSize="12"
+                            VerticalAlignment="Center" />
+
+                    <!-- Display frecuencia + sintonizacion -->
+                    <StackPanel Grid.Column="2" Orientation="Horizontal"
+                                HorizontalAlignment="Center" Spacing="4">
+                        <!-- Flecha abajo -->
+                        <Button Classes="boton-flecha" Content="◀"
+                                Command="{Binding PanelRig.FrecuenciaAbajoCommand}"
+                                VerticalAlignment="Center" />
+
+                        <!-- Display LED -->
+                        <Border Background="#080808" BorderBrush="#2a2a2a"
+                                BorderThickness="2" CornerRadius="4"
+                                Padding="14,4" MinWidth="300">
+                            <TextBlock Text="{Binding PanelRig.FrecuenciaDisplay}"
+                                       FontFamily="Consolas" FontSize="40" FontWeight="Bold"
+                                       Foreground="#ff8c00"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+
+                        <!-- Flecha arriba -->
+                        <Button Classes="boton-flecha" Content="▶"
+                                Command="{Binding PanelRig.FrecuenciaArribaCommand}"
+                                VerticalAlignment="Center" />
+
+                        <!-- Pasos de sintonizacion -->
+                        <StackPanel Orientation="Vertical" Spacing="1" VerticalAlignment="Center" Margin="4,0,0,0">
+                            <TextBlock Text="STEP" Foreground="#555555" FontFamily="Consolas"
+                                       FontSize="8" HorizontalAlignment="Center" />
+                            <StackPanel Orientation="Horizontal" Spacing="1">
+                                <Button Classes="boton-paso" Content="1" Command="{Binding PanelRig.SeleccionarPasoCommand}" CommandParameter="0" />
+                                <Button Classes="boton-paso" Content="10" Command="{Binding PanelRig.SeleccionarPasoCommand}" CommandParameter="1" />
+                                <Button Classes="boton-paso" Content="100" Command="{Binding PanelRig.SeleccionarPasoCommand}" CommandParameter="2" />
+                                <Button Classes="boton-paso" Content="1k" Command="{Binding PanelRig.SeleccionarPasoCommand}" CommandParameter="3" />
+                                <Button Classes="boton-paso" Content="10k" Command="{Binding PanelRig.SeleccionarPasoCommand}" CommandParameter="4" />
+                                <Button Classes="boton-paso" Content="100k" Command="{Binding PanelRig.SeleccionarPasoCommand}" CommandParameter="5" />
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- S-meter compacto -->
+                    <Border Grid.Column="3" Background="#080808" BorderBrush="#2a2a2a"
+                            BorderThickness="1" CornerRadius="3" Padding="6,3"
+                            MinWidth="200" VerticalAlignment="Center" Margin="6,0">
+                        <StackPanel Spacing="1">
+                            <Grid ColumnDefinitions="*,*,*,*,*,*,*,*,*,Auto,Auto,Auto">
+                                <TextBlock Grid.Column="0" Text="1" Foreground="#555555" FontFamily="Consolas" FontSize="8" HorizontalAlignment="Center" />
+                                <TextBlock Grid.Column="1" Text="3" Foreground="#555555" FontFamily="Consolas" FontSize="8" HorizontalAlignment="Center" />
+                                <TextBlock Grid.Column="2" Text="5" Foreground="#555555" FontFamily="Consolas" FontSize="8" HorizontalAlignment="Center" />
+                                <TextBlock Grid.Column="3" Text="7" Foreground="#555555" FontFamily="Consolas" FontSize="8" HorizontalAlignment="Center" />
+                                <TextBlock Grid.Column="4" Text="9" Foreground="#00ff41" FontFamily="Consolas" FontSize="8" FontWeight="Bold" HorizontalAlignment="Center" />
+                                <TextBlock Grid.Column="9" Text="+20" Foreground="#ffff00" FontFamily="Consolas" FontSize="7" HorizontalAlignment="Center" />
+                                <TextBlock Grid.Column="10" Text="+40" Foreground="#ff8800" FontFamily="Consolas" FontSize="7" HorizontalAlignment="Center" />
+                                <TextBlock Grid.Column="11" Text="+60" Foreground="#ff0000" FontFamily="Consolas" FontSize="7" HorizontalAlignment="Center" />
+                            </Grid>
+                            <ProgressBar Value="{Binding PanelRig.NivelSenalPorcentaje}"
+                                         Maximum="100" Height="10"
+                                         Foreground="#00ff41" Background="#1a1a1a" />
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="6">
+                                <TextBlock Text="{Binding PanelRig.NivelSenal, StringFormat=S{0}}"
+                                           Foreground="#00ff41" FontFamily="Consolas" FontSize="10" FontWeight="Bold" />
+                                <TextBlock Text="{Binding PanelRig.PotenciaVatios, StringFormat={}{0:F0}W}"
+                                           Foreground="#ff8c00" FontFamily="Consolas" FontSize="10" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- PTT -->
+                    <Button Grid.Column="4" Classes="boton-ptt"
+                            Command="{Binding PanelRig.CambiarPttCommand}"
+                            VerticalAlignment="Center">
+                        <TextBlock Text="{Binding PanelRig.TextoPtt}"
+                                   FontSize="14" FontWeight="ExtraBold" FontFamily="Consolas" />
+                    </Button>
+                </Grid>
+
+                <!-- FILA 2: Bandas + Modos + VFO/Split/PWR en una sola linea -->
+                <Grid ColumnDefinitions="Auto,Auto,4,Auto,Auto,*,Auto">
+                    <!-- Bandas -->
+                    <TextBlock Grid.Column="0" Text="BAND" Foreground="#555555" FontFamily="Consolas"
+                               FontSize="9" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,4,0" />
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="2">
+                        <ToggleButton Classes="boton-banda" Content="160" IsChecked="{Binding PanelRig.EsBanda160m, Mode=OneWay}" Command="{Binding PanelRig.CambiarBandaCommand}" CommandParameter="160m" />
+                        <ToggleButton Classes="boton-banda" Content="80" IsChecked="{Binding PanelRig.EsBanda80m, Mode=OneWay}" Command="{Binding PanelRig.CambiarBandaCommand}" CommandParameter="80m" />
+                        <ToggleButton Classes="boton-banda" Content="40" IsChecked="{Binding PanelRig.EsBanda40m, Mode=OneWay}" Command="{Binding PanelRig.CambiarBandaCommand}" CommandParameter="40m" />
+                        <ToggleButton Classes="boton-banda" Content="30" IsChecked="{Binding PanelRig.EsBanda30m, Mode=OneWay}" Command="{Binding PanelRig.CambiarBandaCommand}" CommandParameter="30m" />
+                        <ToggleButton Classes="boton-banda" Content="20" IsChecked="{Binding PanelRig.EsBanda20m, Mode=OneWay}" Command="{Binding PanelRig.CambiarBandaCommand}" CommandParameter="20m" />
+                        <ToggleButton Classes="boton-banda" Content="17" IsChecked="{Binding PanelRig.EsBanda17m, Mode=OneWay}" Command="{Binding PanelRig.CambiarBandaCommand}" CommandParameter="17m" />
+                        <ToggleButton Classes="boton-banda" Content="15" IsChecked="{Binding PanelRig.EsBanda15m, Mode=OneWay}" Command="{Binding PanelRig.CambiarBandaCommand}" CommandParameter="15m" />
+                        <ToggleButton Classes="boton-banda" Content="12" IsChecked="{Binding PanelRig.EsBanda12m, Mode=OneWay}" Command="{Binding PanelRig.CambiarBandaCommand}" CommandParameter="12m" />
+                        <ToggleButton Classes="boton-banda" Content="10" IsChecked="{Binding PanelRig.EsBanda10m, Mode=OneWay}" Command="{Binding PanelRig.CambiarBandaCommand}" CommandParameter="10m" />
+                        <ToggleButton Classes="boton-banda" Content="6" IsChecked="{Binding PanelRig.EsBanda6m, Mode=OneWay}" Command="{Binding PanelRig.CambiarBandaCommand}" CommandParameter="6m" />
+                        <ToggleButton Classes="boton-banda" Content="2" IsChecked="{Binding PanelRig.EsBanda2m, Mode=OneWay}" Command="{Binding PanelRig.CambiarBandaCommand}" CommandParameter="2m" />
+                    </StackPanel>
+
+                    <!-- Separador -->
+                    <Border Grid.Column="2" Width="1" Background="#333333" Margin="2,2" />
+
+                    <!-- Modos -->
+                    <TextBlock Grid.Column="3" Text="MODE" Foreground="#555555" FontFamily="Consolas"
+                               FontSize="9" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,4,0" />
+                    <StackPanel Grid.Column="4" Orientation="Horizontal" Spacing="2">
+                        <ToggleButton Classes="boton-modo" Content="LSB" IsChecked="{Binding PanelRig.EsModoLSB, Mode=OneWay}" Command="{Binding PanelRig.CambiarModoTextoCommand}" CommandParameter="LSB" />
+                        <ToggleButton Classes="boton-modo" Content="USB" IsChecked="{Binding PanelRig.EsModoUSB, Mode=OneWay}" Command="{Binding PanelRig.CambiarModoTextoCommand}" CommandParameter="USB" />
+                        <ToggleButton Classes="boton-modo" Content="CW" IsChecked="{Binding PanelRig.EsModoCW, Mode=OneWay}" Command="{Binding PanelRig.CambiarModoTextoCommand}" CommandParameter="CW" />
+                        <ToggleButton Classes="boton-modo" Content="FT8" IsChecked="{Binding PanelRig.EsModoFT8, Mode=OneWay}" Command="{Binding PanelRig.CambiarModoTextoCommand}" CommandParameter="FT8" />
+                        <ToggleButton Classes="boton-modo" Content="FT4" IsChecked="{Binding PanelRig.EsModoFT4, Mode=OneWay}" Command="{Binding PanelRig.CambiarModoTextoCommand}" CommandParameter="FT4" />
+                        <ToggleButton Classes="boton-modo" Content="AM" IsChecked="{Binding PanelRig.EsModoAM, Mode=OneWay}" Command="{Binding PanelRig.CambiarModoTextoCommand}" CommandParameter="AM" />
+                        <ToggleButton Classes="boton-modo" Content="FM" IsChecked="{Binding PanelRig.EsModoFM, Mode=OneWay}" Command="{Binding PanelRig.CambiarModoTextoCommand}" CommandParameter="FM" />
+                        <ToggleButton Classes="boton-modo" Content="RTTY" IsChecked="{Binding PanelRig.EsModoRTTY, Mode=OneWay}" Command="{Binding PanelRig.CambiarModoTextoCommand}" CommandParameter="RTTY" />
+                        <ToggleButton Classes="boton-modo" Content="PSK" IsChecked="{Binding PanelRig.EsModoPSK, Mode=OneWay}" Command="{Binding PanelRig.CambiarModoTextoCommand}" CommandParameter="PSK" />
+                        <ToggleButton Classes="boton-modo" Content="JS8" IsChecked="{Binding PanelRig.EsModoJS8, Mode=OneWay}" Command="{Binding PanelRig.CambiarModoTextoCommand}" CommandParameter="JS8" />
+                        <ToggleButton Classes="boton-modo" Content="JT65" IsChecked="{Binding PanelRig.EsModoJT65, Mode=OneWay}" Command="{Binding PanelRig.CambiarModoTextoCommand}" CommandParameter="JT65" />
+                    </StackPanel>
+
+                    <!-- Controles secundarios a la derecha -->
+                    <StackPanel Grid.Column="6" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                        <Button Classes="boton-retro" Content="{Binding PanelRig.TextoVfo}"
+                                Command="{Binding PanelRig.CambiarVfoCommand}" />
+                        <ToggleButton Classes="boton-modo" Content="SPLIT"
+                                      IsChecked="{Binding PanelRig.SplitActivo}" />
+                        <TextBlock Text="PWR" Foreground="#555555" FontFamily="Consolas" FontSize="9"
+                                   VerticalAlignment="Center" />
+                        <Slider Classes="perilla-retro" Value="{Binding PanelRig.PotenciaPorcentaje}"
+                                Minimum="0" Maximum="100" Width="70" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding PanelRig.PotenciaVatios, StringFormat={}{0:F0}W}"
+                                   Foreground="#ff8c00" FontFamily="Consolas" FontSize="10"
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+                </Grid>
+
+                <!-- ===== PANEL DE CONFIGURACION AVANZADA ===== -->
+                <Border IsVisible="{Binding PanelRig.ConfiguracionVisible}"
+                        Background="#111111" BorderBrush="#333333"
+                        BorderThickness="1" CornerRadius="3"
+                        Padding="8,6" Margin="0,2,0,0">
+                    <StackPanel Spacing="6">
+                        <!-- Titulo + Tipo conexion -->
+                        <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+                            <TextBlock Grid.Column="0" Text="CONEXION"
+                                       Foreground="#ff8c00" FontFamily="Consolas" FontSize="11" FontWeight="Bold"
+                                       VerticalAlignment="Center" />
+                            <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8">
+                                <RadioButton GroupName="TipoConexion" Content="CAT Serial"
+                                             IsChecked="{Binding PanelRig.UsarCatSerial}"
+                                             Foreground="#cccccc" FontFamily="Consolas" FontSize="10" />
+                                <RadioButton GroupName="TipoConexion" Content="rigctld TCP"
+                                             IsChecked="{Binding !PanelRig.UsarCatSerial}"
+                                             Foreground="#cccccc" FontFamily="Consolas" FontSize="10" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="4" Margin="12,0,0,0">
+                                <Button Classes="boton-retro" Content="TEST CAT"
+                                        Command="{Binding PanelRig.TestConexionCommand}" />
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Config CAT Serial -->
+                        <StackPanel IsVisible="{Binding PanelRig.UsarCatSerial}" Spacing="4">
+                            <!-- Fila 1: Puerto, Baudios, Radio -->
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <TextBlock Text="Puerto:" Foreground="#777777" FontFamily="Consolas" FontSize="10" VerticalAlignment="Center" />
+                                <ComboBox ItemsSource="{Binding PanelRig.PuertosDisponibles}"
+                                          SelectedItem="{Binding PanelRig.PuertoSerieSeleccionado}"
+                                          MinWidth="90" Background="#1a1a1a" Foreground="#cccccc"
+                                          FontFamily="Consolas" FontSize="10" />
+                                <Button Classes="boton-retro" Content="↻"
+                                        Command="{Binding PanelRig.RefrescarPuertosDisponiblesCommand}" />
+
+                                <TextBlock Text="Baudios:" Foreground="#777777" FontFamily="Consolas" FontSize="10" VerticalAlignment="Center" />
+                                <ComboBox ItemsSource="{Binding PanelRig.VelocidadesBaudios}"
+                                          SelectedItem="{Binding PanelRig.VelocidadBaudios}"
+                                          MinWidth="75" Background="#1a1a1a" Foreground="#cccccc"
+                                          FontFamily="Consolas" FontSize="10" />
+
+                                <TextBlock Text="Radio:" Foreground="#777777" FontFamily="Consolas" FontSize="10" VerticalAlignment="Center" />
+                                <ComboBox ItemsSource="{Binding PanelRig.ModelosRadio}"
+                                          SelectedItem="{Binding PanelRig.ModeloRadioSeleccionado}"
+                                          MinWidth="120" Background="#1a1a1a" Foreground="#cccccc"
+                                          FontFamily="Consolas" FontSize="10" />
+                            </StackPanel>
+
+                            <!-- Fila 2: Data bits, Stop bits, Paridad, Handshake, PTT Method -->
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <TextBlock Text="Data:" Foreground="#666666" FontFamily="Consolas" FontSize="10" VerticalAlignment="Center" />
+                                <ComboBox ItemsSource="{Binding PanelRig.OpcionesBitsDeDatos}"
+                                          SelectedItem="{Binding PanelRig.BitsDeDatos}"
+                                          MinWidth="50" Background="#1a1a1a" Foreground="#aaaaaa"
+                                          FontFamily="Consolas" FontSize="10" />
+
+                                <TextBlock Text="Stop:" Foreground="#666666" FontFamily="Consolas" FontSize="10" VerticalAlignment="Center" />
+                                <ComboBox ItemsSource="{Binding PanelRig.OpcionesBitsDeParada}"
+                                          SelectedItem="{Binding PanelRig.BitsDeParada}"
+                                          MinWidth="55" Background="#1a1a1a" Foreground="#aaaaaa"
+                                          FontFamily="Consolas" FontSize="10" />
+
+                                <TextBlock Text="Paridad:" Foreground="#666666" FontFamily="Consolas" FontSize="10" VerticalAlignment="Center" />
+                                <ComboBox ItemsSource="{Binding PanelRig.OpcionesParidad}"
+                                          SelectedItem="{Binding PanelRig.Paridad}"
+                                          MinWidth="65" Background="#1a1a1a" Foreground="#aaaaaa"
+                                          FontFamily="Consolas" FontSize="10" />
+
+                                <CheckBox Content="RTS" IsChecked="{Binding PanelRig.RtsEnable}"
+                                          Foreground="#888888" FontFamily="Consolas" FontSize="10" />
+                                <CheckBox Content="DTR" IsChecked="{Binding PanelRig.DtrEnable}"
+                                          Foreground="#888888" FontFamily="Consolas" FontSize="10" />
+
+                                <TextBlock Text="PTT:" Foreground="#666666" FontFamily="Consolas" FontSize="10" VerticalAlignment="Center" />
+                                <ComboBox ItemsSource="{Binding PanelRig.MetodosPtt}"
+                                          SelectedItem="{Binding PanelRig.MetodoPtt}"
+                                          MinWidth="60" Background="#1a1a1a" Foreground="#aaaaaa"
+                                          FontFamily="Consolas" FontSize="10" />
+
+                                <TextBlock Text="Poll:" Foreground="#666666" FontFamily="Consolas" FontSize="10" VerticalAlignment="Center" />
+                                <TextBox Text="{Binding PanelRig.IntervaloPollingMs}" Width="45"
+                                         Background="#1a1a1a" Foreground="#aaaaaa" FontFamily="Consolas" FontSize="10" />
+                                <TextBlock Text="ms" Foreground="#555555" FontFamily="Consolas" FontSize="10" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Config rigctld TCP -->
+                        <StackPanel IsVisible="{Binding !PanelRig.UsarCatSerial}"
+                                    Orientation="Horizontal" Spacing="6">
+                            <TextBlock Text="Host:" Foreground="#777777" FontFamily="Consolas" FontSize="10" VerticalAlignment="Center" />
+                            <TextBox Text="{Binding PanelRig.HostRigctld}" MinWidth="140"
+                                     Background="#1a1a1a" Foreground="#cccccc" FontFamily="Consolas" FontSize="10" />
+                            <TextBlock Text="Puerto:" Foreground="#777777" FontFamily="Consolas" FontSize="10" VerticalAlignment="Center" />
+                            <TextBox Text="{Binding PanelRig.PuertoRigctld}" MinWidth="60"
+                                     Background="#1a1a1a" Foreground="#cccccc" FontFamily="Consolas" FontSize="10" />
+                        </StackPanel>
+
+                        <!-- Config Audio -->
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <TextBlock Text="AUDIO" Foreground="#ff8c00" FontFamily="Consolas"
+                                       FontSize="10" FontWeight="Bold" VerticalAlignment="Center" />
+                            <Border Width="1" Background="#333333" Margin="2,2" />
+
+                            <TextBlock Text="Entrada:" Foreground="#777777" FontFamily="Consolas" FontSize="10" VerticalAlignment="Center" />
+                            <ComboBox ItemsSource="{Binding PanelRig.DispositivosAudioDisponibles}"
+                                      SelectedItem="{Binding PanelRig.DispositivoAudioEntradaVm}"
+                                      MinWidth="250" Background="#1a1a1a" Foreground="#cccccc"
+                                      FontFamily="Consolas" FontSize="10">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:DispositivoAudioVm">
+                                        <TextBlock Text="{Binding TextoDisplay}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                            <Button Classes="boton-retro" Content="↻"
+                                    Command="{Binding PanelRig.RefrescarDispositivosAudioCommand}" />
+
+                            <TextBlock Text="Muestreo:" Foreground="#777777" FontFamily="Consolas" FontSize="10" VerticalAlignment="Center" />
+                            <ComboBox ItemsSource="{Binding PanelRig.TasasDeMuestreo}"
+                                      SelectedItem="{Binding PanelRig.TasaDeMuestreoHz}"
+                                      MinWidth="70" Background="#1a1a1a" Foreground="#cccccc"
+                                      FontFamily="Consolas" FontSize="10" />
+                            <TextBlock Text="Hz" Foreground="#555555" FontFamily="Consolas" FontSize="10" VerticalAlignment="Center" />
+
+                            <Ellipse Width="7" Height="7" Margin="6,0,2,0"
+                                     Fill="#cc0000"
+                                     IsVisible="{Binding !PanelRig.AudioCapturando}" VerticalAlignment="Center" />
+                            <Ellipse Width="7" Height="7" Margin="6,0,2,0"
+                                     Fill="#00ff41"
+                                     IsVisible="{Binding PanelRig.AudioCapturando}" VerticalAlignment="Center" />
+                            <TextBlock Text="AUDIO ON" Foreground="#00ff41" FontFamily="Consolas" FontSize="9"
+                                       IsVisible="{Binding PanelRig.AudioCapturando}" VerticalAlignment="Center" />
+                            <TextBlock Text="AUDIO OFF" Foreground="#666666" FontFamily="Consolas" FontSize="9"
+                                       IsVisible="{Binding !PanelRig.AudioCapturando}" VerticalAlignment="Center" />
+                        </StackPanel>
+
+                        <!-- Status del test -->
+                        <TextBlock Text="{Binding PanelRig.EstadoConexionDetalle}"
+                                   Foreground="#00ff41" FontFamily="Consolas" FontSize="10"
+                                   IsVisible="{Binding PanelRig.EstadoConexionDetalle, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </Border>
+
+        <!-- ============================================================ -->
+        <!-- CONTENIDO CENTRAL — mas espacio para pestanas                -->
+        <!-- ============================================================ -->
+        <Grid RowDefinitions="3*,2*,5*">
+
+            <!-- WATERFALL -->
+            <Border Grid.Row="0" Background="#0a0a0a"
+                    BorderBrush="#2a2a2a" BorderThickness="0,0,0,1" Margin="1">
+                <controles:ControlWaterfall x:Name="Waterfall"
+                                            AnchoFft="1025" DbMinimo="-120" DbMaximo="0"
+                                            ClipToBounds="True" />
+            </Border>
+
+            <!-- MENSAJES DECODIFICADOS -->
+            <Border Grid.Row="1" Background="#0d0d0d"
+                    BorderBrush="#2a2a2a" BorderThickness="0,0,0,1"
+                    Margin="1" Padding="6,2">
+                <DockPanel>
+                    <Grid DockPanel.Dock="Top" ColumnDefinitions="Auto,Auto,*" Margin="0,0,0,2">
+                        <TextBlock Grid.Column="0" Text="DECODE"
+                                   Foreground="#ff8c00" FontFamily="Consolas" FontSize="11" FontWeight="Bold"
+                                   VerticalAlignment="Center" Margin="0,0,6,0" />
+                        <Border Grid.Column="1" Background="#1a1a1a" BorderBrush="#00cc33"
+                                BorderThickness="1" CornerRadius="2" Padding="4,1">
+                            <TextBlock Text="{Binding PanelMensajes.ModoDigital}"
+                                       Foreground="#00ff41" FontFamily="Consolas" FontSize="10" FontWeight="Bold" />
+                        </Border>
                     </Grid>
-                </StackPanel>
 
-                <!-- QSOs recientes -->
-                <StackPanel Grid.Column="1" Margin="10,0,0,0">
-                    <TextBlock Text="{Binding PanelRegistroQso.TotalQsos, StringFormat=QSOs: {0}}" Foreground="White" FontWeight="Bold" FontSize="14" />
-                    <ListBox ItemsSource="{Binding PanelRegistroQso.QsosRecientes}" MaxHeight="150" Background="Transparent">
+                    <Grid DockPanel.Dock="Top" ColumnDefinitions="55,40,40,50,*" Margin="0,0,0,1">
+                        <TextBlock Grid.Column="0" Text="UTC" Foreground="#444444" FontFamily="Consolas" FontSize="9" FontWeight="Bold" />
+                        <TextBlock Grid.Column="1" Text="dB" Foreground="#444444" FontFamily="Consolas" FontSize="9" FontWeight="Bold" />
+                        <TextBlock Grid.Column="2" Text="DT" Foreground="#444444" FontFamily="Consolas" FontSize="9" FontWeight="Bold" />
+                        <TextBlock Grid.Column="3" Text="Freq" Foreground="#444444" FontFamily="Consolas" FontSize="9" FontWeight="Bold" />
+                        <TextBlock Grid.Column="4" Text="Message" Foreground="#444444" FontFamily="Consolas" FontSize="9" FontWeight="Bold" />
+                    </Grid>
+
+                    <ListBox ItemsSource="{Binding PanelMensajes.Mensajes}"
+                             Background="Transparent" BorderThickness="0">
                         <ListBox.ItemTemplate>
-                            <DataTemplate x:DataType="vm:QsoRecienteVm">
-                                <StackPanel Orientation="Horizontal" Spacing="10">
-                                    <TextBlock Text="{Binding Hora}" Foreground="#888888" Width="50" />
-                                    <TextBlock Text="{Binding Indicativo}" Foreground="#e94560" FontWeight="Bold" Width="100" />
-                                    <TextBlock Text="{Binding SenalEnviada}" Foreground="#aaaaaa" Width="40" />
-                                    <TextBlock Text="{Binding SenalRecibida}" Foreground="#aaaaaa" Width="40" />
-                                </StackPanel>
+                            <DataTemplate x:DataType="vm:MensajeDigitalVm">
+                                <Grid ColumnDefinitions="55,40,40,50,*">
+                                    <TextBlock Grid.Column="0" Text="{Binding Hora}"
+                                               Foreground="#777777" FontFamily="Consolas" FontSize="11" />
+                                    <TextBlock Grid.Column="1" Text="{Binding Snr, StringFormat={}{0:+0;-0}}"
+                                               Foreground="#00ff41" FontFamily="Consolas" FontSize="11" />
+                                    <TextBlock Grid.Column="2" Text="{Binding DeltaTiempo, StringFormat={}{0:F1}}"
+                                               Foreground="#555555" FontFamily="Consolas" FontSize="11" />
+                                    <TextBlock Grid.Column="3" Text="{Binding FrecuenciaHz}"
+                                               Foreground="#ff8c00" FontFamily="Consolas" FontSize="11" />
+                                    <TextBlock Grid.Column="4" Text="{Binding Mensaje}"
+                                               Foreground="#cccccc" FontFamily="Consolas" FontSize="11" />
+                                </Grid>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                </StackPanel>
-            </Grid>
-        </Border>
+                </DockPanel>
+            </Border>
 
-        <!-- Centro: Pestañas con contenido principal -->
-        <TabControl SelectedIndex="{Binding PestanaActiva}">
-            <TabControl.Styles>
-                <Style Selector="TabItem">
-                    <Setter Property="Foreground" Value="#aaaaaa" />
-                    <Setter Property="FontWeight" Value="Bold" />
-                </Style>
-                <Style Selector="TabItem:selected">
-                    <Setter Property="Foreground" Value="#e94560" />
-                </Style>
-            </TabControl.Styles>
+            <!-- PESTANAS SECUNDARIAS — ahora con mas espacio (5*) -->
+            <TabControl Grid.Row="2"
+                        SelectedIndex="{Binding PestanaActiva}"
+                        Margin="1" Background="#0a0a0a">
 
-            <!-- Pestaña 0: Operación (Waterfall + Mensajes) -->
-            <TabItem Header="Operación">
-                <Grid ColumnDefinitions="*,350">
-                    <!-- Izquierda: Waterfall de espectro -->
-                    <Border Grid.Column="0" Background="#0a0a23" Margin="5">
-                        <controles:ControlWaterfall x:Name="Waterfall"
-                                                    AnchoFft="1025"
-                                                    DbMinimo="-120"
-                                                    DbMaximo="0"
-                                                    ClipToBounds="True" />
-                    </Border>
+                <TabItem Header="QSO">
+                    <Border Background="#0d0d0d" Padding="8,4">
+                        <Grid ColumnDefinitions="*,*">
+                            <StackPanel Grid.Column="0" Spacing="4">
+                                <TextBlock Text="REGISTRAR QSO" Foreground="#ff8c00" FontWeight="Bold" FontFamily="Consolas" FontSize="12" />
+                                <Grid ColumnDefinitions="Auto,*,Auto,75" RowDefinitions="Auto,Auto,Auto" HorizontalAlignment="Stretch">
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="CALL:" Foreground="#777777" FontFamily="Consolas" FontSize="10" VerticalAlignment="Center" Margin="0,0,4,0" />
+                                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding PanelRegistroQso.IndicativoContacto}" Background="#1a1a1a" Foreground="#cccccc" FontFamily="Consolas" FontSize="11" Margin="0,1" />
+                                    <TextBlock Grid.Row="0" Grid.Column="2" Text=" RST TX:" Foreground="#777777" FontFamily="Consolas" FontSize="10" VerticalAlignment="Center" Margin="4,0" />
+                                    <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding PanelRegistroQso.SenalEnviada}" Background="#1a1a1a" Foreground="#cccccc" FontFamily="Consolas" FontSize="11" Margin="0,1" />
 
-                    <!-- Derecha: Mensajes decodificados -->
-                    <Border Grid.Column="1" Background="#16213e" Margin="5" CornerRadius="4" Padding="8">
-                        <DockPanel>
-                            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="8" Margin="0,0,0,8">
-                                <TextBlock Text="Mensajes" Foreground="White" FontWeight="Bold" FontSize="14" VerticalAlignment="Center" />
-                                <Border Background="#e94560" CornerRadius="4" Padding="6,2">
-                                    <TextBlock Text="{Binding PanelMensajes.ModoDigital}" Foreground="White" FontSize="11" />
-                                </Border>
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="LOC:" Foreground="#777777" FontFamily="Consolas" FontSize="10" VerticalAlignment="Center" Margin="0,0,4,0" />
+                                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding PanelRegistroQso.Localizador}" Background="#1a1a1a" Foreground="#cccccc" FontFamily="Consolas" FontSize="11" Margin="0,1" />
+                                    <TextBlock Grid.Row="1" Grid.Column="2" Text=" RST RX:" Foreground="#777777" FontFamily="Consolas" FontSize="10" VerticalAlignment="Center" Margin="4,0" />
+                                    <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding PanelRegistroQso.SenalRecibida}" Background="#1a1a1a" Foreground="#cccccc" FontFamily="Consolas" FontSize="11" Margin="0,1" />
+
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="NOTAS:" Foreground="#777777" FontFamily="Consolas" FontSize="10" VerticalAlignment="Center" Margin="0,0,4,0" />
+                                    <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding PanelRegistroQso.Notas}" Background="#1a1a1a" Foreground="#cccccc" FontFamily="Consolas" FontSize="11" Margin="0,1" />
+                                    <Button Grid.Row="2" Grid.Column="3" Content="LOG" Classes="boton-retro"
+                                            Command="{Binding PanelRegistroQso.GuardarQsoCommand}"
+                                            HorizontalAlignment="Stretch" Margin="0,1" />
+                                </Grid>
                             </StackPanel>
-                            <ListBox ItemsSource="{Binding PanelMensajes.Mensajes}" Background="Transparent">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate x:DataType="vm:MensajeDigitalVm">
-                                        <Grid ColumnDefinitions="50,35,40,*">
-                                            <TextBlock Grid.Column="0" Text="{Binding Hora}" Foreground="#666666" FontFamily="Consolas" FontSize="11" />
-                                            <TextBlock Grid.Column="1" Text="{Binding Snr, StringFormat={}{0:+0;-0}}" Foreground="#00ff00" FontFamily="Consolas" FontSize="11" />
-                                            <TextBlock Grid.Column="2" Text="{Binding FrecuenciaHz}" Foreground="#888888" FontFamily="Consolas" FontSize="11" />
-                                            <TextBlock Grid.Column="3" Text="{Binding Mensaje}" Foreground="White" FontFamily="Consolas" FontSize="11" />
-                                        </Grid>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                        </DockPanel>
+
+                            <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                <TextBlock Text="{Binding PanelRegistroQso.TotalQsos, StringFormat=QSOs: {0}}"
+                                           Foreground="#ff8c00" FontWeight="Bold" FontFamily="Consolas" FontSize="12" />
+                                <ListBox ItemsSource="{Binding PanelRegistroQso.QsosRecientes}" MaxHeight="200" Background="Transparent" BorderThickness="0">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate x:DataType="vm:QsoRecienteVm">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <TextBlock Text="{Binding Hora}" Foreground="#555555" FontFamily="Consolas" FontSize="10" Width="45" />
+                                                <TextBlock Text="{Binding Indicativo}" Foreground="#ff8c00" FontWeight="Bold" FontFamily="Consolas" FontSize="10" Width="90" />
+                                                <TextBlock Text="{Binding SenalEnviada}" Foreground="#777777" FontFamily="Consolas" FontSize="10" Width="35" />
+                                                <TextBlock Text="{Binding SenalRecibida}" Foreground="#777777" FontFamily="Consolas" FontSize="10" Width="35" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </StackPanel>
+                        </Grid>
                     </Border>
-                </Grid>
-            </TabItem>
+                </TabItem>
 
-            <!-- Pestaña 1: Logbook -->
-            <TabItem Header="Logbook">
-                <vistas:PanelLogbook DataContext="{Binding PanelLogbook}" />
-            </TabItem>
-
-            <!-- Pestaña 2: DX Cluster -->
-            <TabItem Header="DX Cluster">
-                <vistas:PanelDxCluster DataContext="{Binding PanelDxCluster}" />
-            </TabItem>
-
-            <!-- Pestaña 3: Contest -->
-            <TabItem Header="Contest">
-                <vistas:PanelContest DataContext="{Binding PanelContest}" />
-            </TabItem>
-
-            <!-- Pestaña 4: Activaciones POTA/SOTA -->
-            <TabItem Header="Activaciones">
-                <vistas:PanelActivaciones DataContext="{Binding PanelActivaciones}" />
-            </TabItem>
-
-            <!-- Pestaña 5: Propagación HF -->
-            <TabItem Header="Propagación">
-                <vistas:PanelPropagacion DataContext="{Binding PanelPropagacion}" />
-            </TabItem>
-
-            <!-- Pestaña 6: DXCC Tracking -->
-            <TabItem Header="DXCC">
-                <vistas:PanelDxcc DataContext="{Binding PanelDxcc}" />
-            </TabItem>
-
-            <!-- Pestaña 7: Satélites -->
-            <TabItem Header="Satélites">
-                <vistas:PanelSatelites DataContext="{Binding PanelSatelites}" />
-            </TabItem>
-
-            <!-- Pestaña 8: APRS -->
-            <TabItem Header="APRS">
-                <vistas:PanelAprs DataContext="{Binding PanelAprs}" />
-            </TabItem>
-        </TabControl>
+                <TabItem Header="Logbook">
+                    <vistas:PanelLogbook DataContext="{Binding PanelLogbook}" />
+                </TabItem>
+                <TabItem Header="DX Cluster">
+                    <vistas:PanelDxCluster DataContext="{Binding PanelDxCluster}" />
+                </TabItem>
+                <TabItem Header="Contest">
+                    <vistas:PanelContest DataContext="{Binding PanelContest}" />
+                </TabItem>
+                <TabItem Header="Activaciones">
+                    <vistas:PanelActivaciones DataContext="{Binding PanelActivaciones}" />
+                </TabItem>
+                <TabItem Header="Propagacion">
+                    <vistas:PanelPropagacion DataContext="{Binding PanelPropagacion}" />
+                </TabItem>
+                <TabItem Header="DXCC">
+                    <vistas:PanelDxcc DataContext="{Binding PanelDxcc}" />
+                </TabItem>
+                <TabItem Header="Satelites">
+                    <vistas:PanelSatelites DataContext="{Binding PanelSatelites}" />
+                </TabItem>
+                <TabItem Header="APRS">
+                    <vistas:PanelAprs DataContext="{Binding PanelAprs}" />
+                </TabItem>
+                <TabItem Header="SDR">
+                    <vistas:PanelSdr DataContext="{Binding PanelSdr}" />
+                </TabItem>
+                <TabItem Header="Waterfall">
+                    <vistas:PanelWaterfall DataContext="{Binding PanelWaterfall}" />
+                </TabItem>
+            </TabControl>
+        </Grid>
     </DockPanel>
 </Window>

@@ -44,6 +44,14 @@ public sealed record EstadoSincronizacion(
 /// <summary>
 /// Servicio de sincronización bidireccional de QSOs entre el cliente de escritorio y la API web.
 /// </summary>
+/// <remarks>
+/// <para><b>Para qué sirve:</b> Sincroniza QSOs bidireccionalmente entre el cliente local (escritorio/mobile) y la API web. Envía QSOs nuevos al servidor y descarga los que faltan localmente.</para>
+/// <para><b>Cómo se usa:</b> Se inyecta por constructor. Se configura con <see cref="ConfigurarAsync"/> y se ejecuta manualmente con <see cref="SincronizarAsync"/> o automáticamente si se habilita.</para>
+/// <para><b>Implementaciones:</b> <c>RadioAficionado.Infraestructura.Sincronizacion.ServicioSincronizacion</c>.</para>
+/// <para><b>Registro DI:</b> Registrada con <c>AddHttpClient</c> (Transient con HttpClient gestionado) en <c>RadioAficionado.Infraestructura.ConfiguracionServicios.AgregarCapaDeInfraestructura()</c>.</para>
+/// <para><b>Configuración necesaria:</b> URL del servidor, token de autenticación e indicativo (ver <see cref="ConfiguracionSincronizacion"/>).</para>
+/// <para><b>Dependencias:</b> <c>HttpClient</c> (inyectado por factory), <see cref="IRepositorioQso"/>.</para>
+/// </remarks>
 public interface IServicioSincronizacion : IDisposable
 {
     /// <summary>

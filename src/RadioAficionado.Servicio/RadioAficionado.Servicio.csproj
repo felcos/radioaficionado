@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <InternalsVisibleTo>RadioAficionado.Servicio.Tests</InternalsVisibleTo>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
+    <PackageReference Include="MediatR" Version="12.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RadioAficionado.Dominio\RadioAficionado.Dominio.csproj" />
+    <ProjectReference Include="..\RadioAficionado.Aplicacion\RadioAficionado.Aplicacion.csproj" />
+    <ProjectReference Include="..\RadioAficionado.Infraestructura\RadioAficionado.Infraestructura.csproj" />
+    <ProjectReference Include="..\RadioAficionado.Infraestructura.Sqlite\RadioAficionado.Infraestructura.Sqlite.csproj" />
+    <ProjectReference Include="..\RadioAficionado.Nativo.Dsp\RadioAficionado.Nativo.Dsp.csproj" />
+    <ProjectReference Include="..\RadioAficionado.Nativo.ModosDigitales\RadioAficionado.Nativo.ModosDigitales.csproj" />
+    <ProjectReference Include="..\RadioAficionado.Nativo.Rotador\RadioAficionado.Nativo.Rotador.csproj" />
+    <ProjectReference Include="..\RadioAficionado.Nativo.Audio\RadioAficionado.Nativo.Audio.csproj" />
+    <ProjectReference Include="..\RadioAficionado.Nativo.Rig\RadioAficionado.Nativo.Rig.csproj" />
+    <ProjectReference Include="..\RadioAficionado.IA\RadioAficionado.IA.csproj" />
+    <ProjectReference Include="..\RadioAficionado.Nativo.Sdr\RadioAficionado.Nativo.Sdr.csproj" />
+    <ProjectReference Include="..\RadioAficionado.Compartido\RadioAficionado.Compartido.csproj" />
+  </ItemGroup>
+
+</Project>

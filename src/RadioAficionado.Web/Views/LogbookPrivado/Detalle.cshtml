@@ -1,0 +1,202 @@
+@model QsoDetalleViewModel
+@{
+    ViewData["Title"] = $"QSO — {Model.IndicativoPropio} -> {Model.IndicativoContacto}";
+}
+
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a asp-controller="LogbookPrivado" asp-action="Index" class="text-ra-acento">Mi Logbook</a>
+        </li>
+        <li class="breadcrumb-item active text-ra-suave" aria-current="page">
+            Detalle del QSO
+        </li>
+    </ol>
+</nav>
+
+<div class="row">
+    <!-- Cabecera del QSO -->
+    <div class="col-12 mb-4">
+        <div class="card bg-ra-tarjeta border-ra-borde">
+            <div class="card-body text-center py-4">
+                <h1 class="h3 mb-3">
+                    <span class="fw-bold">@Model.IndicativoPropio</span>
+                    <span class="text-ra-suave mx-2">-></span>
+                    <span class="fw-bold text-ra-acento">@Model.IndicativoContacto</span>
+                </h1>
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    <span class="badge bg-ra-modo fs-6">@Model.Modo</span>
+                    @if (!string.IsNullOrWhiteSpace(Model.Banda))
+                    {
+                        <span class="badge bg-secondary fs-6">@Model.Banda</span>
+                    }
+                    <span class="badge @(Model.EstaCompletado ? "bg-success" : "bg-warning text-dark") fs-6">
+                        @(Model.EstaCompletado ? "Completado" : "En curso")
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Informacion del contacto -->
+    <div class="col-md-6 mb-4">
+        <div class="card bg-ra-tarjeta border-ra-borde h-100">
+            <div class="card-header bg-transparent border-ra-borde">
+                <h2 class="h5 text-ra-acento mb-0">Datos del Contacto</h2>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-5 text-ra-suave">Frecuencia</dt>
+                    <dd class="col-sm-7">@Model.Frecuencia</dd>
+
+                    <dt class="col-sm-5 text-ra-suave">Banda</dt>
+                    <dd class="col-sm-7">@(Model.Banda ?? "No identificada")</dd>
+
+                    <dt class="col-sm-5 text-ra-suave">Modo</dt>
+                    <dd class="col-sm-7">@Model.Modo</dd>
+
+                    <dt class="col-sm-5 text-ra-suave">Inicio (UTC)</dt>
+                    <dd class="col-sm-7">@Model.FechaHoraInicio.ToString("dd/MM/yyyy HH:mm:ss")</dd>
+
+                    @if (Model.FechaHoraFin.HasValue)
+                    {
+                        <dt class="col-sm-5 text-ra-suave">Fin (UTC)</dt>
+                        <dd class="col-sm-7">@Model.FechaHoraFin.Value.ToString("dd/MM/yyyy HH:mm:ss")</dd>
+                    }
+
+                    @if (Model.Duracion.HasValue)
+                    {
+                        <dt class="col-sm-5 text-ra-suave">Duracion</dt>
+                        <dd class="col-sm-7">
+                            @if (Model.Duracion.Value.TotalHours >= 1)
+                            {
+                                @($"{(int)Model.Duracion.Value.TotalHours}h {Model.Duracion.Value.Minutes}m {Model.Duracion.Value.Seconds}s")
+                            }
+                            else if (Model.Duracion.Value.TotalMinutes >= 1)
+                            {
+                                @($"{Model.Duracion.Value.Minutes}m {Model.Duracion.Value.Seconds}s")
+                            }
+                            else
+                            {
+                                @($"{Model.Duracion.Value.Seconds}s")
+                            }
+                        </dd>
+                    }
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <!-- Senales y potencia -->
+    <div class="col-md-6 mb-4">
+        <div class="card bg-ra-tarjeta border-ra-borde h-100">
+            <div class="card-header bg-transparent border-ra-borde">
+                <h2 class="h5 text-ra-acento mb-0">Senales y Potencia</h2>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-5 text-ra-suave">Senal Enviada</dt>
+                    <dd class="col-sm-7">
+                        @if (!string.IsNullOrWhiteSpace(Model.SenalEnviada))
+                        {
+                            <span class="badge bg-info text-dark fs-6">@Model.SenalEnviada</span>
+                        }
+                        else
+                        {
+                            <span class="text-ra-suave">—</span>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-5 text-ra-suave">Senal Recibida</dt>
+                    <dd class="col-sm-7">
+                        @if (!string.IsNullOrWhiteSpace(Model.SenalRecibida))
+                        {
+                            <span class="badge bg-info text-dark fs-6">@Model.SenalRecibida</span>
+                        }
+                        else
+                        {
+                            <span class="text-ra-suave">—</span>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-5 text-ra-suave">Potencia</dt>
+                    <dd class="col-sm-7">
+                        @if (Model.Potencia.HasValue)
+                        {
+                            @($"{Model.Potencia.Value} W")
+                        }
+                        else
+                        {
+                            <span class="text-ra-suave">No registrada</span>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-5 text-ra-suave">Localizador</dt>
+                    <dd class="col-sm-7">
+                        @if (!string.IsNullOrWhiteSpace(Model.LocalizadorContacto))
+                        {
+                            @Model.LocalizadorContacto
+                        }
+                        else
+                        {
+                            <span class="text-ra-suave">No proporcionado</span>
+                        }
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notas -->
+    @if (!string.IsNullOrWhiteSpace(Model.Notas))
+    {
+        <div class="col-12 mb-4">
+            <div class="card bg-ra-tarjeta border-ra-borde">
+                <div class="card-header bg-transparent border-ra-borde">
+                    <h2 class="h5 text-ra-acento mb-0">Notas</h2>
+                </div>
+                <div class="card-body">
+                    <p class="mb-0 text-ra-suave">@Model.Notas</p>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Metadatos -->
+    <div class="col-12 mb-4">
+        <div class="card bg-ra-tarjeta border-ra-borde">
+            <div class="card-body">
+                <div class="row text-ra-suave small">
+                    <div class="col-md-4">
+                        <strong>ID:</strong> <code>@Model.Id</code>
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Creado:</strong> @Model.FechaCreacion.ToString("dd/MM/yyyy HH:mm:ss") UTC
+                    </div>
+                    @if (Model.FechaModificacion.HasValue)
+                    {
+                        <div class="col-md-4">
+                            <strong>Modificado:</strong> @Model.FechaModificacion.Value.ToString("dd/MM/yyyy HH:mm:ss") UTC
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-3 d-flex gap-2">
+    <a asp-controller="LogbookPrivado" asp-action="Editar" asp-route-id="@Model.Id"
+       class="btn btn-outline-secondary">
+        Editar
+    </a>
+    <a asp-controller="LogbookPrivado" asp-action="Index" class="btn btn-outline-ra-acento">
+        Volver al Logbook
+    </a>
+    <form asp-controller="LogbookPrivado" asp-action="Eliminar" asp-route-id="@Model.Id"
+          method="post" class="d-inline"
+          onsubmit="return confirm('¿Seguro que deseas eliminar este QSO?');">
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn btn-outline-danger">Eliminar</button>
+    </form>
+</div>

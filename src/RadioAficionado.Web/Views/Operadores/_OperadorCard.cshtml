@@ -1,0 +1,27 @@
+@model OperadorResumenViewModel
+
+<a asp-controller="Operadores" asp-action="Perfil" asp-route-indicativo="@Model.Indicativo"
+   class="text-decoration-none">
+    <div class="card bg-ra-tarjeta border-ra-borde h-100 card-hover-ra">
+        <div class="card-body">
+            <h5 class="card-title text-ra-acento mb-1">@Model.Indicativo</h5>
+            <p class="text-light mb-2">@Model.Nombre</p>
+            <div class="d-flex justify-content-between text-ra-suave small">
+                <span>
+                    @if (!string.IsNullOrWhiteSpace(Model.Localizador))
+                    {
+                        @:Loc: @Model.Localizador
+                    }
+                    else
+                    {
+                        @:Loc: —
+                    }
+                </span>
+                <span>@Model.TotalQsos QSOs</span>
+            </div>
+            <div class="text-ra-suave small mt-1">
+                Miembro desde @Model.FechaRegistro.ToString("MMM yyyy", new System.Globalization.CultureInfo("es-ES"))
+            </div>
+        </div>
+    </div>
+</a>

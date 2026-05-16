@@ -5,6 +5,8 @@ using RadioAficionado.Aplicacion;
 using RadioAficionado.Dominio.Entidades;
 using RadioAficionado.Infraestructura;
 using RadioAficionado.Infraestructura.Postgres;
+using RadioAficionado.Nativo.ModosDigitales;
+using RadioAficionado.IA;
 using RadioAficionado.Web.Data;
 
 // Configurar Serilog
@@ -20,20 +22,36 @@ try
 
     builder.Host.UseSerilog();
 
+    // CORS — permitir que la app de escritorio se comunique con la API
+    builder.Services.AddCors(opciones =>
+    {
+        opciones.AddPolicy("PermitirEscritorio", politica =>
+        {
+            politica.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+    });
+
     // Servicios
     builder.Services.AddControllersWithViews();
     builder.Services.AgregarCapaDeAplicacion();
     builder.Services.AgregarCapaDeInfraestructura();
+    builder.Services.AgregarModosDigitales();
+    builder.Services.AgregarCapaDeIa();
 
-    // PostgreSQL — cadena de conexión desde configuración, con valor por defecto para desarrollo
+    // PostgreSQL — cadena de conexión desde configuración (obligatoria)
     string cadenaConexion = builder.Configuration.GetConnectionString("RadioAficionado")
-        ?? "Host=localhost;Database=radioaficionado;Username=postgres;Password=postgres";
+        ?? throw new InvalidOperationException(
+            "La cadena de conexión 'RadioAficionado' no está configurada en appsettings.json. " +
+            "Añade una sección ConnectionStrings con la clave 'RadioAficionado'.");
     builder.Services.AgregarPostgres(cadenaConexion);
 
     // ASP.NET Identity — contexto separado para no afectar la app de escritorio
     builder.Services.AddDbContext<ContextoIdentidadRadioAficionado>(opciones =>
     {
-        opciones.UseNpgsql(cadenaConexion);
+        opciones.UseNpgsql(cadenaConexion, npgsqlOpciones =>
+            npgsqlOpciones.MigrationsAssembly("RadioAficionado.Infraestructura.Postgres"));
     });
 
     builder.Services.AddIdentity<UsuarioRadio, IdentityRole>(opciones =>
@@ -84,6 +102,7 @@ try
     app.UseHttpsRedirection();
     app.UseStaticFiles();
     app.UseRouting();
+    app.UseCors("PermitirEscritorio");
     app.UseAuthentication();
     app.UseAuthorization();
     app.UseSerilogRequestLogging();

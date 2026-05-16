@@ -1,0 +1,124 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:RadioAficionado.Mobile.ViewModels"
+             xmlns:vistas="using:RadioAficionado.Mobile.Vistas"
+             x:Class="RadioAficionado.Mobile.Vistas.VentanaPrincipalMobile"
+             x:DataType="vm:VentanaPrincipalMobileViewModel"
+             Background="#1a1a2e">
+
+    <Design.DataContext>
+        <vm:VentanaPrincipalMobileViewModel />
+    </Design.DataContext>
+
+    <DockPanel>
+        <!-- Cabecera -->
+        <Border DockPanel.Dock="Top" Background="#16213e" Padding="16,12">
+            <TextBlock Text="{Binding Titulo}"
+                       FontSize="20"
+                       FontWeight="Bold"
+                       Foreground="#e94560"
+                       HorizontalAlignment="Center" />
+        </Border>
+
+        <!-- Barra de pestañas inferior -->
+        <Border DockPanel.Dock="Bottom" Background="#16213e" Padding="0,4">
+            <Grid ColumnDefinitions="*,*,*,*">
+                <!-- Logbook -->
+                <Button Grid.Column="0"
+                        Command="{Binding NavegarALogbookCommand}"
+                        Background="Transparent"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
+                        Padding="8,10">
+                    <StackPanel Spacing="4" HorizontalAlignment="Center">
+                        <TextBlock Text="&#x1F4D6;" FontSize="20" HorizontalAlignment="Center" />
+                        <TextBlock Text="Logbook" FontSize="11" Foreground="#aaaaaa" HorizontalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+
+                <!-- Mapa -->
+                <Button Grid.Column="1"
+                        Command="{Binding NavegarAMapaCommand}"
+                        Background="Transparent"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
+                        Padding="8,10">
+                    <StackPanel Spacing="4" HorizontalAlignment="Center">
+                        <TextBlock Text="&#x1F30D;" FontSize="20" HorizontalAlignment="Center" />
+                        <TextBlock Text="Mapa" FontSize="11" Foreground="#aaaaaa" HorizontalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+
+                <!-- Propagación -->
+                <Button Grid.Column="2"
+                        Command="{Binding NavegarAPropagacionCommand}"
+                        Background="Transparent"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
+                        Padding="8,10">
+                    <StackPanel Spacing="4" HorizontalAlignment="Center">
+                        <TextBlock Text="&#x2600;" FontSize="20" HorizontalAlignment="Center" />
+                        <TextBlock Text="Propagación" FontSize="11" Foreground="#aaaaaa" HorizontalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+
+                <!-- Configuración -->
+                <Button Grid.Column="3"
+                        Command="{Binding NavegarAConfiguracionCommand}"
+                        Background="Transparent"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
+                        Padding="8,10">
+                    <StackPanel Spacing="4" HorizontalAlignment="Center">
+                        <TextBlock Text="&#x2699;" FontSize="20" HorizontalAlignment="Center" />
+                        <TextBlock Text="Config" FontSize="11" Foreground="#aaaaaa" HorizontalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </Border>
+
+        <!-- Contenido principal con TabControl oculto (controlado por PestanaSeleccionada) -->
+        <TabControl SelectedIndex="{Binding PestanaSeleccionada}"
+                    TabStripPlacement="Top"
+                    Padding="0">
+            <!-- Ocultar las pestañas superiores del TabControl (la navegación está abajo) -->
+            <TabControl.Styles>
+                <Style Selector="TabItem">
+                    <Setter Property="IsVisible" Value="False" />
+                </Style>
+            </TabControl.Styles>
+
+            <TabItem>
+                <vistas:PanelLogbookMobile DataContext="{Binding PanelLogbook}" />
+            </TabItem>
+            <TabItem>
+                <vistas:PanelMapaMobile DataContext="{Binding PanelMapa}" />
+            </TabItem>
+            <TabItem>
+                <vistas:PanelPropagacionMobile DataContext="{Binding PanelPropagacion}" />
+            </TabItem>
+            <TabItem>
+                <!-- Panel de configuración placeholder -->
+                <ScrollViewer>
+                    <StackPanel Margin="16" Spacing="16">
+                        <TextBlock Text="Configuración"
+                                   FontSize="22"
+                                   FontWeight="Bold"
+                                   Foreground="White" />
+                        <Border Background="#16213e" CornerRadius="8" Padding="16">
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="Indicativo:" Foreground="#aaaaaa" />
+                                <TextBox PlaceholderText="Ej: EA4FKR" />
+                                <TextBlock Text="Locator:" Foreground="#aaaaaa" Margin="0,8,0,0" />
+                                <TextBox PlaceholderText="Ej: IN80dl" />
+                                <TextBlock Text="Versión: 1.0.0 Mobile"
+                                           Foreground="#666666"
+                                           Margin="0,16,0,0" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</UserControl>

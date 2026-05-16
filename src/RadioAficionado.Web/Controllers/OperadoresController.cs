@@ -173,4 +173,48 @@ public class OperadoresController(
 
         return View(viewModel);
     }
+
+    /// <summary>
+    /// Endpoint JSON que retorna los datos de QSOs con localizador de un operador
+    /// para mostrar en el mapa de contactos del perfil publico.
+    /// </summary>
+    /// <param name="indicativo">Indicativo del operador.</param>
+    /// <param name="ct">Token de cancelacion.</param>
+    /// <returns>Lista JSON de contactos con coordenadas geograficas.</returns>
+    [HttpGet]
+    public async Task<IActionResult> MapaDatosOperador(string indicativo, CancellationToken ct)
+    {
+        if (string.IsNullOrWhiteSpace(indicativo))
+        {
+            return Json(Array.Empty<MapaContactoViewModel>());
+        }
+
+        _logger.LogDebug("Obteniendo datos de mapa para operador: {Indicativo}", indicativo);
+
+        Indicativo indicativoObjeto = new(indicativo);
+        IReadOnlyList<Qso> qsosDelOperador = await _repositorioQso.BuscarPorIndicativoAsync(indicativoObjeto, ct);
+
+        IReadOnlyList<MapaContactoViewModel> marcadores = qsosDelOperador
+            .Where(q => q.IndicativoPropio.Valor.Equals(indicativo, StringComparison.OrdinalIgnoreCase)
+                        && q.LocalizadorContacto.HasValue)
+            .Select(q =>
+            {
+                Coordenadas coordenadas = q.LocalizadorContacto!.Value.ObtenerCoordenadas();
+                BandaRadio? banda = q.Frecuencia.ObtenerBanda();
+
+                return new MapaContactoViewModel
+                {
+                    Latitud = coordenadas.Latitud,
+                    Longitud = coordenadas.Longitud,
+                    Indicativo = q.IndicativoContacto.Valor,
+                    Fecha = q.FechaHoraInicio.ToString("yyyy-MM-dd HH:mm UTC"),
+                    Banda = banda?.ObtenerNombre(),
+                    Modo = q.Modo.ToString(),
+                    Localizador = q.LocalizadorContacto!.Value.Valor
+                };
+            })
+            .ToList();
+
+        return Json(marcadores);
+    }
 }

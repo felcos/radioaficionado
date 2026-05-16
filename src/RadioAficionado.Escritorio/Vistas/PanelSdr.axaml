@@ -1,0 +1,82 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:RadioAficionado.Escritorio.ViewModels"
+             x:Class="RadioAficionado.Escritorio.Vistas.PanelSdr"
+             x:DataType="vm:PanelSdrViewModel">
+
+    <Border Background="#16213e" CornerRadius="4" Padding="10">
+        <DockPanel>
+            <!-- Titulo -->
+            <TextBlock DockPanel.Dock="Top"
+                       Text="Receptor SDR"
+                       Foreground="White"
+                       FontWeight="Bold"
+                       FontSize="16"
+                       Margin="0,0,0,10" />
+
+            <!-- Estado de conexion -->
+            <Border DockPanel.Dock="Top" Background="#0f3460" CornerRadius="4" Padding="8" Margin="0,0,0,8">
+                <TextBlock Text="{Binding EstadoConexion}" Foreground="#e94560" FontWeight="Bold" />
+            </Border>
+
+            <!-- Botones de control -->
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="8" Margin="0,0,0,10">
+                <Button Content="Buscar dispositivos"
+                        Command="{Binding BuscarDispositivosCommand}"
+                        Background="#0f3460"
+                        Foreground="White"
+                        Padding="10,4" />
+                <Button Content="Conectar"
+                        Command="{Binding ConectarCommand}"
+                        Background="#e94560"
+                        Foreground="White"
+                        Padding="10,4" />
+                <Button Content="Desconectar"
+                        Command="{Binding DesconectarCommand}"
+                        Background="#533483"
+                        Foreground="White"
+                        Padding="10,4" />
+                <Button Content="Cambiar fuente waterfall"
+                        Command="{Binding CambiarFuenteWaterfallCommand}"
+                        Background="#0f3460"
+                        Foreground="White"
+                        Padding="10,4" />
+            </StackPanel>
+
+            <!-- Configuracion -->
+            <Grid DockPanel.Dock="Top" ColumnDefinitions="Auto,200,Auto,200" RowDefinitions="Auto,Auto,Auto,Auto" Margin="0,0,0,10">
+                <!-- Dispositivo -->
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Dispositivo:" Foreground="#aaaaaa" VerticalAlignment="Center" Margin="0,0,8,6" />
+                <ComboBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"
+                          ItemsSource="{Binding DispositivosDisponibles}"
+                          SelectedItem="{Binding DispositivoSeleccionado}"
+                          Height="30"
+                          Margin="0,0,0,6" />
+
+                <!-- Frecuencia central -->
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Frecuencia (Hz):" Foreground="#aaaaaa" VerticalAlignment="Center" Margin="0,0,8,6" />
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding FrecuenciaCentral}" Margin="0,0,0,6" />
+
+                <!-- Ancho de banda -->
+                <TextBlock Grid.Row="1" Grid.Column="2" Text="  Ancho de banda (Hz):" Foreground="#aaaaaa" VerticalAlignment="Center" Margin="8,0,8,6" />
+                <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding AnchoDeBanda}" Margin="0,0,0,6" />
+
+                <!-- Ganancia -->
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Ganancia (dB):" Foreground="#aaaaaa" VerticalAlignment="Center" Margin="0,0,8,6" />
+                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Ganancia}" Margin="0,0,0,6" />
+
+                <!-- Fuente waterfall -->
+                <TextBlock Grid.Row="2" Grid.Column="2" Text="  Fuente waterfall:" Foreground="#aaaaaa" VerticalAlignment="Center" Margin="8,0,8,6" />
+                <TextBlock Grid.Row="2" Grid.Column="3" Text="{Binding FuenteWaterfall}" Foreground="White" VerticalAlignment="Center" Margin="0,0,0,6" />
+            </Grid>
+
+            <!-- Espacio restante -->
+            <Border Background="#1a1a2e" CornerRadius="4" Padding="10">
+                <TextBlock Text="Conecte un dispositivo SDR para comenzar la recepcion."
+                           Foreground="#666666"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
+            </Border>
+        </DockPanel>
+    </Border>
+</UserControl>

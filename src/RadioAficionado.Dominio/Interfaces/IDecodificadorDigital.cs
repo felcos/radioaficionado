@@ -96,6 +96,14 @@ public sealed class MensajeDecodificado
 /// Interfaz que deben implementar todos los decodificadores de modos digitales.
 /// Permite añadir nuevos modos sin modificar el código existente.
 /// </summary>
+/// <remarks>
+/// <para><b>Para qué sirve:</b> Define el contrato para decodificadores de modos digitales (FT8, FT4, CW, WSPR, PSK31, RTTY, JS8, JT65, JT9, Olivia, SSTV, FT2, Q65). Cada implementación procesa audio PCM y devuelve mensajes decodificados.</para>
+/// <para><b>Cómo se usa:</b> Se obtiene a través de <see cref="IRegistroDecodificadores"/> o se inyecta como <c>IEnumerable&lt;IDecodificadorDigital&gt;</c>. Se alimenta con muestras de audio vía <see cref="ProcesarAudioAsync"/>.</para>
+/// <para><b>Implementaciones:</b> <c>DecodificadorFt8</c>, <c>DecodificadorFt4</c>, <c>DecodificadorCw</c>, <c>DecodificadorWspr</c>, <c>DecodificadorPsk31</c>, <c>DecodificadorRtty</c>, <c>DecodificadorJs8</c>, <c>DecodificadorJt65</c>, <c>DecodificadorJt9</c>, <c>DecodificadorOlivia</c>, <c>DecodificadorSstv</c>, <c>DecodificadorFt2</c>, <c>DecodificadorQ65</c>.</para>
+/// <para><b>Registro DI:</b> Todas las implementaciones registradas como Singleton en <c>ConfiguracionServiciosModosDigitales.AgregarModosDigitales()</c>.</para>
+/// <para><b>Configuración necesaria:</b> Cada decodificador tiene su propia clase de configuración (ej. <c>ConfiguracionFt8</c>). FT8 requiere la librería nativa ft8_lib.</para>
+/// <para><b>Dependencias:</b> Recibe muestras desde <see cref="IAudioPipeline"/> a través de <see cref="IServicioWaterfall"/> o directamente.</para>
+/// </remarks>
 public interface IDecodificadorDigital : IDisposable
 {
     /// <summary>
@@ -147,6 +155,14 @@ public interface IDecodificadorDigital : IDisposable
 /// Registro central de decodificadores digitales disponibles.
 /// Permite descubrir y activar decodificadores dinámicamente.
 /// </summary>
+/// <remarks>
+/// <para><b>Para qué sirve:</b> Actúa como catálogo central de todos los <see cref="IDecodificadorDigital"/> disponibles. Permite buscar decodificadores por modo y listar los modos soportados.</para>
+/// <para><b>Cómo se usa:</b> Se inyecta por constructor. Se llama a <see cref="ObtenerPorModo"/> para activar un decodificador específico, o <see cref="ObtenerTodos"/> para listar todos.</para>
+/// <para><b>Implementaciones:</b> <c>RadioAficionado.Nativo.ModosDigitales.RegistroDecodificadores</c>.</para>
+/// <para><b>Registro DI:</b> Registrada como Singleton en <c>ConfiguracionServiciosModosDigitales.AgregarModosDigitales()</c> con factory que inyecta todos los <c>IDecodificadorDigital</c> registrados.</para>
+/// <para><b>Configuración necesaria:</b> Ninguna adicional. Se alimenta automáticamente de los decodificadores registrados en DI.</para>
+/// <para><b>Dependencias:</b> <see cref="IDecodificadorDigital"/> (todos los registrados).</para>
+/// </remarks>
 public interface IRegistroDecodificadores
 {
     /// <summary>

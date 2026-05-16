@@ -48,6 +48,9 @@
                         @if (User.Identity?.IsAuthenticated == true)
                         {
                             <li class="nav-item">
+                                <a class="nav-link" asp-controller="LogbookPrivado" asp-action="Index">Mi Logbook</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link text-ra-acento" asp-controller="Cuenta" asp-action="Perfil">
                                     @User.Identity.Name
                                 </a>

@@ -1,7 +1,9 @@
+using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using RadioAficionado.Dominio.Entidades;
 using RadioAficionado.Dominio.Interfaces;
 using RadioAficionado.Dominio.ObjetosDeValor;
+using RadioAficionado.Web.Models;
 using RadioAficionado.Web.ViewModels;
 
 namespace RadioAficionado.Web.Controllers;
@@ -67,6 +69,27 @@ public class InicioController(IRepositorioQso repositorioQso, ILogger<InicioCont
         };
 
         return View(viewModel);
+    }
+
+    /// <summary>
+    /// Muestra la página de política de privacidad del sitio.
+    /// </summary>
+    /// <returns>Vista de privacidad.</returns>
+    [HttpGet]
+    public IActionResult Privacy()
+    {
+        return View();
+    }
+
+    /// <summary>
+    /// Muestra la página de error con el identificador de solicitud.
+    /// Usada por UseExceptionHandler("/Inicio/Error") en Program.cs.
+    /// </summary>
+    /// <returns>Vista de error con el RequestId.</returns>
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    public IActionResult Error()
+    {
+        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 
     /// <summary>

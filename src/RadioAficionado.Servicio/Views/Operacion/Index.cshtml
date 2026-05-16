@@ -1,0 +1,36 @@
+@{
+    ViewData["Title"] = "Operacion";
+    ViewData["Seccion"] = "Operacion";
+}
+
+<div id="app-operacion" class="contenedor-operacion">
+    <!-- Barra superior: Frecuencia, Banda, Modo, S-meter, PTT, UTC, Config -->
+    <partial name="_BarraRig" />
+
+    <!-- Waterfall Canvas -->
+    <div class="panel-waterfall">
+        <canvas id="waterfall-canvas" class="waterfall-canvas"></canvas>
+        <div class="waterfall-eje-x" id="waterfall-eje-x"></div>
+    </div>
+
+    <!-- Zona inferior: Decodificaciones + Panel TX -->
+    <div class="zona-inferior">
+        <!-- Decodificaciones -->
+        <partial name="_PanelDecodificaciones" />
+
+        <!-- Panel TX + QSO -->
+        <div class="zona-tx">
+            <partial name="_PanelTx" />
+            <partial name="_PanelQso" />
+        </div>
+    </div>
+
+</div>
+
+<!-- Modal de configuracion -->
+<partial name="_Configuracion" />
+
+@section Scripts {
+    <script src="~/js/waterfall.js"></script>
+    <script src="~/js/operacion.js"></script>
+}

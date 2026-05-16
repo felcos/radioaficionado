@@ -1,0 +1,609 @@
+/* RadioAficionado - Layout de operacion tipo WSJT-X */
+
+/* ================================================================
+   GRID PRINCIPAL
+   ================================================================ */
+
+.contenedor-operacion {
+    display: grid;
+    grid-template-rows: auto 40vh 1fr;
+    height: 100vh;
+    gap: 2px;
+}
+
+/* ================================================================
+   BARRA RIG (superior)
+   ================================================================ */
+
+.barra-rig {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px;
+    background: #0d1117;
+    border-bottom: 1px solid var(--color-borde);
+    flex-wrap: wrap;
+}
+
+/* Frecuencia LED */
+.frecuencia-led {
+    font-family: 'Courier New', 'Consolas', monospace;
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--color-acento);
+    text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+    letter-spacing: 2px;
+    min-width: 220px;
+    text-align: center;
+    padding: 2px 12px;
+    background: #000;
+    border: 1px solid #333;
+    border-radius: 4px;
+}
+
+/* Botones de banda */
+.grupo-bandas, .grupo-modos {
+    display: flex;
+    gap: 2px;
+}
+
+.btn-banda, .btn-modo {
+    padding: 2px 6px;
+    font-size: 0.7rem;
+    background: #222;
+    color: #aaa;
+    border: 1px solid #444;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.1s;
+}
+
+.btn-banda:hover, .btn-modo:hover {
+    background: #333;
+    color: #fff;
+}
+
+.btn-banda.activa {
+    background: #1a5276;
+    color: #fff;
+    border-color: #2980b9;
+}
+
+.btn-modo.activa {
+    background: #7b241c;
+    color: #fff;
+    border-color: #e74c3c;
+}
+
+/* S-meter */
+.smeter-contenedor {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 120px;
+}
+
+.smeter-etiqueta {
+    font-size: 0.7rem;
+    color: #888;
+}
+
+.smeter-barra {
+    width: 80px;
+    height: 10px;
+    background: #111;
+    border: 1px solid #444;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.smeter-relleno {
+    height: 100%;
+    background: linear-gradient(to right, #00ff41, #ffd700, #ff4444);
+    transition: width 0.2s;
+}
+
+.smeter-valor {
+    font-size: 0.7rem;
+    color: var(--color-acento);
+    min-width: 24px;
+}
+
+/* PTT */
+.btn-ptt {
+    padding: 4px 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    background: #222;
+    color: #888;
+    border: 2px solid #444;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.1s;
+}
+
+.btn-ptt.transmitiendo {
+    background: #cc0000;
+    color: #fff;
+    border-color: #ff4444;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+}
+
+/* VFO */
+.btn-vfo {
+    padding: 2px 8px;
+    font-size: 0.7rem;
+    background: #222;
+    color: #aaa;
+    border: 1px solid #444;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+/* Reloj UTC */
+.reloj-utc {
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+    color: var(--color-info);
+    min-width: 70px;
+    text-align: center;
+}
+
+/* Estado conexion */
+.estado-conexion {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.7rem;
+    color: #888;
+}
+
+.indicador-conexion {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #666;
+}
+
+.indicador-conexion.conectado {
+    background: var(--color-acento);
+    box-shadow: 0 0 6px rgba(0, 255, 65, 0.5);
+}
+
+/* Config */
+.btn-config {
+    padding: 2px 8px;
+    font-size: 1.1rem;
+    background: transparent;
+    color: #888;
+    border: 1px solid #444;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.btn-config:hover {
+    color: #fff;
+}
+
+/* ================================================================
+   WATERFALL
+   ================================================================ */
+
+.panel-waterfall {
+    position: relative;
+    background: #000;
+    overflow: hidden;
+}
+
+.waterfall-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.waterfall-eje-x {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    font-size: 0.6rem;
+    color: #888;
+    pointer-events: none;
+}
+
+/* ================================================================
+   ZONA INFERIOR (decodificaciones + TX)
+   ================================================================ */
+
+.zona-inferior {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 2px;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.zona-tx {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow-y: auto;
+}
+
+/* Panel titulo */
+.panel-titulo {
+    font-size: 0.7rem;
+    font-weight: bold;
+    color: #888;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    background: #111;
+    border-bottom: 1px solid #333;
+}
+
+/* ================================================================
+   DECODIFICACIONES
+   ================================================================ */
+
+.panel-decodificaciones {
+    background: var(--color-fondo-panel);
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.tabla-decodificaciones-scroll {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+}
+
+.tabla-decodificaciones {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+}
+
+.tabla-decodificaciones thead {
+    position: sticky;
+    top: 0;
+    background: #111;
+    z-index: 1;
+}
+
+.tabla-decodificaciones th {
+    padding: 2px 6px;
+    text-align: left;
+    color: #888;
+    font-weight: normal;
+    border-bottom: 1px solid #333;
+}
+
+.tabla-decodificaciones td {
+    padding: 1px 6px;
+    border-bottom: 1px solid #1a1a1a;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.tabla-decodificaciones tr:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.tabla-decodificaciones tr.seleccionada {
+    background: rgba(41, 128, 185, 0.3);
+}
+
+/* ================================================================
+   PANEL TX
+   ================================================================ */
+
+.panel-tx {
+    background: var(--color-fondo-panel);
+}
+
+.tx-botones {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    padding: 4px;
+}
+
+.btn-tx {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 6px;
+    background: #1a1a2e;
+    color: #ccc;
+    border: 1px solid #333;
+    border-radius: 3px;
+    cursor: pointer;
+    text-align: left;
+    font-size: 0.75rem;
+    font-family: 'Courier New', monospace;
+}
+
+.btn-tx:hover {
+    background: #2a2a4e;
+}
+
+.btn-tx.activo {
+    border-color: var(--color-tx);
+    background: rgba(255, 68, 68, 0.1);
+}
+
+.tx-num {
+    color: #888;
+    font-weight: bold;
+    min-width: 24px;
+}
+
+.tx-texto {
+    flex: 1;
+}
+
+.tx-libre {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #ccc;
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    outline: none;
+}
+
+.tx-frecuencia {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 6px;
+    font-size: 0.7rem;
+    color: #888;
+}
+
+.input-tx-freq {
+    width: 60px;
+    background: #111;
+    border: 1px solid #444;
+    color: var(--color-acento);
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    padding: 1px 4px;
+    border-radius: 3px;
+    text-align: right;
+}
+
+/* ================================================================
+   PANEL QSO
+   ================================================================ */
+
+.panel-qso {
+    background: var(--color-fondo-panel);
+}
+
+.qso-campos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    padding: 4px 6px;
+}
+
+.qso-campo label {
+    font-size: 0.65rem;
+    color: #888;
+    display: block;
+}
+
+.input-qso {
+    width: 100%;
+    background: #111;
+    border: 1px solid #444;
+    color: #fff;
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    padding: 2px 4px;
+    border-radius: 3px;
+    text-transform: uppercase;
+}
+
+.qso-controles {
+    display: flex;
+    gap: 4px;
+    padding: 4px 6px;
+}
+
+.btn-enable-tx, .btn-auto-seq, .btn-halt {
+    flex: 1;
+    padding: 3px 6px;
+    font-size: 0.7rem;
+    border: 1px solid #444;
+    border-radius: 3px;
+    cursor: pointer;
+    background: #222;
+    color: #aaa;
+}
+
+.btn-enable-tx.activo {
+    background: #cc0000;
+    color: #fff;
+    border-color: #ff4444;
+}
+
+.btn-auto-seq.activo {
+    background: #1a5276;
+    color: #fff;
+    border-color: #2980b9;
+}
+
+.btn-halt {
+    background: #7b241c;
+    color: #ccc;
+}
+
+.qso-acciones {
+    padding: 4px 6px;
+}
+
+.btn-log-qso {
+    width: 100%;
+    padding: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    background: #1a5276;
+    color: #fff;
+    border: 1px solid #2980b9;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.btn-log-qso:hover {
+    background: #2980b9;
+}
+
+.qso-estado {
+    padding: 2px 6px;
+    font-size: 0.65rem;
+    color: #888;
+    text-align: center;
+}
+
+/* ================================================================
+   SIDEBAR NAVEGACION
+   ================================================================ */
+
+.layout-con-sidebar {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.sidebar {
+    width: 48px;
+    min-width: 48px;
+    background: #0a0e14;
+    border-right: 1px solid #1a1a2e;
+    display: flex;
+    flex-direction: column;
+    transition: width 0.2s ease;
+    overflow: hidden;
+    z-index: 100;
+}
+
+.sidebar.expandido {
+    width: 200px;
+    min-width: 200px;
+}
+
+.sidebar-toggle {
+    padding: 10px;
+    background: transparent;
+    border: none;
+    color: #888;
+    font-size: 1.2rem;
+    cursor: pointer;
+    text-align: center;
+    border-bottom: 1px solid #1a1a2e;
+}
+
+.sidebar-toggle:hover {
+    color: #fff;
+}
+
+.sidebar-nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex: 1;
+}
+
+.sidebar-nav li a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    color: #888;
+    text-decoration: none;
+    font-size: 0.8rem;
+    border-left: 3px solid transparent;
+    transition: all 0.15s;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.sidebar-nav li a:hover {
+    color: #ccc;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.sidebar-nav li a.activa {
+    color: var(--color-acento);
+    border-left-color: var(--color-acento);
+    background: rgba(0, 255, 65, 0.05);
+}
+
+.sidebar-nav li a .icono {
+    font-size: 1.1rem;
+    min-width: 24px;
+    text-align: center;
+}
+
+.sidebar-nav li a .texto-nav {
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+
+.sidebar.expandido .sidebar-nav li a .texto-nav {
+    opacity: 1;
+}
+
+.contenido-principal {
+    flex: 1;
+    overflow: hidden;
+}
+
+/* ================================================================
+   PAGINA PANEL (paginas secundarias: logbook, dxcc, etc.)
+   ================================================================ */
+
+.pagina-panel {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-fondo);
+}
+
+.pagina-panel-header {
+    padding: 12px 16px;
+    background: #0d1117;
+    border-bottom: 1px solid var(--color-borde);
+}
+
+.pagina-panel-header h2 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #ccc;
+}
+
+.pagina-panel-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 16px;
+}
+
+/* ================================================================
+   MODAL CONFIGURACION
+   ================================================================ */
+
+.config-seccion {
+    padding: 8px 0;
+}
+
+#config-estado {
+    font-size: 0.8rem;
+}

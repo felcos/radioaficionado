@@ -1,0 +1,60 @@
+/* RadioAficionado.Servicio - Tema oscuro base */
+
+:root {
+    --color-fondo: #1a1a2e;
+    --color-fondo-panel: #16213e;
+    --color-fondo-input: #0f3460;
+    --color-borde: #333;
+    --color-texto: #e0e0e0;
+    --color-texto-tenue: #888;
+    --color-acento: #00ff41;
+    --color-peligro: #ff4444;
+    --color-advertencia: #ffd700;
+    --color-info: #00bcd4;
+    --color-tx: #ff4444;
+    --color-rx: #00ff41;
+    --color-cq: #ff4444;
+    --color-nuevo-dxcc: #00ff41;
+    --color-sin-confirmar: #ffd700;
+    --color-dirigido: #ffffff;
+    --color-nueva-banda: #ff8c00;
+    --color-trabajado: #666666;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', -apple-system, sans-serif;
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100vh;
+}
+
+/* Scrollbar oscuro */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--color-fondo);
+}
+::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 4px;
+}
+
+/* En construccion */
+.en-construccion {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    min-height: 80px;
+    color: var(--color-texto-tenue);
+    font-style: italic;
+}

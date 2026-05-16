@@ -1,5 +1,311 @@
 # Changelog — RadioAficionado
 
+## [3.1.0] — 2026-05-15 — Paneles conectados, Log QSO, Tests integracion, Lanzador persistido
+
+### fix: corregir clases CSS en DXCC JS
+- dxcc.js usaba `dxcc-confirmado/trabajado/necesitado` pero el CSS define `dxcc-banda-confirmado/trabajado/necesitado`
+- Archivos: `wwwroot/js/dxcc.js`
+
+### feat: barra de progreso y filtro por continente en DXCC
+- Barra de progreso actualizada dinamicamente (meta 340 entidades)
+- Filtro por continente (AF, AS, EU, NA, OC, SA) con botones toggle
+- Archivos: `wwwroot/js/dxcc.js`
+
+### feat: colores semaforo en indices solares de propagacion
+- SFI, SN, A-Index, K-Index ahora muestran colores verde/amarillo/rojo segun umbrales
+- Nueva funcion `aplicarClaseIndice` con umbrales configurables
+- Archivos: `wwwroot/js/propagacion.js`
+
+### feat: endpoint POST /api/logbook/registrar para Log QSO
+- Nuevo DTO `RegistroQsoDto` con campos: Indicativo, FrecuenciaHz, Modo, RstEnviado, RstRecibido, Grid, Nombre, Comentario
+- Validacion de campos obligatorios, parseo de modo, deteccion de duplicados
+- Archivos: `Controllers/LogbookApiController.cs`, `Dtos/RegistroQsoDto.cs`
+
+### feat: boton Log QSO conectado en panel de operacion
+- Variables `frecuenciaActualHz` y `modoActual` actualizadas desde SignalR
+- Funcion `registrarQso()` con POST fetch y notificacion temporal
+- Funcion `mostrarNotificacion()` para feedback visual
+- Archivos: `wwwroot/js/operacion.js`
+
+### feat: ContestApiController con datos reales del repositorio
+- Inyeccion de IRepositorioQso, QSOs de ultimas 48h, agrupacion por banda
+- Multiplicadores como entidades DXCC unicas, puntos por continente, rate por hora
+- Fallback a datos ejemplo si no hay QSOs
+- Archivos: `Controllers/ContestApiController.cs`
+
+### feat: configuracion persistida del lanzador WebView2
+- Nueva clase ConfiguracionLanzador con JSON persistence (posicion, tamano, maximizado, puerto, DevTools)
+- VentanaPrincipal carga/guarda configuracion en OnFormClosing
+- Program.cs usa puerto configurable
+- Archivos: `ConfiguracionLanzador.cs`, `VentanaPrincipal.cs`, `Program.cs` (Lanzador)
+
+### test: 22 tests nuevos (1309 total, 0 fallos)
+- 10 tests unitarios para RegistrarQso (LogbookApiControllerTests)
+- 13 tests unitarios para ContestApiController (ContestApiControllerTests)
+- 22 tests de integracion con WebApplicationFactory + InMemory DB (vistas MVC + APIs REST + POST)
+- Archivos: `Controllers/LogbookApiControllerTests.cs`, `Controllers/ContestApiControllerTests.cs`, `Integracion/OperacionIntegracionTests.cs`
+
+## [3.0.0] — 2026-05-14 — Migración a UI Web tipo WSJT-X (Fases A-G)
+
+### feat: RadioAficionado.Servicio — Host Kestrel + SignalR (Fase A)
+- Nuevo proyecto web .NET 10 con DI idéntica al escritorio Avalonia
+- 4 hubs SignalR: HubRig, HubWaterfall, HubDecodificaciones, HubEstado
+- ServicioEstadoOperacion: singleton con lógica extraída de PanelRigViewModel
+- Dtos: EstadoRigDto, ConfiguracionConexionDto, LineaEspectroDto, MensajeDecodificadoDto, SpotDxDto
+- Health check en /health, Kestrel en localhost:5200
+
+### feat: Panel de operación tipo WSJT-X con Canvas 2D (Fase B)
+- Vista Razor completa: _BarraRig, _PanelDecodificaciones, _PanelTx, _PanelQso, _Configuracion
+- waterfall.js: Canvas 2D con paleta 256 colores, click-to-tune, cursores TX/RX
+- operacion.js: conexión a 4 hubs SignalR, bindings UI, atajos F1-F6/Esc
+- operacion.css: CSS Grid oscuro, frecuencia LED, S-meter, tema radio
+
+### feat: Auto-sequencing FT8 (Fase C)
+- IServicioOperacionDigital: interfaz + FaseQsoFt8 enum (7 estados)
+- ServicioOperacionDigital: máquina de estados CQ→respuesta→reporte→RRR→73
+- GeneradorAudioFt8: 79 tonos FT8 a PCM 16-bit (6.25Hz spacing, 12.64s)
+- ColoreadorIndicativos: colores por estado DXCC (rojo CQ, verde nuevo, etc.)
+
+### feat: Protocolo UDP WSJT-X compatible (Fase D)
+- EscritorMensajeWsjtx + LectorMensajeWsjtx: serialización binaria QDataStream big-endian
+- ServidorUdpWsjtx: BackgroundService en puerto 2237 (heartbeat, status, decode)
+- Compatible con JTAlert, GridTracker, N1MM+
+
+### feat: Split VFO + PTT DTR/RTS (Fase E)
+- IControlRig: +ActivarSplitAsync, +CambiarFrecuenciaVfoBAsync, +CambiarPttDtrAsync/RtsAsync
+- EstadoRig: +SplitActivo, +FrecuenciaVfoB
+- IProtocoloCat: +ComandoActivarSplit/LeerSplit/ParsearSplit/CambiarFrecuenciaVfoB
+- Implementado en Yaesu (FT0/FT1/FB), Icom CI-V (0x0F), Kenwood (FT/FB)
+- ClienteRigctld: split via comando S, VFO B vía cambio temporal
+- ClienteCatSerial: PTT DTR/RTS por control directo de SerialPort
+
+### feat: Lanzador WebView2 (Fase F)
+- RadioAficionado.Lanzador: WinForms + Microsoft.Web.WebView2
+- Lanza Servicio como proceso hijo, espera health check, abre WebView2
+- F11 pantalla completa, sin barra de navegación
+
+### feat: Paneles secundarios web (Fase G)
+- 7 partial views: Logbook, DX Cluster, DXCC, Propagación, POTA/SOTA, Contest, Satélites
+- LogbookApiController: API REST paginada con búsqueda por indicativo
+- logbook.js + dxcluster.js: interactividad AJAX y SignalR
+
+### test: 127+ tests (59 Servicio + 68 Infraestructura Rig)
+- Tests: hubs, dtos, estado operación, auto-sequencing, protocolo UDP, split VFO
+- Build limpio: 0 errores
+
+## [2.4.0] — 2026-04-12 — Audio USB + Waterfall en vivo + Conexión CAT robusta
+
+### feat: Integración audio del radio al ciclo de conexión (Escritorio)
+- DispositivoAudioVm: ViewModel para selector de dispositivos de audio en UI
+- PanelRigViewModel: ahora recibe IAudioPipeline + IServicioWaterfall por DI
+- RefrescarDispositivosAudioAsync(): enumera dispositivos NAudio, restaura selección persistida
+- IniciarCapturaAudioAsync(): inicia captura + arranca waterfall FFT 2048 automáticamente
+- DetenerCapturaAudioAsync(): detiene waterfall + audio al desconectar
+- GuardarConfiguracion(): ahora persiste DispositivoAudioEntrada y TasaDeMuestreoHz
+- ConfiguracionConexionRig: campos DispositivoAudioEntrada y TasaDeMuestreoHz
+- Archivos: ViewModels/DispositivoAudioVm.cs, ViewModels/PanelRigViewModel.cs, ConfiguracionConexionRig.cs
+
+### feat: Waterfall conectado al flujo de audio real (Escritorio)
+- VentanaPrincipal.axaml.cs: suscribe waterfall cabecera a LineaEspectroRecibida
+- PanelWaterfall.axaml.cs: suscribe waterfall pestaña con DataContextChanged
+- Conversión LineaEspectroEventArgs → LineaEspectro + Dispatcher.UIThread.Post
+- Flujo: Radio USB → NAudio → ServicioWaterfall FFT → ControlWaterfall.AgregarLinea()
+- Archivos: Vistas/VentanaPrincipal.axaml.cs, Vistas/PanelWaterfall.axaml.cs
+
+### feat: Selector de audio en panel de configuración (Escritorio)
+- Sección AUDIO: ComboBox dispositivos entrada, tasa muestreo (12k/24k/48k), botón refrescar
+- Indicador LED verde/rojo con AUDIO ON/OFF
+- DispositivoAudioEntradaVm para binding correcto en Avalonia ComboBox
+- Archivos: Vistas/VentanaPrincipal.axaml
+
+### test: 822 tests (658 Infraestructura + 67 Web + 85 IA + 12 Escritorio)
+- 1 fallo preexistente (ML.NET flaky SfiAlto_BandaAlta_ProbabilidadAlta)
+- Build limpio: 0 errores
+
+## [2.3.0] — 2026-04-11 — WSPR/FT2/Q65 + SDR→Waterfall + Modelos ONNX + Auditoría completa
+
+### feat: Decodificadores WSPR, FT2, Q65 (Nativo.ModosDigitales)
+- DecodificadorWspr: 4-FSK ultra-lento (110.6s, 1.4648 Hz spacing), señales débiles
+- DecodificadorFt2: 4-GFSK experimental (6s ventana, 6.25 Hz spacing)
+- DecodificadorQ65: 65-FSK con submodos A/B/C/D/E (15s-300s), señales hasta -28 dB SNR
+- SubModoQ65 enum con extensiones para duración de período
+- ModoOperacion actualizado: FT2 añadido, submodos Q65A-E
+- Total: 13 decodificadores digitales
+- Tests: DecodificadorWsprTests (10), DecodificadorFt2Tests (10), DecodificadorQ65Tests (14+)
+
+### feat: Integración SDR → Waterfall (Nativo.Sdr)
+- IConvertidorIqAAudio: convierte muestras IQ a audio mono (magnitud + ganancia + normalización)
+- IServicioWaterfallSdr: waterfall alimentado directamente desde SDR
+- FuenteDeDatosWaterfall enum: Ninguna, Audio, Sdr
+- ConvertidorIqAAudio: sqrt(I²+Q²), ganancia digital, normalización [-1,1]
+- ServicioWaterfallSdr: suscripción a SDR, buffer 50% overlap, frecuencias centradas en Fc
+- PanelSdrViewModel: inicia/detiene waterfall SDR, comando cambiar fuente Audio↔SDR
+- App.axaml.cs: AgregarCapaDeSdr() + PanelSdrViewModel registrados
+- Tests: ConvertidorIqAAudioTests (11), ServicioWaterfallSdrTests (10)
+
+### feat: Entrenador de modelos ONNX (RadioAficionado.IA)
+- IEntrenadorModelosIa: entrenar y exportar clasificador + analizador como ONNX
+- EntrenadorModelosIa: entrenamiento real con 12000+ muestras (clasificador) y 3500+ (analizador)
+- GeneradorDatosSinteticos: espectros realistas CW/SSB/FM/FT8/AM/Ruido con ruido gaussiano multi-SNR
+- MetricasClasificacion, MetricasRegresion: records con accuracy, R², RMSE, etc.
+- Tests: EntrenadorModelosIaTests (10), GeneradorDatosSinteticosTests (8)
+
+### refactor: Auditoría completa de interfaces y DI
+- 30 interfaces documentadas con XML completo (qué es, cómo se usa, implementaciones, registro DI, configuración, dependencias)
+- 4 decodificadores corregidos en DI (CW, WSPR, FT2, Q65 no estaban registrados)
+- IRepositorioActivaciones: añadido EliminarAsync faltante (CRUD completo)
+- RepositorioActivaciones: implementado EliminarAsync
+
+### fix: Auditoría — problemas críticos e importantes corregidos
+- Error handler roto: acción Error() añadida a InicioController
+- DI escritorio: AgregarModosDigitales() + AgregarCapaDeIa() en App.axaml.cs
+- DI web: AgregarModosDigitales() + AgregarCapaDeIa() en Program.cs + referencias .csproj
+- Connection string: fallback hardcodeado → throw InvalidOperationException
+- EstadoSincronizacionViewModel: registrado en DI
+- CORS: política PermitirEscritorio configurada para API
+- appsettings.json: cadena de conexión añadida
+
+### feat: Vistas de escritorio faltantes
+- PanelSdr.axaml: panel SDR con controles de dispositivo, frecuencia, ganancia, fuente waterfall
+- PanelWaterfall.axaml: panel con ControlWaterfall, botones iniciar/detener, selector FFT
+- VentanaPrincipal.axaml: pestañas SDR y Waterfall añadidas
+- VentanaPrincipalViewModel: PanelSdr + EstadoSincronizacion inyectados
+
+### test: 1120 tests (308 Dominio + 618 Infraestructura + 67 Web + 29 Aplicacion + 12 Escritorio + 86 IA)
+- +65 tests nuevos: Compartido (15), Audio (8), Rotador (13), Rig (8), Mobile (13), ForoController (8)
+- 0 fallos, 0 omitidos
+
+## [2.2.0] — 2026-04-11 — SDR + JT65/JT9/Olivia/SSTV + ONNX Runtime + Vistas web
+
+### feat: SDR con SoapySDR (Nativo.Sdr — proyecto nuevo)
+- IReceptorSdr: interfaz de dominio con eventos MuestrasRecibidas, control de frecuencia/ganancia/ancho de banda
+- DispositivoSdr, ConfiguracionSdr: records de dominio en Dominio/Sdr
+- SoapySdrNativo: P/Invoke completo a SoapySDR (enumerate, make, stream, read)
+- ReceptorSoapySdr: implementacion con hilo dedicado de lectura IQ, thread-safe, IDisposable
+- PanelSdrViewModel: ViewModel escritorio con Conectar/Desconectar/BuscarDispositivos
+- ConfiguracionServiciosSdr: AgregarCapaDeSdr() extension DI
+- Tests: ReceptorSoapySdrTests (10), ConfiguracionSdrTests (5), DispositivoSdrTests (5)
+
+### feat: Modos digitales — JT65, JT9, Olivia, SSTV (Nativo.ModosDigitales)
+- DecodificadorJt65: 65-FSK, simbolos de 0.372s, analisis Goertzel multi-tono (65 frecuencias)
+- DecodificadorJt9: 9-FSK, simbolos de 0.576s, tonos espaciados 1.7361 Hz
+- DecodificadorOlivia: MFSK con Walsh-Hadamard, modos 4/8/16/32/64/128/256 tonos × 125-2000 Hz BW
+- DecodificadorSstv: Scottie1/2, Martin1/2, Robot36, deteccion VIS, mapeo frecuencia→luminancia
+- RegistroDecodificadores actualizado: 10 decodificadores totales
+- ConfiguracionServiciosModosDigitales actualizado con DI
+- Tests: DecodificadorJt65Tests (10), DecodificadorJt9Tests (10), DecodificadorOliviaTests (10), DecodificadorSstvTests (10)
+
+### feat: ONNX Runtime (RadioAficionado.IA)
+- IMotorInferenciaOnnx: interfaz de dominio para inferencia con modelos ONNX
+- ResultadoInferencia, ConfiguracionOnnx: records de dominio
+- MotorInferenciaOnnx: cache de InferenceSession, thread-safe con SemaphoreSlim por modelo
+- ClasificadorSenalesOnnx: clasificador con fallback a ML.NET si no hay modelo ONNX
+- ExportadorModeloOnnx: exportacion de modelos ML.NET a formato ONNX
+- Paquetes: ML.NET 5.0.0, OnnxConverter 0.23.0, OnnxTransformer 5.0.0
+- Tests: MotorInferenciaOnnxTests (12), ClasificadorSenalesOnnxTests (8), ExportadorModeloOnnxTests (5)
+
+### feat: Vistas web completadas
+- Views/Operadores/Perfil.cshtml: breadcrumb, tarjetas estadisticas, mapa Leaflet
+- Views/Operadores/_OperadorCard.cshtml: partial view para directorio
+- wwwroot/js/mapa-operador.js: carga datos via fetch, marcadores Leaflet con popups
+- Tests: OperadoresControllerIndexTests (5)
+
+### fix: Mobile Android/iOS
+- MainActivity.cs: corregido AvaloniaMainActivity (no genérica en Avalonia 12.x)
+- AppDelegate.cs: removido WithInterFont() inexistente
+
+### test: 978 tests (308 Dominio + 502 Infraestructura + 59 Web + 29 Aplicacion + 12 Escritorio + 68 IA)
+- +95 tests nuevos respecto a v2.1.0
+- 0 fallos, 0 omitidos
+- Build limpio: 0 errores
+
+## [2.1.0] — 2026-04-11 — Proyecto Mobile (Android + iOS) con Avalonia
+
+### feat: Proyecto mobile compartido (RadioAficionado.Mobile)
+- App.axaml.cs: Application Avalonia con DI (sin servicios de hardware: rig, audio, rotador)
+- VentanaPrincipalMobileViewModel: navegacion por pestanas (Logbook, Mapa, Propagacion, Config)
+- PanelLogbookMobileViewModel: lista de QSOs con busqueda, filtros, paginacion, creacion manual de QSO
+- PanelMapaMobileViewModel: estadisticas de contactos por continente (QSOs, DXCC, bandas, modos)
+- PanelPropagacionMobileViewModel: indices solares (SFI, Kp, Ap, SSN) y predicciones por banda
+- 4 vistas AXAML: VentanaPrincipalMobile (TabControl inferior), PanelLogbookMobile (FAB para nuevo QSO), PanelMapaMobile, PanelPropagacionMobile
+- Tema oscuro consistente con escritorio (#1a1a2e, #16213e, #e94560)
+
+### feat: Proyecto Android (RadioAficionado.Mobile.Android)
+- MainActivity: AvaloniaMainActivity<App> con soporte de orientacion y UI mode
+- SplashActivity: splash screen simple con redireccion automatica
+- TargetFramework: net10.0-android, ApplicationId: com.radioaficionado.app
+
+### feat: Proyecto iOS (RadioAficionado.Mobile.iOS)
+- AppDelegate: AvaloniaAppDelegate<App>
+- Main.cs: punto de entrada iOS
+- TargetFramework: net10.0-ios
+
+### infra: Solucion actualizada
+- RadioAficionado.slnx: 3 proyectos mobile añadidos en carpeta /mobile/
+
+## [2.0.0] — 2026-04-11 — Fase 5: Waterfall + FFTW3 + FT8 + Modos digitales + IA + Logbook privado + Perfiles publicos
+
+### feat: Waterfall en vivo (Nativo.Dsp + Escritorio)
+- IServicioWaterfall: interfaz con eventos LineaEspectroGenerada, IniciarAsync/DetenerAsync
+- ServicioWaterfall: suscripcion a IAudioPipeline, buffer con solapamiento 50%, ProcesadorEspectro
+- PanelWaterfallViewModel: comandos IniciarWaterfall/DetenerWaterfall, binding a UI
+- Registrado en DI (App.axaml.cs): IServicioWaterfall → ServicioWaterfall
+- Tests: ServicioWaterfallTests (10 tests)
+- Archivos: Dominio/Interfaces/IServicioWaterfall.cs, Nativo.Dsp/ServicioWaterfall.cs, Escritorio/ViewModels/PanelWaterfallViewModel.cs
+
+### feat: FFTW3 nativa con fallback (Nativo.Dsp)
+- Fftw3Nativo: P/Invoke a libfftw3-3 (PlanearRealAComplejo, Ejecutar, DestruirPlan, AsignarMemoria, LiberarMemoria)
+- TransformadaFftw3: implementacion ITransformadaFourier con buffers SIMD-aligned, plan R2C FFTW_ESTIMATE, thread-safe
+- FabricaTransformadaFourier: factory estatica FFTW3 → fallback Cooley-Tukey, cache de disponibilidad
+- ProcesadorEspectro actualizado para usar FabricaTransformadaFourier en vez de Cooley-Tukey directo
+- Tests: FabricaTransformadaFourierTests (10 tests)
+- Archivos: Nativo.Dsp/Fftw3Nativo.cs, TransformadaFftw3.cs, FabricaTransformadaFourier.cs
+
+### feat: Migracion PostgreSQL Identity (Web + Infraestructura.Postgres)
+- FabricaContextoIdentidadEnDiseño: IDesignTimeDbContextFactory en Web/Data para EF Core CLI
+- Program.cs: UseNpgsql con MigrationsAssembly("RadioAficionado.Infraestructura.Postgres")
+- Infraestructura.Postgres.csproj: paquetes Identity.EntityFrameworkCore y EF Design añadidos
+- Archivos: Web/Data/FabricaContextoIdentidadEnDiseño.cs
+
+### feat: Logbook privado (Web)
+- LogbookPrivadoController: [Authorize], CRUD completo, filtros por IndicativoPropio del usuario autenticado
+- ViewModels: CrearQsoViewModel, EditarQsoViewModel, LogbookPrivadoIndexViewModel
+- Vistas Razor: Index (tabla paginada con filtros), Crear, Editar, Detalle
+- Link "Mi Logbook" en _Layout.cshtml para usuarios autenticados
+- Tests: LogbookPrivadoControllerTests (15 tests)
+- Archivos: Controllers/LogbookPrivadoController.cs, ViewModels/Crear+Editar+LogbookPrivadoIndexViewModel.cs, Views/LogbookPrivado/*.cshtml
+
+### feat: Modos digitales — FT4, RTTY, PSK31, JS8 (Nativo.ModosDigitales)
+- DecodificadorFt4: reutiliza Ft8Nativo con ventana de 7.5s
+- DecodificadorRtty: filtro Goertzel dual mark/space, tabla Baudot ITA2
+- DecodificadorPsk31: deteccion de fase BPSK, tabla Varicode
+- DecodificadorJs8: reutiliza Ft8Nativo con multiples velocidades (Normal/Turbo/Lento/Ultra)
+- RegistroDecodificadores: IRegistroDecodificadores con 5 decodificadores registrados (CW, FT8, FT4, RTTY, PSK31, JS8)
+- ConfiguracionServiciosModosDigitales actualizado con DI de todos los decodificadores
+- Tests: DecodificadorRttyTests (14), DecodificadorPsk31Tests (17), RegistroDecodificadoresTests (10)
+- Archivos: Nativo.ModosDigitales/Ft4/*.cs, Rtty/*.cs, Psk31/*.cs, Js8/*.cs, RegistroDecodificadores.cs
+
+### feat: IA con ML.NET (RadioAficionado.IA — proyecto nuevo)
+- IAnalizadorPropagacion: interfaz para prediccion de propagacion por banda HF
+- IClasificadorSenales: interfaz para clasificacion de tipo de senal (CW, SSB, FM, FT8, ruido)
+- AnalizadorPropagacionMlNet: regresion FastTree con ~880 datos sinteticos, prediccion por banda, MUF estimado, hora optima
+- ClasificadorSenalesMlNet: clasificacion SdcaMaximumEntropy con 800 datos sinteticos, binning de espectro, modos alternativos
+- PrediccionPropagacionIa, ResultadoClasificacion: records en Dominio/IA
+- ConfiguracionServiciosIa: AgregarCapaDeIa() extension para DI
+- Tests: AnalizadorPropagacionMlNetTests (15), ClasificadorSenalesMlNetTests (14) — nuevo proyecto RadioAficionado.IA.Tests
+- Archivos: IA/*.cs, Dominio/IA/*.cs, Dominio/Interfaces/IAnalizadorPropagacion.cs, IClasificadorSenales.cs
+
+### feat: Perfiles publicos de operadores (Web)
+- OperadoresController: Index (directorio paginado con busqueda), Perfil (detalle con estadisticas, bandas favoritas, ultimos QSOs), MapaDatosOperador (JSON para mapa)
+- ViewModels: OperadoresIndexViewModel, OperadorResumenViewModel, PerfilPublicoViewModel, BandaFavoritaViewModel
+- Tests: OperadoresControllerTests (5 tests)
+- Archivos: Controllers/OperadoresController.cs, ViewModels/Operadores*.cs
+
+### test: 883 tests (308 Dominio + 437 Infraestructura + 54 Web + 29 Aplicacion + 12 Escritorio + 43 IA)
+- +159 tests nuevos respecto a v1.3.0
+- 0 fallos, 0 omitidos
+- Build limpio: 0 errores
+
 ## [1.3.0] — 2026-03-23 — CW Decoder + APRS + Satelites + QSL Generator
 
 ### feat: Decodificador CW (Nativo.ModosDigitales/Cw)

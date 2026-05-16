@@ -37,6 +37,14 @@ public sealed class MuestraAudio
 /// Pipeline de audio interno que elimina la necesidad de cables de audio virtuales.
 /// Captura audio del hardware y lo distribuye a múltiples consumidores.
 /// </summary>
+/// <remarks>
+/// <para><b>Para qué sirve:</b> Centraliza la captura de audio del hardware (micrófono/línea) y distribuye las muestras PCM a múltiples consumidores simultáneamente (waterfall, decodificadores digitales, etc.).</para>
+/// <para><b>Cómo se usa:</b> Se inyecta por constructor. Se llama a <see cref="IniciarCapturaAsync"/> con el ID del dispositivo, luego se suscribe con <see cref="Suscribir"/> para recibir muestras.</para>
+/// <para><b>Implementaciones:</b> <c>RadioAficionado.Nativo.Audio.PipelineAudioNAudio</c> (usa NAudio para captura multiplataforma).</para>
+/// <para><b>Registro DI:</b> Registrada como Singleton en <c>RadioAficionado.Escritorio.App.ConfigurarServicios()</c>. No disponible en mobile ni web.</para>
+/// <para><b>Configuración necesaria:</b> Un dispositivo de audio compatible debe estar disponible en el sistema. No requiere archivos de configuración externos.</para>
+/// <para><b>Dependencias:</b> Ninguna interfaz de dominio. Depende de NAudio (paquete nativo).</para>
+/// </remarks>
 public interface IAudioPipeline : IAsyncDisposable
 {
     /// <summary>

@@ -1,0 +1,153 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:RadioAficionado.Mobile.ViewModels"
+             x:Class="RadioAficionado.Mobile.Vistas.PanelMapaMobile"
+             x:DataType="vm:PanelMapaMobileViewModel"
+             Background="#1a1a2e">
+
+    <ScrollViewer>
+        <StackPanel Margin="12" Spacing="12">
+            <!-- Título y botón de actualización -->
+            <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Grid.Column="0"
+                           Text="Mapa de Contactos"
+                           FontSize="22"
+                           FontWeight="Bold"
+                           Foreground="White"
+                           VerticalAlignment="Center" />
+                <Button Grid.Column="1"
+                        Content="Actualizar"
+                        Command="{Binding CargarEstadisticasCommand}"
+                        Padding="12,6" />
+            </Grid>
+
+            <!-- Estadísticas generales -->
+            <Border Background="#16213e" CornerRadius="12" Padding="16">
+                <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" RowSpacing="12" ColumnSpacing="12">
+                    <!-- Total QSOs -->
+                    <Border Grid.Row="0" Grid.Column="0"
+                            Background="#0f3460" CornerRadius="8" Padding="12">
+                        <StackPanel HorizontalAlignment="Center">
+                            <TextBlock Text="{Binding TotalQsos}"
+                                       FontSize="28"
+                                       FontWeight="Bold"
+                                       Foreground="#e94560"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock Text="QSOs"
+                                       FontSize="12"
+                                       Foreground="#aaaaaa"
+                                       HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Total DXCC -->
+                    <Border Grid.Row="0" Grid.Column="1"
+                            Background="#0f3460" CornerRadius="8" Padding="12">
+                        <StackPanel HorizontalAlignment="Center">
+                            <TextBlock Text="{Binding TotalDxcc}"
+                                       FontSize="28"
+                                       FontWeight="Bold"
+                                       Foreground="#00e5ff"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock Text="DXCC"
+                                       FontSize="12"
+                                       Foreground="#aaaaaa"
+                                       HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Total Bandas -->
+                    <Border Grid.Row="1" Grid.Column="0"
+                            Background="#0f3460" CornerRadius="8" Padding="12">
+                        <StackPanel HorizontalAlignment="Center">
+                            <TextBlock Text="{Binding TotalBandas}"
+                                       FontSize="28"
+                                       FontWeight="Bold"
+                                       Foreground="#ffd700"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock Text="Bandas"
+                                       FontSize="12"
+                                       Foreground="#aaaaaa"
+                                       HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Total Modos -->
+                    <Border Grid.Row="1" Grid.Column="1"
+                            Background="#0f3460" CornerRadius="8" Padding="12">
+                        <StackPanel HorizontalAlignment="Center">
+                            <TextBlock Text="{Binding TotalModos}"
+                                       FontSize="28"
+                                       FontWeight="Bold"
+                                       Foreground="#00c853"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock Text="Modos"
+                                       FontSize="12"
+                                       Foreground="#aaaaaa"
+                                       HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- Contactos por continente -->
+            <TextBlock Text="Contactos por Región"
+                       FontSize="18"
+                       FontWeight="SemiBold"
+                       Foreground="White"
+                       Margin="0,8,0,0" />
+
+            <ItemsControl ItemsSource="{Binding EstadisticasPorContinente}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:EstadisticaContinenteVm">
+                        <Border Background="#16213e" CornerRadius="8" Padding="12" Margin="0,4">
+                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                <!-- Indicador de color -->
+                                <Border Grid.Column="0"
+                                        Width="6"
+                                        CornerRadius="3"
+                                        Margin="0,0,12,0"
+                                        VerticalAlignment="Stretch" />
+
+                                <!-- Nombre y prefijos -->
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock Text="{Binding Continente}"
+                                               FontSize="16"
+                                               FontWeight="SemiBold"
+                                               Foreground="White" />
+                                    <TextBlock FontSize="12" Foreground="#888888">
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0} prefijos únicos">
+                                                <Binding Path="PrefijosUnicos" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </StackPanel>
+
+                                <!-- Cantidad de QSOs -->
+                                <StackPanel Grid.Column="2" HorizontalAlignment="Right">
+                                    <TextBlock Text="{Binding CantidadQsos}"
+                                               FontSize="22"
+                                               FontWeight="Bold"
+                                               Foreground="#e94560"
+                                               HorizontalAlignment="Right" />
+                                    <TextBlock Text="QSOs"
+                                               FontSize="11"
+                                               Foreground="#888888"
+                                               HorizontalAlignment="Right" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <!-- Estado -->
+            <TextBlock Text="{Binding TextoEstado}"
+                       FontSize="12"
+                       Foreground="#666666"
+                       HorizontalAlignment="Center"
+                       Margin="0,8" />
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -28,6 +28,14 @@ public sealed class ConfiguracionLoTW
 /// Cliente para interactuar con el servicio Logbook of the World (LoTW) de la ARRL.
 /// Permite subir QSOs en formato ADIF y descargar confirmaciones.
 /// </summary>
+/// <remarks>
+/// <para><b>Para qué sirve:</b> Comunica con el servicio LoTW de la ARRL para subir QSOs firmados digitalmente y descargar confirmaciones de contactos verificados.</para>
+/// <para><b>Cómo se usa:</b> No se usa directamente — es invocado por <see cref="IServicioConfirmaciones"/>. Se puede inyectar por constructor si se necesita acceso directo.</para>
+/// <para><b>Implementaciones:</b> <c>RadioAficionado.Infraestructura.Confirmaciones.ClienteLoTW</c>.</para>
+/// <para><b>Registro DI:</b> Registrada con <c>AddHttpClient</c> (Transient con HttpClient gestionado) en <c>RadioAficionado.Infraestructura.ConfiguracionServicios.AgregarCapaDeInfraestructura()</c>.</para>
+/// <para><b>Configuración necesaria:</b> Credenciales LoTW, ruta a TQSL opcional, certificado activo (ver <see cref="ConfiguracionLoTW"/>).</para>
+/// <para><b>Dependencias:</b> <c>HttpClient</c> (inyectado por factory), <see cref="ConfiguracionLoTW"/>.</para>
+/// </remarks>
 public interface IClienteLoTW
 {
     /// <summary>

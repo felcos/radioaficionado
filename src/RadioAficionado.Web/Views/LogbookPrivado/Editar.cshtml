@@ -1,0 +1,131 @@
+@model EditarQsoViewModel
+@{
+    ViewData["Title"] = "Editar QSO";
+}
+
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a asp-controller="LogbookPrivado" asp-action="Index" class="text-ra-acento">Mi Logbook</a>
+        </li>
+        <li class="breadcrumb-item active text-ra-suave" aria-current="page">
+            Editar QSO
+        </li>
+    </ol>
+</nav>
+
+<h1 class="h3 text-ra-acento mb-4">Editar QSO</h1>
+
+<div class="card bg-ra-tarjeta border-ra-borde">
+    <div class="card-body">
+        <form asp-controller="LogbookPrivado" asp-action="Editar" method="post">
+            @Html.AntiForgeryToken()
+            <input asp-for="Id" type="hidden" />
+
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+            <div class="row g-3">
+                <!-- Indicativo Contacto -->
+                <div class="col-md-4">
+                    <label asp-for="IndicativoContacto" class="form-label text-ra-suave"></label>
+                    <input asp-for="IndicativoContacto"
+                           class="form-control bg-ra-input border-ra-borde text-light"
+                           placeholder="Ej: W1AW" />
+                    <span asp-validation-for="IndicativoContacto" class="text-danger small"></span>
+                </div>
+
+                <!-- Frecuencia -->
+                <div class="col-md-4">
+                    <label asp-for="FrecuenciaMHz" class="form-label text-ra-suave"></label>
+                    <input asp-for="FrecuenciaMHz"
+                           class="form-control bg-ra-input border-ra-borde text-light"
+                           type="number" step="0.001"
+                           placeholder="Ej: 14.074" />
+                    <span asp-validation-for="FrecuenciaMHz" class="text-danger small"></span>
+                </div>
+
+                <!-- Modo -->
+                <div class="col-md-4">
+                    <label asp-for="Modo" class="form-label text-ra-suave"></label>
+                    <select asp-for="Modo" class="form-select bg-ra-input border-ra-borde text-light">
+                        @foreach (ModoOperacion modoItem in Model.ModosDisponibles)
+                        {
+                            <option value="@modoItem" selected="@(Model.Modo == modoItem)">@modoItem</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Modo" class="text-danger small"></span>
+                </div>
+
+                <!-- Fecha/Hora Inicio -->
+                <div class="col-md-6">
+                    <label asp-for="FechaHoraInicio" class="form-label text-ra-suave"></label>
+                    <input asp-for="FechaHoraInicio"
+                           class="form-control bg-ra-input border-ra-borde text-light"
+                           type="datetime-local" />
+                    <span asp-validation-for="FechaHoraInicio" class="text-danger small"></span>
+                </div>
+
+                <!-- Fecha/Hora Fin -->
+                <div class="col-md-6">
+                    <label asp-for="FechaHoraFin" class="form-label text-ra-suave"></label>
+                    <input asp-for="FechaHoraFin"
+                           class="form-control bg-ra-input border-ra-borde text-light"
+                           type="datetime-local" />
+                    <span asp-validation-for="FechaHoraFin" class="text-danger small"></span>
+                </div>
+
+                <!-- Senal Enviada -->
+                <div class="col-md-3">
+                    <label asp-for="SenalEnviada" class="form-label text-ra-suave"></label>
+                    <input asp-for="SenalEnviada"
+                           class="form-control bg-ra-input border-ra-borde text-light"
+                           placeholder="Ej: 59" />
+                    <span asp-validation-for="SenalEnviada" class="text-danger small"></span>
+                </div>
+
+                <!-- Senal Recibida -->
+                <div class="col-md-3">
+                    <label asp-for="SenalRecibida" class="form-label text-ra-suave"></label>
+                    <input asp-for="SenalRecibida"
+                           class="form-control bg-ra-input border-ra-borde text-light"
+                           placeholder="Ej: 59" />
+                    <span asp-validation-for="SenalRecibida" class="text-danger small"></span>
+                </div>
+
+                <!-- Potencia -->
+                <div class="col-md-3">
+                    <label asp-for="Potencia" class="form-label text-ra-suave"></label>
+                    <input asp-for="Potencia"
+                           class="form-control bg-ra-input border-ra-borde text-light"
+                           type="number" step="0.1"
+                           placeholder="Ej: 100" />
+                    <span asp-validation-for="Potencia" class="text-danger small"></span>
+                </div>
+
+                <!-- Localizador -->
+                <div class="col-md-3">
+                    <label asp-for="LocalizadorContacto" class="form-label text-ra-suave"></label>
+                    <input asp-for="LocalizadorContacto"
+                           class="form-control bg-ra-input border-ra-borde text-light"
+                           placeholder="Ej: IO91WM" />
+                    <span asp-validation-for="LocalizadorContacto" class="text-danger small"></span>
+                </div>
+
+                <!-- Notas -->
+                <div class="col-12">
+                    <label asp-for="Notas" class="form-label text-ra-suave"></label>
+                    <textarea asp-for="Notas"
+                              class="form-control bg-ra-input border-ra-borde text-light"
+                              rows="3"
+                              placeholder="Notas adicionales sobre el contacto..."></textarea>
+                    <span asp-validation-for="Notas" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <div class="mt-4 d-flex gap-2">
+                <button type="submit" class="btn btn-ra-acento">Guardar cambios</button>
+                <a asp-controller="LogbookPrivado" asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>

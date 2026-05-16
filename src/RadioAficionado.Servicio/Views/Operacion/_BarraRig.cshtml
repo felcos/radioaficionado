@@ -1,0 +1,62 @@
+<div class="barra-rig">
+    <!-- Frecuencia LED -->
+    <div class="frecuencia-led" id="frecuencia-display">14.074.000</div>
+
+    <!-- Banda -->
+    <div class="grupo-bandas" id="grupo-bandas">
+        <button class="btn-banda activa" data-banda="160m">160m</button>
+        <button class="btn-banda" data-banda="80m">80m</button>
+        <button class="btn-banda" data-banda="40m">40m</button>
+        <button class="btn-banda" data-banda="30m">30m</button>
+        <button class="btn-banda" data-banda="20m">20m</button>
+        <button class="btn-banda" data-banda="17m">17m</button>
+        <button class="btn-banda" data-banda="15m">15m</button>
+        <button class="btn-banda" data-banda="12m">12m</button>
+        <button class="btn-banda" data-banda="10m">10m</button>
+        <button class="btn-banda" data-banda="6m">6m</button>
+        <button class="btn-banda" data-banda="2m">2m</button>
+    </div>
+
+    <!-- Modo -->
+    <div class="grupo-modos" id="grupo-modos">
+        <button class="btn-modo" data-modo="USB">USB</button>
+        <button class="btn-modo" data-modo="LSB">LSB</button>
+        <button class="btn-modo" data-modo="CW">CW</button>
+        <button class="btn-modo activa" data-modo="FT8">FT8</button>
+        <button class="btn-modo" data-modo="FT4">FT4</button>
+        <button class="btn-modo" data-modo="RTTY">RTTY</button>
+        <button class="btn-modo" data-modo="PSK">PSK</button>
+        <button class="btn-modo" data-modo="JS8">JS8</button>
+        <button class="btn-modo" data-modo="AM">AM</button>
+        <button class="btn-modo" data-modo="FM">FM</button>
+    </div>
+
+    <!-- S-meter -->
+    <div class="smeter-contenedor">
+        <div class="smeter-etiqueta">S</div>
+        <div class="smeter-barra">
+            <div class="smeter-relleno" id="smeter-relleno" style="width: 0%"></div>
+        </div>
+        <div class="smeter-valor" id="smeter-valor">S0</div>
+    </div>
+
+    <!-- PTT -->
+    <button class="btn-ptt" id="btn-ptt">TX</button>
+
+    <!-- VFO -->
+    <button class="btn-vfo" id="btn-vfo">VFO A</button>
+
+    <!-- UTC -->
+    <div class="reloj-utc" id="reloj-utc">00:00:00</div>
+
+    <!-- Conexion -->
+    <div class="estado-conexion">
+        <span class="indicador-conexion" id="indicador-conexion"></span>
+        <span id="texto-conexion">Sin conexion</span>
+    </div>
+
+    <!-- Config -->
+    <button class="btn-config" id="btn-config" data-bs-toggle="modal" data-bs-target="#modal-configuracion" title="Configuracion">
+        &#9881;
+    </button>
+</div>

@@ -36,6 +36,7 @@
     <ProjectReference Include="..\RadioAficionado.Nativo.Audio\RadioAficionado.Nativo.Audio.csproj" />
     <ProjectReference Include="..\RadioAficionado.Nativo.Rig\RadioAficionado.Nativo.Rig.csproj" />
     <ProjectReference Include="..\RadioAficionado.IA\RadioAficionado.IA.csproj" />
+    <ProjectReference Include="..\RadioAficionado.Nativo.Sdr\RadioAficionado.Nativo.Sdr.csproj" />
     <ProjectReference Include="..\RadioAficionado.Compartido\RadioAficionado.Compartido.csproj" />
   </ItemGroup>
 </Project>

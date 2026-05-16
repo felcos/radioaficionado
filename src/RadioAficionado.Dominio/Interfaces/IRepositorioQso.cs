@@ -13,6 +13,14 @@ public sealed record ResultadoPaginado<T>(IReadOnlyList<T> Elementos, int TotalE
 /// <summary>
 /// Repositorio para operaciones de persistencia de contactos de radio (QSOs).
 /// </summary>
+/// <remarks>
+/// <para><b>Para qué sirve:</b> Abstrae las operaciones CRUD y consultas de persistencia para entidades <c>Qso</c>. Soporta paginación, filtrado, detección de duplicados y búsqueda por indicativo.</para>
+/// <para><b>Cómo se usa:</b> Se inyecta por constructor en servicios y handlers. Las operaciones de escritura requieren llamar a <see cref="IUnidadDeTrabajo.GuardarCambiosAsync"/> para persistir.</para>
+/// <para><b>Implementaciones:</b> <c>RadioAficionado.Infraestructura.Persistencia.RepositorioQso</c> (EF Core).</para>
+/// <para><b>Registro DI:</b> Registrada como Scoped en <c>RadioAficionado.Infraestructura.ConfiguracionServicios.AgregarCapaDeInfraestructura()</c>.</para>
+/// <para><b>Configuración necesaria:</b> Requiere que el <c>ContextoRadioAficionado</c> (DbContext) esté registrado.</para>
+/// <para><b>Dependencias:</b> <c>ContextoRadioAficionado</c> (DbContext de EF Core).</para>
+/// </remarks>
 public interface IRepositorioQso
 {
     /// <summary>

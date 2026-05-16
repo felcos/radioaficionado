@@ -1,0 +1,59 @@
+<div class="panel-contest-contenido">
+    <div class="contest-toolbar">
+        <select class="form-select form-select-sm" id="contest-seleccionar" style="width: auto; display: inline-block;">
+            <option value="">Seleccionar contest...</option>
+            <option value="cqww-ssb">CQ WW SSB</option>
+            <option value="cqww-cw">CQ WW CW</option>
+            <option value="cqwpx-ssb">CQ WPX SSB</option>
+            <option value="cqwpx-cw">CQ WPX CW</option>
+            <option value="arrl-dx-ssb">ARRL DX SSB</option>
+            <option value="arrl-dx-cw">ARRL DX CW</option>
+            <option value="iaru-hf">IARU HF Championship</option>
+        </select>
+        <button class="btn btn-sm btn-outline-light" id="btn-contest-iniciar">Iniciar contest</button>
+    </div>
+    <div class="contest-resumen">
+        <div class="contest-stat">
+            <span class="contest-label">QSOs</span>
+            <span class="contest-valor" id="contest-qsos">0</span>
+        </div>
+        <div class="contest-stat">
+            <span class="contest-label">Puntos</span>
+            <span class="contest-valor" id="contest-puntos">0</span>
+        </div>
+        <div class="contest-stat">
+            <span class="contest-label">Multiplicadores</span>
+            <span class="contest-valor" id="contest-multiplicadores">0</span>
+        </div>
+        <div class="contest-stat">
+            <span class="contest-label">Score</span>
+            <span class="contest-valor contest-score" id="contest-score">0</span>
+        </div>
+    </div>
+    <div class="contest-rate">
+        <span>Rate:</span>
+        <strong id="contest-rate">0</strong>
+        <span>QSO/h</span>
+        <div class="contest-rate-barra">
+            <div class="contest-rate-relleno" id="contest-rate-relleno" style="width: 0%;"></div>
+        </div>
+    </div>
+    <div class="contest-ultimos-qsos">
+        <h6>Ultimos QSOs</h6>
+        <table class="table table-dark table-sm" id="tabla-contest-qsos">
+            <thead>
+                <tr>
+                    <th>UTC</th>
+                    <th>Indicativo</th>
+                    <th>RST Env</th>
+                    <th>RST Rec</th>
+                    <th>Intercambio</th>
+                    <th>Mult</th>
+                    <th>Pts</th>
+                </tr>
+            </thead>
+            <tbody id="contest-qsos-tbody">
+            </tbody>
+        </table>
+    </div>
+</div>

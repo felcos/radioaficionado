@@ -142,6 +142,7 @@ public sealed class ClienteRigctld : IControlRig
         char vfoActivo = await ObtenerVfoInternoAsync(ct).ConfigureAwait(false);
         int nivelSenal = await ObtenerNivelSenalInternoAsync(ct).ConfigureAwait(false);
         double potenciaVatios = await ObtenerPotenciaInternaAsync(ct).ConfigureAwait(false);
+        (bool splitActivo, Frecuencia? frecuenciaVfoB) = await ObtenerSplitInternoAsync(ct).ConfigureAwait(false);
 
         EstadoRig estado = new()
         {
@@ -152,7 +153,9 @@ public sealed class ClienteRigctld : IControlRig
             PotenciaVatios = potenciaVatios,
             Transmitiendo = transmitiendo,
             AnchoDeBandaHz = anchoBanda,
-            VfoActivo = vfoActivo
+            VfoActivo = vfoActivo,
+            SplitActivo = splitActivo,
+            FrecuenciaVfoB = frecuenciaVfoB
         };
 
         return estado;
@@ -214,6 +217,52 @@ public sealed class ClienteRigctld : IControlRig
         string vfoRigctld = MapeadorModos.VfoHaciaRigctld(vfo);
         string respuesta = await EnviarComandoAsync($"V {vfoRigctld}", ct).ConfigureAwait(false);
         VerificarRespuesta(respuesta, "CambiarVfo");
+    }
+
+    /// <inheritdoc />
+    public async Task ActivarSplitAsync(bool activar, CancellationToken ct = default)
+    {
+        VerificarConexion();
+
+        // Comando rigctld: S [split] [tx_vfo]
+        // split = 1 para activar, 0 para desactivar
+        // tx_vfo = VFOB cuando se activa split
+        string split = activar ? "1" : "0";
+        string txVfo = activar ? "VFOB" : "VFOA";
+        string respuesta = await EnviarComandoAsync($"S {split} {txVfo}", ct).ConfigureAwait(false);
+        VerificarRespuesta(respuesta, "ActivarSplit");
+    }
+
+    /// <inheritdoc />
+    public async Task CambiarFrecuenciaVfoBAsync(Frecuencia frecuencia, CancellationToken ct = default)
+    {
+        VerificarConexion();
+
+        // Cambiar a VFO B, establecer frecuencia, volver a VFO A
+        string respuesta = await EnviarComandoAsync("V VFOB", ct).ConfigureAwait(false);
+        VerificarRespuesta(respuesta, "CambiarFrecuenciaVfoB (seleccionar B)");
+
+        respuesta = await EnviarComandoAsync($"F {frecuencia.Hz}", ct).ConfigureAwait(false);
+        VerificarRespuesta(respuesta, "CambiarFrecuenciaVfoB (frecuencia)");
+
+        respuesta = await EnviarComandoAsync("V VFOA", ct).ConfigureAwait(false);
+        VerificarRespuesta(respuesta, "CambiarFrecuenciaVfoB (volver A)");
+    }
+
+    /// <inheritdoc />
+    public Task CambiarPttDtrAsync(bool activar, CancellationToken ct = default)
+    {
+        // rigctld no soporta PTT por DTR directamente — se usa el comando T estándar.
+        // La línea DTR se gestiona en la configuración del demonio rigctld.
+        return CambiarPttAsync(activar, ct);
+    }
+
+    /// <inheritdoc />
+    public Task CambiarPttRtsAsync(bool activar, CancellationToken ct = default)
+    {
+        // rigctld no soporta PTT por RTS directamente — se usa el comando T estándar.
+        // La línea RTS se gestiona en la configuración del demonio rigctld.
+        return CambiarPttAsync(activar, ct);
     }
 
     /// <inheritdoc />
@@ -372,6 +421,43 @@ public sealed class ClienteRigctld : IControlRig
     }
 
     /// <summary>
+    /// Obtiene el estado del split y la frecuencia del VFO B si está activo.
+    /// </summary>
+    private async Task<(bool SplitActivo, Frecuencia? FrecuenciaVfoB)> ObtenerSplitInternoAsync(CancellationToken ct)
+    {
+        try
+        {
+            // Comando rigctld: s — devuelve "Split" y "SatMode" en 2 líneas
+            List<string> lineas = await EnviarComandoMultilineaAsync("s", 2, ct).ConfigureAwait(false);
+            bool splitActivo = lineas[0].Trim() != "0";
+
+            if (splitActivo)
+            {
+                // Leer frecuencia del VFO B
+                string respVfoB = await EnviarComandoAsync("V VFOB", ct).ConfigureAwait(false);
+                if (respVfoB.Trim() == "RPRT 0")
+                {
+                    string respFreqB = await EnviarComandoAsync("f", ct).ConfigureAwait(false);
+                    string respVolverA = await EnviarComandoAsync("V VFOA", ct).ConfigureAwait(false);
+
+                    if (long.TryParse(respFreqB.Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out long hzB) && hzB > 0)
+                    {
+                        return (true, Frecuencia.DesdeHz(hzB));
+                    }
+                }
+
+                return (true, null);
+            }
+
+            return (false, null);
+        }
+        catch (InvalidOperationException)
+        {
+            return (false, null);
+        }
+    }
+
+    /// <summary>
     /// Obtiene la potencia de transmisión actual en vatios.
     /// </summary>
     private async Task<double> ObtenerPotenciaInternaAsync(CancellationToken ct)
@@ -446,7 +532,9 @@ public sealed class ClienteRigctld : IControlRig
             || Math.Abs(anterior.PotenciaVatios - actual.PotenciaVatios) > 0.01
             || anterior.Transmitiendo != actual.Transmitiendo
             || anterior.AnchoDeBandaHz != actual.AnchoDeBandaHz
-            || anterior.VfoActivo != actual.VfoActivo;
+            || anterior.VfoActivo != actual.VfoActivo
+            || anterior.SplitActivo != actual.SplitActivo
+            || anterior.FrecuenciaVfoB != actual.FrecuenciaVfoB;
     }
 
     /// <summary>

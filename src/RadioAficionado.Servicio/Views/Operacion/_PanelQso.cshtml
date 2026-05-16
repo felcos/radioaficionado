@@ -1,0 +1,36 @@
+<div class="panel-qso">
+    <div class="panel-titulo">QSO en curso</div>
+
+    <div class="qso-campos">
+        <div class="qso-campo">
+            <label>DX Call</label>
+            <input type="text" id="qso-dx-call" class="input-qso" placeholder="Indicativo" maxlength="12" />
+        </div>
+        <div class="qso-campo">
+            <label>Grid</label>
+            <input type="text" id="qso-grid" class="input-qso" placeholder="Grid" maxlength="6" />
+        </div>
+        <div class="qso-campo">
+            <label>Rpt Sent</label>
+            <input type="text" id="qso-rpt-sent" class="input-qso" placeholder="-00" maxlength="4" />
+        </div>
+        <div class="qso-campo">
+            <label>Rpt Rcvd</label>
+            <input type="text" id="qso-rpt-rcvd" class="input-qso" placeholder="-00" maxlength="4" />
+        </div>
+    </div>
+
+    <div class="qso-controles">
+        <button class="btn-enable-tx" id="btn-enable-tx">Enable TX</button>
+        <button class="btn-auto-seq" id="btn-auto-seq">Auto Seq</button>
+        <button class="btn-halt" id="btn-halt">Halt TX</button>
+    </div>
+
+    <div class="qso-acciones">
+        <button class="btn-log-qso" id="btn-log-qso">Log QSO</button>
+    </div>
+
+    <div class="qso-estado" id="qso-estado">
+        <!-- Estado de la secuencia: Inactivo, CQ Enviado, etc. -->
+    </div>
+</div>

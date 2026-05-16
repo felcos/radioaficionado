@@ -1,0 +1,63 @@
+<div class="panel-dxcc-contenido">
+    <div class="dxcc-toolbar">
+        <div class="dxcc-resumen">
+            <span class="dxcc-stat">Trabajados: <strong id="dxcc-trabajados">0</strong></span>
+            <span class="dxcc-stat">Confirmados: <strong id="dxcc-confirmados">0</strong></span>
+            <span class="dxcc-stat">Meta: <strong>340</strong></span>
+        </div>
+        <div class="dxcc-filtros">
+            <select class="form-select form-select-sm" id="dxcc-filtro-banda" style="width: auto; display: inline-block;">
+                <option value="">Todas las bandas</option>
+                <option value="160m">160m</option>
+                <option value="80m">80m</option>
+                <option value="40m">40m</option>
+                <option value="20m">20m</option>
+                <option value="15m">15m</option>
+                <option value="10m">10m</option>
+                <option value="6m">6m</option>
+            </select>
+            <select class="form-select form-select-sm" id="dxcc-filtro-estado" style="width: auto; display: inline-block;">
+                <option value="">Todos</option>
+                <option value="necesitado">Necesitados</option>
+                <option value="trabajado">Trabajados</option>
+                <option value="confirmado">Confirmados</option>
+            </select>
+        </div>
+    </div>
+    <div class="dxcc-filtro-continente" id="dxcc-filtro-continente">
+        <button class="btn-continente activo" data-continente="">Todos</button>
+        <button class="btn-continente" data-continente="AF">AF</button>
+        <button class="btn-continente" data-continente="AS">AS</button>
+        <button class="btn-continente" data-continente="EU">EU</button>
+        <button class="btn-continente" data-continente="NA">NA</button>
+        <button class="btn-continente" data-continente="OC">OC</button>
+        <button class="btn-continente" data-continente="SA">SA</button>
+    </div>
+    <div class="dxcc-progreso">
+        <div class="dxcc-progreso-barra">
+            <div class="dxcc-progreso-relleno" id="dxcc-progreso-relleno" style="width: 0%;"></div>
+        </div>
+        <span class="dxcc-progreso-texto" id="dxcc-progreso-texto">0%</span>
+    </div>
+    <div class="dxcc-tabla-wrapper">
+        <table class="table table-dark table-sm" id="tabla-dxcc">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Entidad</th>
+                    <th>Prefijo</th>
+                    <th>Continente</th>
+                    <th>160m</th>
+                    <th>80m</th>
+                    <th>40m</th>
+                    <th>20m</th>
+                    <th>15m</th>
+                    <th>10m</th>
+                    <th>6m</th>
+                </tr>
+            </thead>
+            <tbody id="dxcc-tbody">
+            </tbody>
+        </table>
+    </div>
+</div>

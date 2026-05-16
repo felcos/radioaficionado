@@ -72,4 +72,11 @@ public sealed class RepositorioActivaciones : IRepositorioActivaciones
 
         return activaciones.AsReadOnly();
     }
+
+    /// <inheritdoc />
+    public Task EliminarAsync(Activacion activacion, CancellationToken ct)
+    {
+        _contexto.Activaciones.Remove(activacion);
+        return Task.CompletedTask;
+    }
 }

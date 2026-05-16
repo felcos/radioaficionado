@@ -51,6 +51,9 @@ public enum ModoOperacion
     /// <summary>FT4 (Franke-Taylor 4-FSK). Disenado para contests rapidos.</summary>
     FT4,
 
+    /// <summary>FT2 (Franke-Taylor 2 — experimental). 4-GFSK con ventana de 6 segundos.</summary>
+    FT2,
+
     /// <summary>Hellschreiber — texto como imagen bitmap.</summary>
     HELL,
 
@@ -268,7 +271,19 @@ public enum SubModoOperacion
     /// <summary>AMTOR — modo ARQ.</summary>
     AMTOR,
     /// <summary>NAVTEX.</summary>
-    NAVTEX
+    NAVTEX,
+
+    // --- Q65 submodos ---
+    /// <summary>Q65A — periodo de 15 segundos.</summary>
+    Q65A,
+    /// <summary>Q65B — periodo de 30 segundos.</summary>
+    Q65B,
+    /// <summary>Q65C — periodo de 60 segundos.</summary>
+    Q65C,
+    /// <summary>Q65D — periodo de 120 segundos.</summary>
+    Q65D,
+    /// <summary>Q65E — periodo de 300 segundos.</summary>
+    Q65E
 }
 
 /// <summary>
@@ -305,6 +320,8 @@ public static class ModoOperacionExtensiones
             SubModoOperacion.ASCI => ModoOperacion.RTTY,
             SubModoOperacion.VARA_HF or SubModoOperacion.VARA_FM or SubModoOperacion.VARA_SAT => ModoOperacion.V4,
             SubModoOperacion.AMTOR or SubModoOperacion.NAVTEX => ModoOperacion.TOR,
+            SubModoOperacion.Q65A or SubModoOperacion.Q65B or SubModoOperacion.Q65C or
+            SubModoOperacion.Q65D or SubModoOperacion.Q65E => ModoOperacion.Q65,
             _ => throw new ArgumentOutOfRangeException(nameof(subModo), subModo, "Submodo no reconocido.")
         };
     }
@@ -326,8 +343,8 @@ public static class ModoOperacionExtensiones
     /// <returns>True si el modo esta disenado para senales debiles.</returns>
     public static bool EsSenalDebil(this ModoOperacion modo)
     {
-        return modo is ModoOperacion.FT8 or ModoOperacion.FT4 or ModoOperacion.JT65 or
-            ModoOperacion.JT9 or ModoOperacion.JT4 or ModoOperacion.Q65 or
+        return modo is ModoOperacion.FT8 or ModoOperacion.FT4 or ModoOperacion.FT2 or
+            ModoOperacion.JT65 or ModoOperacion.JT9 or ModoOperacion.JT4 or ModoOperacion.Q65 or
             ModoOperacion.QRA64 or ModoOperacion.MSK144 or ModoOperacion.WSPR or
             ModoOperacion.FST4 or ModoOperacion.FST4W or ModoOperacion.ISCAT;
     }

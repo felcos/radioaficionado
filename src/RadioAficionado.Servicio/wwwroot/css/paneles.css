@@ -1,0 +1,1134 @@
+/* RadioAficionado - Estilos de paneles secundarios
+   Logbook, DX Cluster, DXCC, Propagacion, POTA/SOTA, Contest, Satelites
+   ================================================================ */
+
+/* ================================================================
+   COMUNES A TODOS LOS PANELES
+   ================================================================ */
+
+/* Fuente monospace para datos de radio */
+.dato-radio {
+    font-family: 'Courier New', 'Consolas', monospace;
+}
+
+/* Toolbars comunes */
+.logbook-toolbar,
+.dxcluster-toolbar,
+.dxcc-toolbar,
+.propagacion-toolbar,
+.activaciones-toolbar,
+.contest-toolbar,
+.satelites-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px 0;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #30363d;
+    flex-wrap: wrap;
+}
+
+/* Tablas compactas estilo terminal */
+.panel-logbook-contenido .table,
+.panel-dxcluster-contenido .table,
+.panel-dxcc-contenido .table,
+.panel-propagacion-contenido .table,
+.panel-activaciones-contenido .table,
+.panel-contest-contenido .table,
+.panel-satelites-contenido .table {
+    font-family: 'Courier New', 'Consolas', monospace;
+    font-size: 0.8rem;
+    margin-bottom: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #0d1117;
+}
+
+.panel-logbook-contenido .table thead th,
+.panel-dxcluster-contenido .table thead th,
+.panel-dxcc-contenido .table thead th,
+.panel-propagacion-contenido .table thead th,
+.panel-activaciones-contenido .table thead th,
+.panel-contest-contenido .table thead th,
+.panel-satelites-contenido .table thead th {
+    position: sticky;
+    top: 0;
+    background: #161b22;
+    color: #8b949e;
+    font-weight: 600;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 6px 8px;
+    border-bottom: 2px solid #30363d;
+    white-space: nowrap;
+    z-index: 1;
+}
+
+.panel-logbook-contenido .table td,
+.panel-dxcluster-contenido .table td,
+.panel-dxcc-contenido .table td,
+.panel-propagacion-contenido .table td,
+.panel-activaciones-contenido .table td,
+.panel-contest-contenido .table td,
+.panel-satelites-contenido .table td {
+    padding: 4px 8px;
+    border-bottom: 1px solid #21262d;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+/* Tabla wrapper con scroll */
+.logbook-tabla-wrapper,
+.dxcluster-tabla-wrapper,
+.dxcc-tabla-wrapper,
+.activaciones-tabla-wrapper {
+    overflow-y: auto;
+    max-height: calc(100vh - 180px);
+    border: 1px solid #30363d;
+    border-radius: 4px;
+    background: #0d1117;
+}
+
+/* Selects y inputs en tema oscuro */
+.panel-logbook-contenido .form-select,
+.panel-dxcluster-contenido .form-select,
+.panel-dxcc-contenido .form-select,
+.panel-activaciones-contenido .form-select,
+.panel-contest-contenido .form-select,
+.panel-satelites-contenido .form-select,
+.panel-logbook-contenido .form-control,
+.panel-activaciones-contenido .form-control {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    color: #c9d1d9;
+    font-size: 0.8rem;
+}
+
+.panel-logbook-contenido .form-select:focus,
+.panel-dxcluster-contenido .form-select:focus,
+.panel-dxcc-contenido .form-select:focus,
+.panel-activaciones-contenido .form-select:focus,
+.panel-contest-contenido .form-select:focus,
+.panel-satelites-contenido .form-select:focus,
+.panel-logbook-contenido .form-control:focus,
+.panel-activaciones-contenido .form-control:focus {
+    background: #0d1117;
+    border-color: var(--color-acento);
+    color: #c9d1d9;
+    box-shadow: 0 0 0 2px rgba(0, 255, 65, 0.15);
+}
+
+/* Botones en paneles */
+.panel-logbook-contenido .btn-outline-light,
+.panel-dxcluster-contenido .btn-outline-light,
+.panel-dxcc-contenido .btn-outline-light,
+.panel-propagacion-contenido .btn-outline-light,
+.panel-activaciones-contenido .btn-outline-light,
+.panel-contest-contenido .btn-outline-light,
+.panel-satelites-contenido .btn-outline-light {
+    border-color: #30363d;
+    color: #8b949e;
+    font-size: 0.8rem;
+}
+
+.panel-logbook-contenido .btn-outline-light:hover,
+.panel-dxcluster-contenido .btn-outline-light:hover,
+.panel-dxcc-contenido .btn-outline-light:hover,
+.panel-propagacion-contenido .btn-outline-light:hover,
+.panel-activaciones-contenido .btn-outline-light:hover,
+.panel-contest-contenido .btn-outline-light:hover,
+.panel-satelites-contenido .btn-outline-light:hover {
+    background: #21262d;
+    border-color: #8b949e;
+    color: #c9d1d9;
+}
+
+/* ================================================================
+   LOGBOOK
+   ================================================================ */
+
+.logbook-busqueda {
+    flex: 1;
+    max-width: 300px;
+}
+
+.logbook-busqueda .form-control {
+    background: #0d1117;
+    border-color: #30363d;
+    color: #c9d1d9;
+    font-family: 'Courier New', monospace;
+}
+
+.logbook-acciones {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.logbook-total {
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    color: var(--color-acento);
+    padding: 0 8px;
+}
+
+/* Alternancia de filas */
+.panel-logbook-contenido .table tbody tr:nth-child(odd) {
+    background: #0d1117;
+}
+
+.panel-logbook-contenido .table tbody tr:nth-child(even) {
+    background: #161b22;
+}
+
+.panel-logbook-contenido .table tbody tr:hover {
+    background: #1c2333;
+}
+
+/* Columnas monospace para datos de radio */
+.panel-logbook-contenido .table td:nth-child(1),  /* Fecha/Hora */
+.panel-logbook-contenido .table td:nth-child(3),  /* Banda */
+.panel-logbook-contenido .table td:nth-child(5),  /* RST Env */
+.panel-logbook-contenido .table td:nth-child(6),  /* RST Rec */
+.panel-logbook-contenido .table td:nth-child(7) { /* Grid */
+    font-family: 'Courier New', monospace;
+    color: #c9d1d9;
+}
+
+/* Indicativo como enlace */
+.panel-logbook-contenido .table td:nth-child(2) {
+    font-weight: 600;
+    color: var(--color-info);
+}
+
+/* Badge de confirmacion */
+.badge-confirmado {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge-confirmado.confirmado {
+    background: rgba(0, 255, 65, 0.15);
+    color: #3fb950;
+    border: 1px solid rgba(0, 255, 65, 0.3);
+}
+
+.badge-confirmado.pendiente {
+    background: rgba(139, 148, 158, 0.15);
+    color: #8b949e;
+    border: 1px solid rgba(139, 148, 158, 0.3);
+}
+
+/* Boton importar ADIF estilizado */
+.btn-importar-adif {
+    background: #161b22;
+    border: 1px solid var(--color-acento);
+    color: var(--color-acento);
+    font-size: 0.8rem;
+    padding: 4px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.btn-importar-adif:hover {
+    background: rgba(0, 255, 65, 0.1);
+    box-shadow: 0 0 8px rgba(0, 255, 65, 0.2);
+}
+
+/* Paginacion */
+.logbook-paginacion {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    padding: 8px 0;
+}
+
+.logbook-paginacion .btn {
+    background: #161b22;
+    border: 1px solid #30363d;
+    color: #8b949e;
+    font-size: 0.75rem;
+    padding: 2px 8px;
+}
+
+.logbook-paginacion .btn.active {
+    background: var(--color-acento);
+    color: #0d1117;
+    border-color: var(--color-acento);
+}
+
+/* ================================================================
+   DX CLUSTER
+   ================================================================ */
+
+.dxcluster-filtros {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.dxcluster-estado {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dxcluster-contador {
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    color: var(--color-acento);
+}
+
+/* Filas coloreadas por banda */
+.panel-dxcluster-contenido .table tbody tr[data-banda="160m"] { border-left: 3px solid #8b5cf6; }
+.panel-dxcluster-contenido .table tbody tr[data-banda="80m"]  { border-left: 3px solid #6366f1; }
+.panel-dxcluster-contenido .table tbody tr[data-banda="60m"]  { border-left: 3px solid #3b82f6; }
+.panel-dxcluster-contenido .table tbody tr[data-banda="40m"]  { border-left: 3px solid #06b6d4; }
+.panel-dxcluster-contenido .table tbody tr[data-banda="30m"]  { border-left: 3px solid #14b8a6; }
+.panel-dxcluster-contenido .table tbody tr[data-banda="20m"]  { border-left: 3px solid #22c55e; }
+.panel-dxcluster-contenido .table tbody tr[data-banda="17m"]  { border-left: 3px solid #84cc16; }
+.panel-dxcluster-contenido .table tbody tr[data-banda="15m"]  { border-left: 3px solid #eab308; }
+.panel-dxcluster-contenido .table tbody tr[data-banda="12m"]  { border-left: 3px solid #f97316; }
+.panel-dxcluster-contenido .table tbody tr[data-banda="10m"]  { border-left: 3px solid #ef4444; }
+.panel-dxcluster-contenido .table tbody tr[data-banda="6m"]   { border-left: 3px solid #ec4899; }
+.panel-dxcluster-contenido .table tbody tr[data-banda="2m"]   { border-left: 3px solid #f43f5e; }
+
+/* Spot nuevo: parpadeo sutil de entrada */
+@keyframes spot-nuevo-entrada {
+    0%   { background: rgba(0, 255, 65, 0.2); }
+    100% { background: transparent; }
+}
+
+.panel-dxcluster-contenido .table tbody tr.spot-nuevo {
+    animation: spot-nuevo-entrada 2s ease-out;
+}
+
+/* Indicativo clickeable */
+.dxcluster-indicativo {
+    color: var(--color-info);
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.15s;
+}
+
+.dxcluster-indicativo:hover {
+    color: #58d9f5;
+    text-decoration: underline;
+}
+
+/* Frecuencia con monospace */
+.dxcluster-frecuencia {
+    font-family: 'Courier New', monospace;
+    color: var(--color-acento);
+    font-weight: 600;
+}
+
+/* UTC tenue */
+.dxcluster-utc {
+    color: #8b949e;
+    font-family: 'Courier New', monospace;
+}
+
+/* Badge de estado conexion */
+.dxcluster-estado .badge.bg-success {
+    background: rgba(0, 255, 65, 0.2) !important;
+    color: #3fb950;
+}
+
+.dxcluster-estado .badge.bg-secondary {
+    background: rgba(139, 148, 158, 0.2) !important;
+    color: #8b949e;
+}
+
+/* ================================================================
+   DXCC
+   ================================================================ */
+
+.dxcc-resumen {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.dxcc-stat {
+    font-size: 0.85rem;
+    color: #8b949e;
+}
+
+.dxcc-stat strong {
+    color: #c9d1d9;
+    font-family: 'Courier New', monospace;
+}
+
+.dxcc-filtros {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+/* Filtros por continente */
+.dxcc-filtro-continente {
+    display: flex;
+    gap: 4px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.dxcc-filtro-continente .btn-continente {
+    padding: 2px 10px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    background: #161b22;
+    border: 1px solid #30363d;
+    color: #8b949e;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.dxcc-filtro-continente .btn-continente:hover {
+    border-color: #8b949e;
+    color: #c9d1d9;
+}
+
+.dxcc-filtro-continente .btn-continente.activo {
+    background: var(--color-info);
+    color: #0d1117;
+    border-color: var(--color-info);
+}
+
+/* Barra de progreso DXCC */
+.dxcc-progreso {
+    margin: 8px 0 12px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dxcc-progreso-barra {
+    flex: 1;
+    height: 8px;
+    background: #21262d;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid #30363d;
+}
+
+.dxcc-progreso-relleno {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--color-acento), #22c55e);
+    transition: width 0.4s ease;
+}
+
+.dxcc-progreso-texto {
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    color: var(--color-acento);
+    min-width: 48px;
+    text-align: right;
+    font-weight: 600;
+}
+
+/* Columnas de banda: celdas coloreadas */
+.dxcc-banda-confirmado {
+    background: rgba(0, 255, 65, 0.15) !important;
+    color: #3fb950 !important;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.7rem;
+}
+
+.dxcc-banda-trabajado {
+    background: rgba(255, 215, 0, 0.15) !important;
+    color: #d4a017 !important;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.7rem;
+}
+
+.dxcc-banda-necesitado {
+    background: transparent !important;
+    color: #30363d !important;
+    text-align: center;
+    font-size: 0.7rem;
+}
+
+/* Encabezados de banda centrados */
+.panel-dxcc-contenido .table thead th:nth-child(n+5) {
+    text-align: center;
+    min-width: 48px;
+}
+
+/* Entidad y prefijo */
+.dxcc-entidad {
+    color: #c9d1d9;
+    font-weight: 500;
+}
+
+.dxcc-prefijo {
+    font-family: 'Courier New', monospace;
+    color: var(--color-info);
+    font-weight: 600;
+}
+
+.dxcc-continente {
+    color: #8b949e;
+    font-size: 0.75rem;
+}
+
+/* ================================================================
+   PROPAGACION
+   ================================================================ */
+
+.propagacion-toolbar {
+    justify-content: flex-start;
+    gap: 12px;
+}
+
+.propagacion-ultima-actualizacion {
+    font-size: 0.75rem;
+    color: #8b949e;
+    font-style: italic;
+}
+
+.propagacion-grid {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 16px;
+    margin-top: 4px;
+}
+
+/* Panel de indices solares estilo widget hamqsl */
+.propagacion-indices {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 12px;
+}
+
+.propagacion-indices h6 {
+    color: #8b949e;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #21262d;
+}
+
+.propagacion-indice {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid #21262d;
+}
+
+.propagacion-indice:last-child {
+    border-bottom: none;
+}
+
+.propagacion-label {
+    font-size: 0.8rem;
+    color: #8b949e;
+    font-weight: 500;
+}
+
+.propagacion-valor {
+    font-family: 'Courier New', monospace;
+    font-size: 1.1rem;
+    font-weight: 700;
+    min-width: 40px;
+    text-align: right;
+}
+
+/* Colores semaforo para indices */
+.propagacion-valor.prop-bueno {
+    color: #3fb950;
+    text-shadow: 0 0 6px rgba(0, 255, 65, 0.3);
+}
+
+.propagacion-valor.prop-regular {
+    color: #d4a017;
+    text-shadow: 0 0 6px rgba(255, 215, 0, 0.3);
+}
+
+.propagacion-valor.prop-malo {
+    color: #f85149;
+    text-shadow: 0 0 6px rgba(255, 68, 68, 0.3);
+}
+
+/* Tabla de condiciones por banda */
+.propagacion-bandas {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 12px;
+}
+
+.propagacion-bandas h6 {
+    color: #8b949e;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #21262d;
+}
+
+/* Indicadores de color para condiciones */
+.prop-buena {
+    color: #3fb950 !important;
+    font-weight: 600;
+    text-align: center;
+}
+
+.prop-buena::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #3fb950;
+    margin-right: 6px;
+    box-shadow: 0 0 6px rgba(0, 255, 65, 0.4);
+}
+
+.prop-regular {
+    color: #d4a017 !important;
+    font-weight: 600;
+    text-align: center;
+}
+
+.prop-regular::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #d4a017;
+    margin-right: 6px;
+    box-shadow: 0 0 6px rgba(255, 215, 0, 0.4);
+}
+
+.prop-mala {
+    color: #f85149 !important;
+    font-weight: 600;
+    text-align: center;
+}
+
+.prop-mala::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #f85149;
+    margin-right: 6px;
+    box-shadow: 0 0 6px rgba(255, 68, 68, 0.4);
+}
+
+.prop-cerrada {
+    color: #484f58 !important;
+    font-weight: 600;
+    text-align: center;
+}
+
+.prop-cerrada::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #484f58;
+    margin-right: 6px;
+}
+
+/* Tabla propagacion: banda column */
+.panel-propagacion-contenido .table td:first-child {
+    color: var(--color-info);
+    font-weight: 600;
+}
+
+/* ================================================================
+   ACTIVACIONES (POTA/SOTA)
+   ================================================================ */
+
+.activaciones-tabs {
+    display: flex;
+    gap: 4px;
+}
+
+.activaciones-tabs .btn.active,
+.activaciones-tabs .btn.activo {
+    background: var(--color-info);
+    color: #0d1117;
+    border-color: var(--color-info);
+}
+
+.activaciones-filtros {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+/* Cards de activacion */
+.activaciones-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.activacion-card {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 12px;
+    transition: border-color 0.15s;
+}
+
+.activacion-card:hover {
+    border-color: #8b949e;
+}
+
+.activacion-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.activacion-card-referencia {
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #c9d1d9;
+}
+
+/* Badge de programa POTA/SOTA */
+.badge-programa {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge-programa.pota {
+    background: rgba(34, 197, 94, 0.15);
+    color: #3fb950;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.badge-programa.sota {
+    background: rgba(249, 115, 22, 0.15);
+    color: #f97316;
+    border: 1px solid rgba(249, 115, 22, 0.3);
+}
+
+.activacion-card-nombre {
+    font-size: 0.8rem;
+    color: #8b949e;
+    margin-bottom: 6px;
+}
+
+.activacion-card-activador {
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    color: var(--color-info);
+    font-weight: 600;
+}
+
+.activacion-card-detalle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #21262d;
+    font-size: 0.75rem;
+    color: #8b949e;
+}
+
+.activacion-card-freq {
+    font-family: 'Courier New', monospace;
+    color: var(--color-acento);
+}
+
+/* Indicador de QSOs */
+.activacion-qsos {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.activacion-qsos-numero {
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--color-acento);
+}
+
+.activacion-qsos-etiqueta {
+    font-size: 0.7rem;
+    color: #8b949e;
+}
+
+/* Tabla de activaciones */
+.panel-activaciones-contenido .table td:nth-child(1) { /* Referencia */
+    font-weight: 600;
+    color: var(--color-info);
+}
+
+.panel-activaciones-contenido .table td:nth-child(3) { /* Activador */
+    font-weight: 600;
+    color: var(--color-info);
+}
+
+.panel-activaciones-contenido .table td:nth-child(4) { /* Freq */
+    color: var(--color-acento);
+    font-family: 'Courier New', monospace;
+}
+
+/* ================================================================
+   CONTEST
+   ================================================================ */
+
+/* Dashboard con contadores grandes */
+.contest-resumen {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin: 12px 0;
+}
+
+.contest-stat {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 16px 12px;
+    text-align: center;
+}
+
+.contest-label {
+    display: block;
+    font-size: 0.7rem;
+    color: #8b949e;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+}
+
+.contest-valor {
+    display: block;
+    font-family: 'Courier New', monospace;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #c9d1d9;
+    line-height: 1;
+}
+
+.contest-score {
+    color: var(--color-acento) !important;
+    text-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+}
+
+/* Rate meter (QSOs/hora) */
+.contest-rate {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 0.85rem;
+    color: #8b949e;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.contest-rate strong {
+    font-family: 'Courier New', monospace;
+    font-size: 1.3rem;
+    color: var(--color-advertencia);
+}
+
+/* Rate barra visual */
+.contest-rate-barra {
+    flex: 1;
+    height: 6px;
+    background: #21262d;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-left: 8px;
+}
+
+.contest-rate-relleno {
+    height: 100%;
+    background: linear-gradient(90deg, #22c55e, #eab308, #ef4444);
+    border-radius: 3px;
+    transition: width 0.3s;
+}
+
+/* Tabla de ultimos QSOs del contest */
+.contest-ultimos-qsos {
+    margin-top: 12px;
+}
+
+.contest-ultimos-qsos h6 {
+    color: #8b949e;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+
+/* ================================================================
+   SATELITES
+   ================================================================ */
+
+.satelites-grid {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 16px;
+    margin-top: 4px;
+}
+
+.satelites-pases {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 12px;
+}
+
+.satelites-pases h6,
+.satelites-info h6 {
+    color: #8b949e;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #21262d;
+}
+
+.satelites-info {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 12px;
+}
+
+/* Timeline vertical de proximos pases */
+.satelites-timeline {
+    position: relative;
+    padding-left: 20px;
+}
+
+.satelites-timeline::before {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #30363d;
+}
+
+.satelite-pase-item {
+    position: relative;
+    padding: 10px 0 10px 16px;
+    border-bottom: 1px solid #21262d;
+}
+
+.satelite-pase-item:last-child {
+    border-bottom: none;
+}
+
+.satelite-pase-item::before {
+    content: '';
+    position: absolute;
+    left: -17px;
+    top: 14px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #30363d;
+    border: 2px solid #0d1117;
+}
+
+/* Color por tipo de satelite */
+.satelite-pase-item.tipo-fm::before {
+    background: #3b82f6;
+    box-shadow: 0 0 6px rgba(59, 130, 246, 0.4);
+}
+
+.satelite-pase-item.tipo-linear::before {
+    background: #22c55e;
+    box-shadow: 0 0 6px rgba(34, 197, 94, 0.4);
+}
+
+.satelite-pase-item.tipo-digital::before {
+    background: #f97316;
+    box-shadow: 0 0 6px rgba(249, 115, 22, 0.4);
+}
+
+.satelite-pase-nombre {
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #c9d1d9;
+    margin-bottom: 4px;
+}
+
+.satelite-pase-hora {
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    color: #8b949e;
+}
+
+.satelite-pase-hora span {
+    color: var(--color-info);
+}
+
+/* Indicador de elevacion maxima con barra */
+.satelite-elevacion {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.satelite-elevacion-label {
+    font-size: 0.7rem;
+    color: #8b949e;
+    min-width: 60px;
+}
+
+.satelite-elevacion-barra {
+    flex: 1;
+    height: 6px;
+    background: #21262d;
+    border-radius: 3px;
+    overflow: hidden;
+    max-width: 120px;
+}
+
+.satelite-elevacion-relleno {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s;
+}
+
+/* Color de barra segun elevacion */
+.satelite-elevacion-relleno.elev-baja {
+    background: #f85149;
+}
+
+.satelite-elevacion-relleno.elev-media {
+    background: #d4a017;
+}
+
+.satelite-elevacion-relleno.elev-alta {
+    background: #3fb950;
+}
+
+.satelite-elevacion-valor {
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-acento);
+    min-width: 30px;
+    text-align: right;
+}
+
+/* Badges de tipo de satelite */
+.badge-tipo-sat {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 8px;
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.badge-tipo-sat.fm {
+    background: rgba(59, 130, 246, 0.15);
+    color: #58a6ff;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.badge-tipo-sat.linear {
+    background: rgba(34, 197, 94, 0.15);
+    color: #3fb950;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.badge-tipo-sat.digital {
+    background: rgba(249, 115, 22, 0.15);
+    color: #f97316;
+    border: 1px solid rgba(249, 115, 22, 0.3);
+}
+
+/* Tabla de pases */
+.panel-satelites-contenido .table td:nth-child(1) { /* Nombre satelite */
+    font-weight: 600;
+    color: #c9d1d9;
+}
+
+.panel-satelites-contenido .table td:nth-child(2),
+.panel-satelites-contenido .table td:nth-child(3) { /* AOS, LOS */
+    font-family: 'Courier New', monospace;
+    color: var(--color-info);
+}
+
+.panel-satelites-contenido .table td:nth-child(4) { /* Max Elev */
+    font-family: 'Courier New', monospace;
+    color: var(--color-acento);
+    font-weight: 600;
+}
+
+.panel-satelites-contenido .table td:nth-child(5) { /* Doppler */
+    font-family: 'Courier New', monospace;
+    color: #8b949e;
+}
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+
+@media (max-width: 768px) {
+    .propagacion-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .satelites-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .contest-resumen {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .activaciones-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .dxcc-resumen {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+}

@@ -1,0 +1,159 @@
+<div class="modal fade" id="modal-configuracion" tabindex="-1" aria-labelledby="titulo-modal-config" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content bg-dark text-light border-secondary">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title" id="titulo-modal-config">Configuracion</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Tipo de conexion -->
+                <div class="mb-3">
+                    <label class="form-label">Tipo de conexion</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="tipo-conexion" id="tipo-cat" value="cat" checked>
+                        <label class="form-check-label" for="tipo-cat">CAT Serial (directo)</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="tipo-conexion" id="tipo-rigctld" value="rigctld">
+                        <label class="form-check-label" for="tipo-rigctld">rigctld (TCP)</label>
+                    </div>
+                </div>
+
+                <!-- CAT Serial -->
+                <div id="config-cat" class="config-seccion">
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <label class="form-label">Puerto COM</label>
+                            <select class="form-select form-select-sm bg-dark text-light" id="config-puerto">
+                            </select>
+                            <button class="btn btn-sm btn-outline-secondary mt-1" id="btn-refrescar-puertos">Refrescar</button>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Baudios</label>
+                            <select class="form-select form-select-sm bg-dark text-light" id="config-baudios">
+                                <option value="4800">4800</option>
+                                <option value="9600">9600</option>
+                                <option value="19200">19200</option>
+                                <option value="38400" selected>38400</option>
+                                <option value="57600">57600</option>
+                                <option value="115200">115200</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Modelo</label>
+                            <select class="form-select form-select-sm bg-dark text-light" id="config-modelo">
+                                <option value="Automatico" selected>Automatico</option>
+                                <option value="YaesuFt991">Yaesu FT-991</option>
+                                <option value="YaesuFt991A">Yaesu FT-991A</option>
+                                <option value="YaesuFt891">Yaesu FT-891</option>
+                                <option value="YaesuFt710">Yaesu FT-710</option>
+                                <option value="YaesuFtdx10">Yaesu FTDX-10</option>
+                                <option value="YaesuFtdx101">Yaesu FTDX-101</option>
+                                <option value="IcomIc7300">Icom IC-7300</option>
+                                <option value="IcomIc7100">Icom IC-7100</option>
+                                <option value="IcomIc705">Icom IC-705</option>
+                                <option value="IcomIc9700">Icom IC-9700</option>
+                                <option value="KenwoodTs890">Kenwood TS-890</option>
+                                <option value="KenwoodTs590">Kenwood TS-590</option>
+                                <option value="ElecraftK3">Elecraft K3</option>
+                                <option value="ElecraftKx3">Elecraft KX3</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row g-2 mt-2">
+                        <div class="col-md-3">
+                            <label class="form-label">Bits datos</label>
+                            <select class="form-select form-select-sm bg-dark text-light" id="config-bits-datos">
+                                <option value="7">7</option>
+                                <option value="8" selected>8</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Stop bits</label>
+                            <select class="form-select form-select-sm bg-dark text-light" id="config-stop-bits">
+                                <option value="1" selected>1</option>
+                                <option value="2">1.5</option>
+                                <option value="3">2</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Paridad</label>
+                            <select class="form-select form-select-sm bg-dark text-light" id="config-paridad">
+                                <option value="None" selected>None</option>
+                                <option value="Even">Even</option>
+                                <option value="Odd">Odd</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">PTT</label>
+                            <select class="form-select form-select-sm bg-dark text-light" id="config-ptt">
+                                <option value="CAT" selected>CAT</option>
+                                <option value="DTR">DTR</option>
+                                <option value="RTS">RTS</option>
+                                <option value="VOX">VOX</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row g-2 mt-2">
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="config-rts" checked>
+                                <label class="form-check-label" for="config-rts">RTS</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="config-dtr">
+                                <label class="form-check-label" for="config-dtr">DTR</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Polling (ms)</label>
+                            <input type="number" class="form-control form-control-sm bg-dark text-light" id="config-polling" value="200" min="100" max="2000">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- rigctld TCP -->
+                <div id="config-rigctld" class="config-seccion" style="display:none;">
+                    <div class="row g-2">
+                        <div class="col-md-8">
+                            <label class="form-label">Host</label>
+                            <input type="text" class="form-control form-control-sm bg-dark text-light" id="config-host" value="localhost">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Puerto</label>
+                            <input type="number" class="form-control form-control-sm bg-dark text-light" id="config-puerto-tcp" value="4532">
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="border-secondary" />
+
+                <!-- Audio -->
+                <div class="mb-3">
+                    <label class="form-label">Dispositivo de audio (entrada)</label>
+                    <select class="form-select form-select-sm bg-dark text-light" id="config-audio">
+                    </select>
+                    <button class="btn btn-sm btn-outline-secondary mt-1" id="btn-refrescar-audio">Refrescar</button>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Tasa de muestreo</label>
+                    <select class="form-select form-select-sm bg-dark text-light" id="config-sample-rate">
+                        <option value="12000">12000 Hz</option>
+                        <option value="24000">24000 Hz</option>
+                        <option value="48000" selected>48000 Hz</option>
+                    </select>
+                </div>
+
+                <!-- Estado -->
+                <div class="alert alert-secondary py-1 mb-0" id="config-estado"></div>
+            </div>
+            <div class="modal-footer border-secondary">
+                <button type="button" class="btn btn-success" id="btn-conectar-rig">Conectar</button>
+                <button type="button" class="btn btn-danger" id="btn-desconectar-rig" disabled>Desconectar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

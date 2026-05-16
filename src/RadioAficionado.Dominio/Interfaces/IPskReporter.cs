@@ -55,6 +55,14 @@ public sealed class ConfiguracionPskReporter
 /// Interfaz para el cliente de PSKReporter que permite enviar y consultar
 /// spots de señales digitales decodificadas.
 /// </summary>
+/// <remarks>
+/// <para><b>Para qué sirve:</b> Integra con el servicio PSKReporter.info para reportar señales digitales decodificadas y consultar spots de otros operadores. Es la red de reportes estándar para modos digitales.</para>
+/// <para><b>Cómo se usa:</b> Se inyecta por constructor. Se alimenta con spots decodificados vía <see cref="EnviarSpotsAsync"/> y se consultan spots con <see cref="ObtenerSpotsAsync"/>.</para>
+/// <para><b>Implementaciones:</b> <c>RadioAficionado.Infraestructura.PskReporter.ClientePskReporter</c>.</para>
+/// <para><b>Registro DI:</b> Registrada como Singleton en <c>RadioAficionado.Infraestructura.ConfiguracionServicios.AgregarCapaDeInfraestructura()</c>.</para>
+/// <para><b>Configuración necesaria:</b> Indicativo propio, localizador Maidenhead y opcionalmente el intervalo de envío (ver <see cref="ConfiguracionPskReporter"/>).</para>
+/// <para><b>Dependencias:</b> Requiere conexión a Internet. Usa HTTP para la API de PSKReporter.</para>
+/// </remarks>
 public interface IPskReporter : IAsyncDisposable
 {
     /// <summary>

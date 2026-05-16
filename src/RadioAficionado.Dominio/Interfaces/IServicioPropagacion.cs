@@ -19,6 +19,14 @@ public sealed class ConfiguracionPropagacion
 /// Servicio de prediccion de propagacion HF basado en indices solares, hora del dia y geometria de la trayectoria.
 /// Permite estimar que bandas de HF estan abiertas en un momento dado entre dos ubicaciones.
 /// </summary>
+/// <remarks>
+/// <para><b>Para qué sirve:</b> Predice la propagación HF entre dos ubicaciones basándose en índices solares (SFI, Kp), hora del día y geometría de la trayectoria ionosférica. Ayuda a elegir la mejor banda para comunicar.</para>
+/// <para><b>Cómo se usa:</b> Se inyecta por constructor. Se llama a <see cref="PredecirPropagacionAsync"/> para predicción completa o <see cref="ObtenerMejorBandaAsync"/> para la mejor banda.</para>
+/// <para><b>Implementaciones:</b> <c>RadioAficionado.Infraestructura.Propagacion.ServicioPropagacion</c>.</para>
+/// <para><b>Registro DI:</b> Registrada como Singleton en <c>RadioAficionado.Infraestructura.ConfiguracionServicios.AgregarCapaDeInfraestructura()</c>.</para>
+/// <para><b>Configuración necesaria:</b> URL de datos solares e intervalo de actualización (ver <see cref="ConfiguracionPropagacion"/>). Requiere conexión a Internet para datos solares.</para>
+/// <para><b>Dependencias:</b> <c>HttpClient</c> para descargar índices solares de NOAA.</para>
+/// </remarks>
 public interface IServicioPropagacion
 {
     /// <summary>

@@ -1,0 +1,187 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:RadioAficionado.Mobile.ViewModels"
+             x:Class="RadioAficionado.Mobile.Vistas.PanelPropagacionMobile"
+             x:DataType="vm:PanelPropagacionMobileViewModel"
+             Background="#1a1a2e">
+
+    <ScrollViewer>
+        <StackPanel Margin="12" Spacing="12">
+            <!-- Título y botón de actualización -->
+            <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Grid.Column="0"
+                           Text="Propagación HF"
+                           FontSize="22"
+                           FontWeight="Bold"
+                           Foreground="White"
+                           VerticalAlignment="Center" />
+                <Button Grid.Column="1"
+                        Content="Actualizar"
+                        Command="{Binding ActualizarTodoCommand}"
+                        Padding="12,6" />
+            </Grid>
+
+            <!-- Índices solares -->
+            <Border Background="#16213e" CornerRadius="12" Padding="16">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Índices Solares"
+                               FontSize="16"
+                               FontWeight="SemiBold"
+                               Foreground="White" />
+
+                    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" RowSpacing="8" ColumnSpacing="8">
+                        <!-- SFI -->
+                        <Border Grid.Row="0" Grid.Column="0"
+                                Background="#0f3460" CornerRadius="8" Padding="12">
+                            <StackPanel HorizontalAlignment="Center">
+                                <TextBlock Text="{Binding Sfi}"
+                                           FontSize="32"
+                                           FontWeight="Bold"
+                                           Foreground="#e94560"
+                                           HorizontalAlignment="Center" />
+                                <TextBlock Text="SFI"
+                                           FontSize="12"
+                                           Foreground="#aaaaaa"
+                                           HorizontalAlignment="Center" />
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Kp -->
+                        <Border Grid.Row="0" Grid.Column="1"
+                                Background="#0f3460" CornerRadius="8" Padding="12">
+                            <StackPanel HorizontalAlignment="Center">
+                                <TextBlock Text="{Binding Kp}"
+                                           FontSize="32"
+                                           FontWeight="Bold"
+                                           Foreground="#00e5ff"
+                                           HorizontalAlignment="Center" />
+                                <TextBlock Text="Kp"
+                                           FontSize="12"
+                                           Foreground="#aaaaaa"
+                                           HorizontalAlignment="Center" />
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Ap -->
+                        <Border Grid.Row="1" Grid.Column="0"
+                                Background="#0f3460" CornerRadius="8" Padding="12">
+                            <StackPanel HorizontalAlignment="Center">
+                                <TextBlock Text="{Binding Ap}"
+                                           FontSize="32"
+                                           FontWeight="Bold"
+                                           Foreground="#ffd700"
+                                           HorizontalAlignment="Center" />
+                                <TextBlock Text="Ap"
+                                           FontSize="12"
+                                           Foreground="#aaaaaa"
+                                           HorizontalAlignment="Center" />
+                            </StackPanel>
+                        </Border>
+
+                        <!-- SSN -->
+                        <Border Grid.Row="1" Grid.Column="1"
+                                Background="#0f3460" CornerRadius="8" Padding="12">
+                            <StackPanel HorizontalAlignment="Center">
+                                <TextBlock Text="{Binding Ssn, StringFormat='{}{0:F0}'}"
+                                           FontSize="32"
+                                           FontWeight="Bold"
+                                           Foreground="#00c853"
+                                           HorizontalAlignment="Center" />
+                                <TextBlock Text="SSN"
+                                           FontSize="12"
+                                           Foreground="#aaaaaa"
+                                           HorizontalAlignment="Center" />
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!-- Estado geomagnético -->
+                    <Border Background="#0f3460" CornerRadius="8" Padding="10" Margin="0,4,0,0">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="8">
+                            <TextBlock Text="Estado geomagnético:"
+                                       Foreground="#aaaaaa"
+                                       VerticalAlignment="Center" />
+                            <TextBlock Text="{Binding EstadoGeomagnetico}"
+                                       FontWeight="Bold"
+                                       Foreground="White"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock Text="{Binding UltimaActualizacion, StringFormat='Última actualización: {0}'}"
+                               FontSize="11"
+                               Foreground="#666666"
+                               HorizontalAlignment="Center" />
+                </StackPanel>
+            </Border>
+
+            <!-- Predicciones por banda -->
+            <TextBlock Text="Predicciones por Banda"
+                       FontSize="18"
+                       FontWeight="SemiBold"
+                       Foreground="White"
+                       Margin="0,4,0,0" />
+
+            <ItemsControl ItemsSource="{Binding Predicciones}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:PrediccionBandaMobileVm">
+                        <Border Background="#16213e" CornerRadius="8" Padding="12" Margin="0,4">
+                            <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto">
+                                <!-- Banda y nivel -->
+                                <TextBlock Grid.Row="0" Grid.Column="0"
+                                           Text="{Binding NombreBanda}"
+                                           FontSize="16"
+                                           FontWeight="SemiBold"
+                                           Foreground="White" />
+                                <Border Grid.Row="0" Grid.Column="1"
+                                        CornerRadius="4"
+                                        Padding="8,2">
+                                    <TextBlock Text="{Binding Nivel}"
+                                               FontWeight="Bold"
+                                               Foreground="White"
+                                               FontSize="13" />
+                                </Border>
+
+                                <!-- Descripción -->
+                                <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                           Text="{Binding Descripcion}"
+                                           Foreground="#aaaaaa"
+                                           FontSize="13"
+                                           TextWrapping="Wrap"
+                                           Margin="0,4,0,0" />
+
+                                <!-- Mejor hora y regiones -->
+                                <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                                            Orientation="Horizontal" Spacing="16" Margin="0,6,0,0">
+                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                        <TextBlock Text="Hora:"
+                                                   FontSize="11"
+                                                   Foreground="#666666" />
+                                        <TextBlock Text="{Binding MejorHora}"
+                                                   FontSize="11"
+                                                   Foreground="#ffd700" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                        <TextBlock Text="Regiones:"
+                                                   FontSize="11"
+                                                   Foreground="#666666" />
+                                        <TextBlock Text="{Binding Regiones}"
+                                                   FontSize="11"
+                                                   Foreground="#00c853" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <!-- Estado -->
+            <TextBlock Text="{Binding TextoEstado}"
+                       FontSize="12"
+                       Foreground="#666666"
+                       HorizontalAlignment="Center"
+                       Margin="0,8" />
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

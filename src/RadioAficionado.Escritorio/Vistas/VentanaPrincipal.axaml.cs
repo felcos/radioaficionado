@@ -1,34 +1,52 @@
 using Avalonia.Controls;
-using Avalonia.Interactivity;
+using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
+using RadioAficionado.Dominio.Interfaces;
+using RadioAficionado.Escritorio.Controles;
 using RadioAficionado.Escritorio.ViewModels;
+using RadioAficionado.Nativo.Dsp;
 
 namespace RadioAficionado.Escritorio.Vistas;
 
 /// <summary>
 /// Ventana principal de la aplicación de escritorio.
-/// Resuelve su ViewModel desde el contenedor de inyección de dependencias.
+/// Resuelve su ViewModel desde el contenedor de inyección de dependencias
+/// y conecta el waterfall principal al flujo de espectro.
 /// </summary>
 public partial class VentanaPrincipal : Window
 {
     /// <summary>
     /// Inicializa la ventana principal resolviendo el ViewModel desde App.Servicios.
+    /// Suscribe el waterfall principal al evento de espectro.
     /// </summary>
     public VentanaPrincipal()
     {
         InitializeComponent();
-        DataContext = App.Servicios!.GetRequiredService<VentanaPrincipalViewModel>();
+        VentanaPrincipalViewModel viewModel = App.Servicios!.GetRequiredService<VentanaPrincipalViewModel>();
+        DataContext = viewModel;
 
-        Button botonConfig = this.FindControl<Button>("BotonConfiguracion")!;
-        botonConfig.Click += AbrirConfiguracion;
+        // Conectar el waterfall de la cabecera al flujo de espectro
+        viewModel.PanelWaterfall.LineaEspectroRecibida += AlRecibirLineaEspectro;
     }
 
     /// <summary>
-    /// Abre la ventana de configuración como diálogo modal.
+    /// Alimenta el control waterfall principal con cada linea de espectro recibida.
     /// </summary>
-    private async void AbrirConfiguracion(object? sender, RoutedEventArgs e)
+    private void AlRecibirLineaEspectro(object? sender, LineaEspectroEventArgs e)
     {
-        VentanaConfiguracion ventana = new VentanaConfiguracion();
-        await ventana.ShowDialog(this);
+        LineaEspectro linea = new()
+        {
+            MarcaDeTiempo = e.MarcaDeTiempo,
+            MagnitudesDb = e.MagnitudesDb,
+            ResolucionHz = e.ResolucionHz,
+            FrecuenciaMinHz = e.FrecuenciaMinHz,
+            FrecuenciaMaxHz = e.FrecuenciaMaxHz
+        };
+
+        ControlWaterfall? control = this.FindControl<ControlWaterfall>("Waterfall");
+        if (control is not null)
+        {
+            Dispatcher.UIThread.Post(() => control.AgregarLinea(linea));
+        }
     }
 }

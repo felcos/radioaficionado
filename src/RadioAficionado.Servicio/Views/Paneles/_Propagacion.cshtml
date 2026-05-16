@@ -1,0 +1,45 @@
+<div class="panel-propagacion-contenido">
+    <div class="propagacion-toolbar">
+        <button class="btn btn-sm btn-outline-light" id="btn-actualizar-propagacion">Actualizar</button>
+        <span class="propagacion-ultima-actualizacion" id="propagacion-actualizacion">Sin datos</span>
+    </div>
+    <div class="propagacion-grid">
+        <div class="propagacion-indices">
+            <h6>Indices solares</h6>
+            <div class="propagacion-indice">
+                <span class="propagacion-label">SFI:</span>
+                <span class="propagacion-valor" id="prop-sfi">--</span>
+            </div>
+            <div class="propagacion-indice">
+                <span class="propagacion-label">SN:</span>
+                <span class="propagacion-valor" id="prop-sn">--</span>
+            </div>
+            <div class="propagacion-indice">
+                <span class="propagacion-label">A-Index:</span>
+                <span class="propagacion-valor" id="prop-a">--</span>
+            </div>
+            <div class="propagacion-indice">
+                <span class="propagacion-label">K-Index:</span>
+                <span class="propagacion-valor" id="prop-k">--</span>
+            </div>
+        </div>
+        <div class="propagacion-bandas">
+            <h6>Condiciones por banda</h6>
+            <table class="table table-dark table-sm" id="tabla-propagacion">
+                <thead>
+                    <tr>
+                        <th>Banda</th>
+                        <th>Dia</th>
+                        <th>Noche</th>
+                    </tr>
+                </thead>
+                <tbody id="propagacion-tbody">
+                    <tr><td>80m-40m</td><td class="prop-buena">Buena</td><td class="prop-buena">Buena</td></tr>
+                    <tr><td>30m-20m</td><td class="prop-buena">Buena</td><td class="prop-regular">Regular</td></tr>
+                    <tr><td>17m-15m</td><td class="prop-regular">Regular</td><td class="prop-mala">Mala</td></tr>
+                    <tr><td>12m-10m</td><td class="prop-mala">Mala</td><td class="prop-cerrada">Cerrada</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

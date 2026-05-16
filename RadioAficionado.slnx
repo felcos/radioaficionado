@@ -13,13 +13,23 @@
     <Project Path="src/RadioAficionado.Nativo.ModosDigitales/RadioAficionado.Nativo.ModosDigitales.csproj" />
     <Project Path="src/RadioAficionado.Nativo.Rig/RadioAficionado.Nativo.Rig.csproj" />
     <Project Path="src/RadioAficionado.Nativo.Rotador/RadioAficionado.Nativo.Rotador.csproj" />
+    <Project Path="src/RadioAficionado.Nativo.Sdr/RadioAficionado.Nativo.Sdr.csproj" />
     <Project Path="src/RadioAficionado.Web/RadioAficionado.Web.csproj" />
+    <Project Path="src/RadioAficionado.Servicio/RadioAficionado.Servicio.csproj" />
+    <Project Path="src/RadioAficionado.Lanzador/RadioAficionado.Lanzador.csproj" />
+  </Folder>
+  <Folder Name="/mobile/">
+    <Project Path="src/RadioAficionado.Mobile/RadioAficionado.Mobile.csproj" />
+    <Project Path="src/RadioAficionado.Mobile.Android/RadioAficionado.Mobile.Android.csproj" />
+    <Project Path="src/RadioAficionado.Mobile.iOS/RadioAficionado.Mobile.iOS.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/RadioAficionado.Aplicacion.Tests/RadioAficionado.Aplicacion.Tests.csproj" />
     <Project Path="tests/RadioAficionado.Dominio.Tests/RadioAficionado.Dominio.Tests.csproj" />
     <Project Path="tests/RadioAficionado.Escritorio.Tests/RadioAficionado.Escritorio.Tests.csproj" />
     <Project Path="tests/RadioAficionado.Infraestructura.Tests/RadioAficionado.Infraestructura.Tests.csproj" />
+    <Project Path="tests/RadioAficionado.IA.Tests/RadioAficionado.IA.Tests.csproj" />
     <Project Path="tests/RadioAficionado.Web.Tests/RadioAficionado.Web.Tests.csproj" />
+    <Project Path="tests/RadioAficionado.Servicio.Tests/RadioAficionado.Servicio.Tests.csproj" />
   </Folder>
 </Solution>

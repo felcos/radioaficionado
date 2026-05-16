@@ -23,6 +23,14 @@ public sealed class ConfiguracionSatelites
 /// Permite obtener el catálogo de satélites, calcular posiciones instantáneas
 /// y predecir pasos futuros sobre una ubicación.
 /// </summary>
+/// <remarks>
+/// <para><b>Para qué sirve:</b> Proporciona tracking en tiempo real de satélites amateur: catálogo con transponders, cálculo de posiciones instantáneas y predicción de pasos futuros sobre una ubicación.</para>
+/// <para><b>Cómo se usa:</b> Se inyecta por constructor. Se llama a <see cref="ObtenerSatelitesAsync"/> para el catálogo, <see cref="CalcularPosicionAsync"/> para posición instantánea y <see cref="PredecirPasosAsync"/> para futuros pasos.</para>
+/// <para><b>Implementaciones:</b> <c>RadioAficionado.Infraestructura.Satelites.ServicioSatelites</c>.</para>
+/// <para><b>Registro DI:</b> Registrada con <c>AddHttpClient</c> (Transient con HttpClient gestionado) en <c>RadioAficionado.Infraestructura.ConfiguracionServicios.AgregarCapaDeInfraestructura()</c>.</para>
+/// <para><b>Configuración necesaria:</b> URL de datos TLE (CelesTrak por defecto), intervalo de actualización y elevación mínima (ver <see cref="ConfiguracionSatelites"/>).</para>
+/// <para><b>Dependencias:</b> <c>HttpClient</c> (inyectado por factory) para descargar TLE de CelesTrak.</para>
+/// </remarks>
 public interface IServicioSatelites
 {
     /// <summary>

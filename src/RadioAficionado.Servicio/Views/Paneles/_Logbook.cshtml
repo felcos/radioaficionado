@@ -1,0 +1,40 @@
+<div class="panel-logbook-contenido">
+    <div class="logbook-toolbar">
+        <div class="logbook-busqueda">
+            <input type="text" id="logbook-buscar" class="form-control form-control-sm" placeholder="Buscar indicativo..." />
+        </div>
+        <div class="logbook-acciones">
+            <button class="btn btn-sm btn-outline-light" id="btn-exportar-adif" title="Exportar ADIF">
+                Exportar ADIF
+            </button>
+            <button class="btn btn-sm btn-importar-adif" id="btn-importar-adif" title="Importar ADIF">
+                Importar ADIF
+            </button>
+            <input type="file" id="input-archivo-adif" accept=".adi,.adif" style="display:none;" />
+            <span class="logbook-total" id="logbook-total">0 QSOs</span>
+        </div>
+    </div>
+    <div class="logbook-tabla-wrapper">
+        <table class="table table-dark table-sm" id="tabla-logbook">
+            <thead>
+                <tr>
+                    <th>Fecha/Hora</th>
+                    <th>Indicativo</th>
+                    <th>Banda</th>
+                    <th>Modo</th>
+                    <th>RST Env</th>
+                    <th>RST Rec</th>
+                    <th>Grid</th>
+                    <th>DXCC</th>
+                    <th>Confirmado</th>
+                </tr>
+            </thead>
+            <tbody id="logbook-tbody">
+            </tbody>
+        </table>
+    </div>
+    <div class="logbook-paginacion" id="logbook-paginacion">
+    </div>
+    <div id="resultado-importacion" class="alert alert-info mt-2" style="display:none;">
+    </div>
+</div>

@@ -26,6 +26,11 @@
     <ProjectReference Include="..\..\src\RadioAficionado.Compartido\RadioAficionado.Compartido.csproj" />
     <ProjectReference Include="..\..\src\RadioAficionado.Nativo.Dsp\RadioAficionado.Nativo.Dsp.csproj" />
     <ProjectReference Include="..\..\src\RadioAficionado.Nativo.ModosDigitales\RadioAficionado.Nativo.ModosDigitales.csproj" />
+    <ProjectReference Include="..\..\src\RadioAficionado.Nativo.Sdr\RadioAficionado.Nativo.Sdr.csproj" />
+    <ProjectReference Include="..\..\src\RadioAficionado.Nativo.Audio\RadioAficionado.Nativo.Audio.csproj" />
+    <ProjectReference Include="..\..\src\RadioAficionado.Nativo.Rotador\RadioAficionado.Nativo.Rotador.csproj" />
+    <ProjectReference Include="..\..\src\RadioAficionado.Nativo.Rig\RadioAficionado.Nativo.Rig.csproj" />
+    <ProjectReference Include="..\..\src\RadioAficionado.Mobile\RadioAficionado.Mobile.csproj" />
   </ItemGroup>
 
   <ItemGroup>

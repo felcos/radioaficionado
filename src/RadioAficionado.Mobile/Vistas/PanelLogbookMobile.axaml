@@ -1,0 +1,186 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:RadioAficionado.Mobile.ViewModels"
+             x:Class="RadioAficionado.Mobile.Vistas.PanelLogbookMobile"
+             x:DataType="vm:PanelLogbookMobileViewModel"
+             Background="#1a1a2e">
+
+    <Grid RowDefinitions="Auto,*,Auto,Auto">
+        <!-- Barra de búsqueda -->
+        <Border Grid.Row="0" Background="#16213e" Padding="12,8" CornerRadius="0">
+            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                <TextBox Grid.Column="0" Grid.Row="0"
+                         Text="{Binding TextoBusqueda}"
+                         PlaceholderText="Buscar indicativo..."
+                         Margin="0,0,8,0" />
+                <Button Grid.Column="1" Grid.Row="0"
+                        Content="Buscar"
+                        Command="{Binding BuscarCommand}"
+                        Padding="12,6" />
+
+                <!-- Filtros compactos -->
+                <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1"
+                            Orientation="Horizontal" Spacing="8" Margin="0,6,0,0">
+                    <ComboBox ItemsSource="{Binding OpcionesBanda}"
+                              SelectedItem="{Binding FiltroBanda}"
+                              PlaceholderText="Banda"
+                              MinWidth="80" />
+                    <ComboBox ItemsSource="{Binding OpcionesModo}"
+                              SelectedItem="{Binding FiltroModo}"
+                              PlaceholderText="Modo"
+                              MinWidth="80" />
+                    <Button Content="Limpiar"
+                            Command="{Binding LimpiarFiltrosCommand}"
+                            Padding="8,4"
+                            FontSize="12" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Lista de QSOs -->
+        <ScrollViewer Grid.Row="1">
+            <ItemsControl ItemsSource="{Binding Qsos}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:QsoMobileVm">
+                        <Border Background="#16213e" CornerRadius="8" Padding="12" Margin="8,4">
+                            <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto">
+                                <!-- Indicativo y fecha -->
+                                <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Text="{Binding Indicativo}"
+                                               FontSize="18"
+                                               FontWeight="Bold"
+                                               Foreground="#e94560" />
+                                    <TextBlock Text="{Binding Fecha}"
+                                               FontSize="12"
+                                               Foreground="#888888"
+                                               VerticalAlignment="Center" />
+                                </StackPanel>
+
+                                <!-- Señales -->
+                                <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" Spacing="4">
+                                    <TextBlock Text="{Binding SenalEnviada}"
+                                               Foreground="#00c853"
+                                               FontSize="14" />
+                                    <TextBlock Text="/"
+                                               Foreground="#666666"
+                                               FontSize="14" />
+                                    <TextBlock Text="{Binding SenalRecibida}"
+                                               Foreground="#00e5ff"
+                                               FontSize="14" />
+                                </StackPanel>
+
+                                <!-- Banda, modo, frecuencia -->
+                                <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                            Orientation="Horizontal" Spacing="12" Margin="0,4,0,0">
+                                    <Border Background="#533483" CornerRadius="4" Padding="6,2">
+                                        <TextBlock Text="{Binding Banda}"
+                                                   Foreground="White"
+                                                   FontSize="12" />
+                                    </Border>
+                                    <Border Background="#0f3460" CornerRadius="4" Padding="6,2">
+                                        <TextBlock Text="{Binding Modo}"
+                                                   Foreground="White"
+                                                   FontSize="12" />
+                                    </Border>
+                                    <TextBlock Text="{Binding Frecuencia, StringFormat='{}{0} MHz'}"
+                                               Foreground="#666666"
+                                               FontSize="12"
+                                               VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <!-- Paginación -->
+        <Border Grid.Row="2" Background="#16213e" Padding="8,4">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <Button Grid.Column="0"
+                        Content="&#x25C0; Anterior"
+                        Command="{Binding PaginaAnteriorCommand}"
+                        Padding="8,4"
+                        FontSize="12" />
+                <TextBlock Grid.Column="1"
+                           Text="{Binding TextoPaginacion}"
+                           Foreground="#aaaaaa"
+                           FontSize="12"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
+                <Button Grid.Column="2"
+                        Content="Siguiente &#x25B6;"
+                        Command="{Binding PaginaSiguienteCommand}"
+                        Padding="8,4"
+                        FontSize="12" />
+            </Grid>
+        </Border>
+
+        <!-- FAB (botón flotante) para crear QSO + formulario -->
+        <Panel Grid.Row="1" Grid.RowSpan="2"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Bottom"
+               Margin="0,0,16,60">
+
+            <!-- Formulario de nuevo QSO (visible cuando FormularioQsoVisible es true) -->
+            <Border Background="#0f3460"
+                    CornerRadius="12"
+                    Padding="16"
+                    Margin="0,0,0,60"
+                    IsVisible="{Binding FormularioQsoVisible}"
+                    MinWidth="280">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Nuevo QSO"
+                               FontSize="16"
+                               FontWeight="Bold"
+                               Foreground="White" />
+                    <TextBox Text="{Binding NuevoIndicativo}"
+                             PlaceholderText="Indicativo (ej: EA4FKR)" />
+                    <TextBox Text="{Binding NuevaFrecuencia}"
+                             PlaceholderText="Frecuencia MHz (ej: 14.076)" />
+                    <TextBox Text="{Binding NuevoModo}"
+                             PlaceholderText="Modo (ej: SSB, FT8)" />
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                        <TextBox Grid.Column="0"
+                                 Text="{Binding NuevaSenalEnviada}"
+                                 PlaceholderText="RST enviado" />
+                        <TextBox Grid.Column="1"
+                                 Text="{Binding NuevaSenalRecibida}"
+                                 PlaceholderText="RST recibido" />
+                    </Grid>
+                    <Button Content="Registrar QSO"
+                            Command="{Binding CrearQsoManualCommand}"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                            Padding="8,6"
+                            Background="#e94560"
+                            Foreground="White" />
+                </StackPanel>
+            </Border>
+
+            <!-- Botón FAB -->
+            <Button Command="{Binding MostrarFormularioQsoCommand}"
+                    Background="#e94560"
+                    Foreground="White"
+                    FontSize="24"
+                    FontWeight="Bold"
+                    Width="56"
+                    Height="56"
+                    CornerRadius="28"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Content="+" />
+        </Panel>
+
+        <!-- Barra de estado -->
+        <Border Grid.Row="3" Background="#0f3460" Padding="8,4"
+                IsVisible="{Binding MensajeEstado, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+            <TextBlock Text="{Binding MensajeEstado}"
+                       Foreground="#ffd700"
+                       FontSize="12"
+                       HorizontalAlignment="Center" />
+        </Border>
+    </Grid>
+</UserControl>

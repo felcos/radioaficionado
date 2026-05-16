@@ -18,6 +18,8 @@
     <ProjectReference Include="..\RadioAficionado.Infraestructura\RadioAficionado.Infraestructura.csproj" />
     <ProjectReference Include="..\RadioAficionado.Infraestructura.Postgres\RadioAficionado.Infraestructura.Postgres.csproj" />
     <ProjectReference Include="..\RadioAficionado.Compartido\RadioAficionado.Compartido.csproj" />
+    <ProjectReference Include="..\RadioAficionado.Nativo.ModosDigitales\RadioAficionado.Nativo.ModosDigitales.csproj" />
+    <ProjectReference Include="..\RadioAficionado.IA\RadioAficionado.IA.csproj" />
   </ItemGroup>
 
 </Project>

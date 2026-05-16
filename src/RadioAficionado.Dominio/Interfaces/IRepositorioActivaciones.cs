@@ -6,6 +6,14 @@ namespace RadioAficionado.Dominio.Interfaces;
 /// <summary>
 /// Repositorio para operaciones de persistencia de activaciones de radio (POTA, SOTA, etc.).
 /// </summary>
+/// <remarks>
+/// <para><b>Para qué sirve:</b> Abstrae las operaciones CRUD de persistencia para entidades <c>Activacion</c>. Permite agregar, actualizar, eliminar, obtener por ID, por tipo y listar todas.</para>
+/// <para><b>Cómo se usa:</b> Se inyecta por constructor en servicios de dominio. Las operaciones de escritura requieren llamar a <see cref="IUnidadDeTrabajo.GuardarCambiosAsync"/> para persistir.</para>
+/// <para><b>Implementaciones:</b> <c>RadioAficionado.Infraestructura.Persistencia.RepositorioActivaciones</c> (EF Core).</para>
+/// <para><b>Registro DI:</b> Registrada como Scoped en <c>RadioAficionado.Infraestructura.ConfiguracionServicios.AgregarCapaDeInfraestructura()</c>.</para>
+/// <para><b>Configuración necesaria:</b> Requiere que el <c>ContextoRadioAficionado</c> (DbContext) esté registrado.</para>
+/// <para><b>Dependencias:</b> <c>ContextoRadioAficionado</c> (DbContext de EF Core).</para>
+/// </remarks>
 public interface IRepositorioActivaciones
 {
     /// <summary>
@@ -51,4 +59,11 @@ public interface IRepositorioActivaciones
     /// <param name="ct">Token de cancelación.</param>
     /// <returns>Lista de solo lectura con todas las activaciones.</returns>
     Task<IReadOnlyList<Activacion>> ObtenerTodasAsync(CancellationToken ct);
+
+    /// <summary>
+    /// Elimina una activación del repositorio.
+    /// </summary>
+    /// <param name="activacion">La activación a eliminar.</param>
+    /// <param name="ct">Token de cancelación.</param>
+    Task EliminarAsync(Activacion activacion, CancellationToken ct);
 }

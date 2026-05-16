@@ -22,6 +22,14 @@ public sealed class ConfiguracionEQsl
 /// Cliente para interactuar con el servicio eQSL.cc.
 /// Permite subir QSOs en formato ADIF y descargar confirmaciones electrónicas.
 /// </summary>
+/// <remarks>
+/// <para><b>Para qué sirve:</b> Comunica con el servicio eQSL.cc para subir QSOs en formato ADIF y descargar tarjetas QSL electrónicas recibidas.</para>
+/// <para><b>Cómo se usa:</b> No se usa directamente — es invocado por <see cref="IServicioConfirmaciones"/>. Se puede inyectar por constructor si se necesita acceso directo.</para>
+/// <para><b>Implementaciones:</b> <c>RadioAficionado.Infraestructura.Confirmaciones.ClienteEQsl</c>.</para>
+/// <para><b>Registro DI:</b> Registrada con <c>AddHttpClient</c> (Transient con HttpClient gestionado) en <c>RadioAficionado.Infraestructura.ConfiguracionServicios.AgregarCapaDeInfraestructura()</c>.</para>
+/// <para><b>Configuración necesaria:</b> Usuario y contraseña de eQSL.cc (ver <see cref="ConfiguracionEQsl"/>).</para>
+/// <para><b>Dependencias:</b> <c>HttpClient</c> (inyectado por factory), <see cref="ConfiguracionEQsl"/>.</para>
+/// </remarks>
 public interface IClienteEQsl
 {
     /// <summary>

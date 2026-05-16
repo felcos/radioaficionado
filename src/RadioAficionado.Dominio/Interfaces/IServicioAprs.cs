@@ -7,6 +7,14 @@ namespace RadioAficionado.Dominio.Interfaces;
 /// Servicio para la comunicación con la red APRS-IS (Automatic Packet Reporting System - Internet Service).
 /// Permite conectar, enviar posiciones y mensajes, y recibir paquetes de otras estaciones.
 /// </summary>
+/// <remarks>
+/// <para><b>Para qué sirve:</b> Conecta con la red APRS-IS para enviar reportes de posición, mensajes entre estaciones y recibir paquetes APRS en tiempo real. Útil para tracking y comunicación de emergencia.</para>
+/// <para><b>Cómo se usa:</b> Se inyecta por constructor. Se conecta con <see cref="ConectarAsync"/> y se suscribe a <see cref="PaqueteRecibido"/> para recibir paquetes. Se envían posiciones con <see cref="EnviarPosicionAsync"/>.</para>
+/// <para><b>Implementaciones:</b> <c>RadioAficionado.Infraestructura.Aprs.ClienteAprsIs</c>.</para>
+/// <para><b>Registro DI:</b> Registrada como Singleton en <c>RadioAficionado.Infraestructura.ConfiguracionServicios.AgregarCapaDeInfraestructura()</c>.</para>
+/// <para><b>Configuración necesaria:</b> Indicativo propio, passcode APRS-IS, servidor y puerto (ver <c>ConfiguracionAprs</c>).</para>
+/// <para><b>Dependencias:</b> Conexión TCP al servidor APRS-IS. No depende de otras interfaces de dominio.</para>
+/// </remarks>
 public interface IServicioAprs
 {
     /// <summary>

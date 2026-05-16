@@ -39,6 +39,14 @@ public sealed class PosicionRotador
 /// <summary>
 /// Interfaz para el control de rotadores de antena vía rotctld (Hamlib).
 /// </summary>
+/// <remarks>
+/// <para><b>Para qué sirve:</b> Permite controlar remotamente rotadores de antena (azimut y opcionalmente elevación) a través del protocolo de red de rotctld (parte de Hamlib).</para>
+/// <para><b>Cómo se usa:</b> Se inyecta por constructor. Se conecta con <see cref="ConectarAsync"/> y se controla con <see cref="MoverAsync"/>, <see cref="ObtenerPosicionAsync"/>, etc.</para>
+/// <para><b>Implementaciones:</b> <c>RadioAficionado.Nativo.Rotador.ClienteRotctld</c>.</para>
+/// <para><b>Registro DI:</b> Registrada como Singleton en <c>RadioAficionado.Escritorio.App.ConfigurarServicios()</c>. No disponible en mobile ni web.</para>
+/// <para><b>Configuración necesaria:</b> Requiere que el demonio rotctld (Hamlib) esté ejecutándose en el host y puerto configurados (por defecto localhost:4533).</para>
+/// <para><b>Dependencias:</b> Ninguna interfaz de dominio. Se conecta por TCP al demonio rotctld externo.</para>
+/// </remarks>
 public interface IControlRotador : IAsyncDisposable
 {
     /// <summary>

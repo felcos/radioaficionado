@@ -61,6 +61,14 @@ public sealed class ConfiguracionDxCluster
 /// Interfaz para el cliente de DX Cluster que permite conectarse a servidores Telnet
 /// de DX Cluster, recibir spots DX en tiempo real y publicar spots propios.
 /// </summary>
+/// <remarks>
+/// <para><b>Para qué sirve:</b> Conecta a servidores de DX Cluster vía Telnet para recibir spots DX en tiempo real y publicar spots propios. Fundamental para saber qué estaciones DX están activas.</para>
+/// <para><b>Cómo se usa:</b> Se inyecta por constructor. Se conecta con <see cref="ConectarAsync"/> y se suscribe a <see cref="SpotRecibido"/> para recibir spots en tiempo real.</para>
+/// <para><b>Implementaciones:</b> <c>RadioAficionado.Infraestructura.DxCluster.ClienteDxCluster</c>.</para>
+/// <para><b>Registro DI:</b> Registrada como Singleton en <c>RadioAficionado.Infraestructura.ConfiguracionServicios.AgregarCapaDeInfraestructura()</c>.</para>
+/// <para><b>Configuración necesaria:</b> Indicativo propio para autenticarse, servidor y puerto del DX Cluster (ver <see cref="ConfiguracionDxCluster"/>).</para>
+/// <para><b>Dependencias:</b> Ninguna interfaz de dominio. Usa TCP para conexión Telnet al cluster.</para>
+/// </remarks>
 public interface IDxCluster : IAsyncDisposable
 {
     /// <summary>Indica si está conectado al servidor DX Cluster.</summary>

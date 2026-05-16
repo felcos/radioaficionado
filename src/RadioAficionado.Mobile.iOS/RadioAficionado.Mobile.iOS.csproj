@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-ios</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia.iOS" Version="12.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RadioAficionado.Mobile\RadioAficionado.Mobile.csproj" />
+    <ProjectReference Include="..\RadioAficionado.Dominio\RadioAficionado.Dominio.csproj" />
+    <ProjectReference Include="..\RadioAficionado.Aplicacion\RadioAficionado.Aplicacion.csproj" />
+    <ProjectReference Include="..\RadioAficionado.Infraestructura\RadioAficionado.Infraestructura.csproj" />
+    <ProjectReference Include="..\RadioAficionado.Infraestructura.Sqlite\RadioAficionado.Infraestructura.Sqlite.csproj" />
+    <ProjectReference Include="..\RadioAficionado.Nativo.Dsp\RadioAficionado.Nativo.Dsp.csproj" />
+    <ProjectReference Include="..\RadioAficionado.Nativo.ModosDigitales\RadioAficionado.Nativo.ModosDigitales.csproj" />
+    <ProjectReference Include="..\RadioAficionado.IA\RadioAficionado.IA.csproj" />
+  </ItemGroup>
+
+</Project>

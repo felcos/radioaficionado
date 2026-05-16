@@ -44,7 +44,7 @@ RadioAficionado pretende resolver todo esto con una plataforma moderna, multipla
 
 ## Arquitectura
 
-Clean Architecture compartida entre escritorio y web:
+Clean Architecture compartida entre escritorio, mobile y web:
 
 ```
 Compartido ← Dominio ← Aplicacion ← Infraestructura ← Infraestructura.Sqlite
@@ -56,10 +56,12 @@ Compartido ← Dominio ← Aplicacion ← Infraestructura ← Infraestructura.Sq
                                    ← Nativo.Rotador
                                    ← IA
                                    ← Escritorio (Avalonia UI)
+                                   ← Mobile (Avalonia Mobile) ← Mobile.Android
+                                                               ← Mobile.iOS
                                    ← Web (ASP.NET MVC + API REST)
 ```
 
-Las capas **Dominio** y **Aplicacion** son compartidas entre escritorio y web. La infraestructura se divide por proveedor de BD. Los proyectos Nativo.* encapsulan P/Invoke a librerias nativas. La sincronizacion bidireccional conecta escritorio y web via API REST.
+Las capas **Dominio** y **Aplicacion** son compartidas entre escritorio, mobile y web. La infraestructura se divide por proveedor de BD. Los proyectos Nativo.* encapsulan P/Invoke a librerias nativas. La sincronizacion bidireccional conecta escritorio y web via API REST. El proyecto mobile comparte Dominio/Aplicacion/Infraestructura con escritorio pero sin servicios de hardware (rig, audio, rotador, waterfall).
 
 ## Decisiones tomadas
 
@@ -103,24 +105,36 @@ Las capas **Dominio** y **Aplicacion** son compartidas entre escritorio y web. L
 | 2026-03-23 | APRS via APRS-IS (TCP) | Acceso al sistema global APRS sin necesidad de TNC fisico ni modem de paquetes |
 | 2026-03-23 | Calculo orbital con TLE propio | Prediccion de pasos de satelites sin dependencias externas; TLE actualizables desde CelesTrak/AMSAT |
 | 2026-03-23 | SkiaSharp para generacion de tarjetas QSL | Reutiliza la dependencia existente; exportacion en PNG, PDF y SVG |
+| 2026-04-11 | Avalonia Mobile para Android e iOS | Reutiliza capas Dominio/Aplicacion/Infraestructura; sin servicios de hardware (rig, audio, rotador, waterfall) |
+| 2026-04-11 | Proyecto compartido Mobile + Android + iOS separados | Patron estandar Avalonia: proyecto compartido (net10.0) + head projects por plataforma (net10.0-android, net10.0-ios) |
+| 2026-04-12 | Audio USB del radio integrado al ciclo de conexion CAT | Al conectar: CAT + captura audio + waterfall FFT. Al desconectar: todo se detiene. Sin cables de audio virtuales |
+| 2026-04-12 | PanelRigViewModel crea IControlRig en runtime (no por DI) | ClienteCatSerial o ClienteRigctld se instancian segun la seleccion del usuario al conectar |
+| 2026-04-12 | Waterfall se inicia automaticamente al conectar | ServicioWaterfall.IniciarAsync(2048) se llama despues de iniciar la captura de audio |
 
 ## Estado actual
 
-**Fases 0-4 esencialmente completadas.**
+**Fases 0-7 completadas. Integracion final verificada 2026-04-11.**
 
 - **Fase 0** — Cimientos: estructura, dominio, EF Core, MediatR
 - **Fase 1** — Capa nativa: rig, audio, DSP, rotador, UI MVVM
 - **Fase 2** — Features: ADIF, logbook, DX Cluster, compliance, contests, POTA/SOTA, PSK Reporter, DXCC, confirmaciones, propagacion
 - **Fase 3** — Web: homepage, logbook publico, Identity, API REST, sincronizacion, mapa, estadisticas, foro
 - **Fase 4** — Avanzado: CW decoder, APRS, satelites, generador QSL
+- **Fase 5** — Integracion: Waterfall en vivo, FFTW3, FT8, migracion PostgreSQL Identity, logbook privado, modos digitales (FT4/RTTY/PSK31/JS8), IA (ML.NET), perfiles publicos
+- **Fase 6** — Expansion: SDR (SoapySDR), modos digitales (JT65/JT9/Olivia/SSTV), ONNX Runtime, Mobile (Android+iOS), vistas web completadas
+- **Fase 7** — Completitud: WSPR/FT2/Q65, SDR→Waterfall, modelos ONNX entrenables, auditoría completa (DI, CRUD, documentación interfaces)
+- **Fase 8 (en curso)** — Rig + Waterfall + FT8: conexión CAT serial robusta, audio USB del radio, waterfall en vivo conectado al audio real
+- **Fase 9 (completada 2026-05-15)** — Paneles conectados: DXCC progreso/filtro, propagación colores, Log QSO, Contest datos reales, Lanzador persistido, tests integración
 
 ### Que funciona
-- Solucion completa: 14 proyectos fuente + 5 proyectos de test
-- **724 tests** (308 Dominio + 344 Infraestructura + 31 Web + 29 Aplicacion + 12 Escritorio), **todos pasando, 0 fallos**
-- Modelo de dominio completo: objetos de valor, 5 entidades, compliance, contests, activaciones, DXCC, propagacion, foro, APRS, satelites, QSL
-- 23 interfaces de dominio definidas e implementadas
+- Solucion completa: 19 proyectos fuente + 7 proyectos de test
+- **1309 tests** (308 Dominio + 676 Infraestructura + 67 Web + 29 Aplicacion + 12 Escritorio + 86 IA + 131 Servicio), **todos pasando, 0 fallos**
+- Build limpio: 0 errores, 0 warnings propios
+- Modelo de dominio completo: objetos de valor, 5 entidades, compliance, contests, activaciones, DXCC, propagacion, foro, APRS, satelites, QSL, IA
+- 30 interfaces de dominio definidas, implementadas, registradas en DI y documentadas con XML completo
 - ADIF parser/generador completo con conversion bidireccional Qso ↔ RegistroAdif
 - Logbook UI escritorio con DataGrid paginado, filtros, import/export ADIF
+- **Logbook privado web**: CRUD completo de QSOs con [Authorize], filtros, paginacion
 - DX Cluster con cliente TCP/Telnet y UI de spots en tiempo real
 - Motor de Contests con reglas, multiplicadores, GeneradorCabrillo y Panel de Contest UI
 - Activaciones POTA/SOTA con ciclo de vida completo y Panel de Activaciones UI con cronometro
@@ -130,16 +144,25 @@ Las capas **Dominio** y **Aplicacion** son compartidas entre escritorio y web. L
 - Tracking DXCC: CatalogoDxcc (~170 entidades), EstadisticasDxcc, Panel DXCC UI con filtros y barras de progreso
 - Confirmaciones externas: ClienteLoTW, ClienteEQsl, ClienteClubLog + ServicioConfirmaciones orquestador
 - Propagacion: ServicioPropagacion (modelo SFI) + Panel de Propagacion UI con indices solares
+- **IA con ML.NET + ONNX**: AnalizadorPropagacionMlNet + ClasificadorSenalesMlNet + MotorInferenciaOnnx + ClasificadorSenalesOnnx (con fallback) + ExportadorModeloOnnx
 - Decodificador CW: DecodificadorCw con FiltroGoertzel, TablaMorse, ConfiguracionCw
+- **Decodificador FT8**: ft8_lib via P/Invoke
+- **13 decodificadores digitales**: CW, FT8, FT4, FT2, RTTY, PSK31, JS8, JT65, JT9, Q65, Olivia, SSTV, WSPR con RegistroDecodificadores
 - APRS: PaqueteAprs, PosicionAprs, MensajeAprs, ObjetoAprs, ClienteAprsIs, ParserAprs
-- Satelites amateur: CatalogoSatelites (~30 satelites), CalculadorOrbital con TLE, PanelSatelitesViewModel
+- Satelites amateur: CatalogoSatelites (~30 satelites), CalculadorOrbital con TLE, PanelSatelitesViewModel + PanelSatelites.axaml
 - Generador de tarjetas QSL: PlantillaQsl, DatosQsl, GeneradorQslSkia (PNG/PDF/SVG)
 - Control de rig (rigctld) y rotador (rotctld) via TCP
 - Pipeline de audio con NAudio + FFT + ProcesadorEspectro
+- **Waterfall en vivo**: IServicioWaterfall → ServicioWaterfall con solapamiento 50%, PanelWaterfallViewModel
+- **FFTW3 nativa**: FabricaTransformadaFourier con fallback Cooley-Tukey, TransformadaFftw3 via P/Invoke
 - WaterfallControl con SkiaSharp
-- UI escritorio MVVM: 15 ViewModels, 8 vistas, 1 control custom
-- Web completa: homepage, logbook publico (paginado, filtros, detalle, mapa), estadisticas con Chart.js
+- **SDR**: IReceptorSdr, SoapySdrNativo (P/Invoke), ReceptorSoapySdr, PanelSdrViewModel
+- UI escritorio MVVM: 17 ViewModels, 9 vistas, 1 control custom
+- **Mobile (Avalonia)**: proyecto compartido + Android + iOS, 5 ViewModels, 4 vistas
+- Web completa: homepage, logbook publico, logbook privado, perfiles publicos, mapa, estadisticas con Chart.js
 - ASP.NET Identity: registro, login, perfil, editar perfil
+- **Migracion PostgreSQL Identity**: FabricaContextoIdentidadEnDiseño + MigrationsAssembly configurado
+- **Perfiles publicos de operadores**: OperadoresController con directorio paginado, perfil detallado, mapa de contactos JSON
 - API REST: QsoApiController + AdifApiController con DTOs, mapeadores y [Authorize]
 - Sincronizacion bidireccional: ServicioSincronizacion + EstadoSincronizacionViewModel
 - Foro comunitario: categorias, hilos, respuestas, paginacion
@@ -147,15 +170,13 @@ Las capas **Dominio** y **Aplicacion** son compartidas entre escritorio y web. L
 - Migracion EF Core SQLite con tablas Activaciones y Qsos
 
 ### Problemas conocidos
-- Web: errores de compilacion menores en namespaces de ViewModels — no afectan tests
-- Escritorio: referencia PanelDxccViewModel pendiente en VentanaPrincipalViewModel — no afecta tests
 - Escritorio: lock de DLL de Avalonia ocasional en compilacion paralela (error AVLN9999)
+- Warning NU1903: paquete transitivo Tmds.DBus.Protocol 0.20.0 tiene vulnerabilidad conocida (dependencia de Avalonia, no afecta funcionalidad)
 
 ### Que viene despues
-- **Migracion EF Core PostgreSQL para Identity**: tablas de usuarios, roles, claims
-- **Logbook privado**: CRUD de QSOs asociado al usuario autenticado
-- **Decodificador FT8**: ft8_lib via P/Invoke
-- **Waterfall en vivo**: conectar ProcesadorEspectro → PipelineAudio → ControlWaterfall via DI
-- **FFTW3 nativa**: swap de FFT managed cuando haya binarios disponibles
-- **Mas modos digitales**: FT4, RTTY, PSK31, JS8Call
-- **IA**: ML.NET + ONNX para analisis de propagacion e identificacion de senales
+- **DX Cluster real**: conectar ClienteDxClusterTelnet al HubEstado con spots en tiempo real
+- **Graficos interactivos**: propagacion con Chart.js, mapa DXCC con Leaflet
+- **Docker compose**: web + PostgreSQL para deployment
+- **CI/CD**: GitHub Actions para build + tests automaticos
+- **SDR hardware testing**: probar con dispositivos RTL-SDR reales
+- **Mobile testing**: probar en emuladores Android/iOS

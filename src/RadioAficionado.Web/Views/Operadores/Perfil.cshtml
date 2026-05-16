@@ -3,6 +3,18 @@
     ViewData["Title"] = $"{Model.Indicativo} — Perfil";
 }
 
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a asp-controller="Operadores" asp-action="Index" class="text-ra-acento">Operadores</a>
+        </li>
+        <li class="breadcrumb-item active text-ra-suave" aria-current="page">
+            @Model.Indicativo
+        </li>
+    </ol>
+</nav>
+
 <div class="row justify-content-center">
     <div class="col-lg-10">
 
@@ -48,6 +60,38 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjetas de estadísticas -->
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-md-3">
+                <div class="card bg-ra-tarjeta border-ra-borde text-center p-3">
+                    <span class="h3 fw-bold text-ra-acento">@Model.TotalQsos</span>
+                    <span class="text-ra-suave small">Total QSOs</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card bg-ra-tarjeta border-ra-borde text-center p-3">
+                    <span class="h3 fw-bold text-light">@Model.IndicativosUnicos</span>
+                    <span class="text-ra-suave small">Indicativos Únicos</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card bg-ra-tarjeta border-ra-borde text-center p-3">
+                    <span class="h3 fw-bold text-light">
+                        @Model.FechaRegistro.ToString("dd/MM/yyyy")
+                    </span>
+                    <span class="text-ra-suave small">Fecha Registro</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card bg-ra-tarjeta border-ra-borde text-center p-3">
+                    <span class="h3 fw-bold text-light">
+                        @(Model.RegionItu.HasValue ? $"Región {Model.RegionItu}" : "—")
+                    </span>
+                    <span class="text-ra-suave small">Región ITU</span>
                 </div>
             </div>
         </div>
@@ -159,6 +203,16 @@
             </div>
         </div>
 
+        <!-- Mapa de contactos -->
+        <div class="card bg-ra-tarjeta border-ra-borde mt-4">
+            <div class="card-header border-ra-borde">
+                <h3 class="h5 mb-0 text-ra-acento">Mapa de contactos</h3>
+            </div>
+            <div class="card-body p-0">
+                <div id="mapa-contactos-operador" style="height: 450px; border-radius: 0 0 8px 8px;"></div>
+            </div>
+        </div>
+
         <!-- Enlace para volver -->
         <div class="mt-4">
             <a asp-controller="Operadores" asp-action="Index" class="btn btn-outline-secondary">
@@ -168,3 +222,14 @@
 
     </div>
 </div>
+
+@section Scripts {
+    <link rel="stylesheet" href="~/lib/leaflet/leaflet.min.css" />
+    <script src="~/lib/leaflet/leaflet.min.js"></script>
+    <script src="~/js/mapa-operador.js" asp-append-version="true"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            inicializarMapaOperador('@Html.Raw(Model.Indicativo)');
+        });
+    </script>
+}
