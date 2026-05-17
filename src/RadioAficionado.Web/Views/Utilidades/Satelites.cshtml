@@ -1,0 +1,136 @@
+@{
+    ViewData["Title"] = "Satelites";
+}
+
+<h2 class="mb-4">Satelites de Radioaficion</h2>
+<p class="text-muted">Referencia de satelites amateur activos con frecuencias, modos y estado. Pasa el cursor sobre una fila para ver la descripcion.</p>
+
+<!-- Filtros -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="input-group">
+            <span class="input-group-text bg-dark border-secondary text-light">Buscar</span>
+            <input type="text" class="form-control bg-dark text-light border-secondary" id="satelites-buscar" placeholder="Nombre, modo...">
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="input-group">
+            <span class="input-group-text bg-dark border-secondary text-light">Tipo</span>
+            <select class="form-select bg-dark text-light border-secondary" id="satelites-filtro-tipo">
+                <option value="">Todos</option>
+                <option value="FM Repeater">FM Repeater</option>
+                <option value="Transpondedor">Transpondedor Lineal</option>
+                <option value="Digipeater">Digipeater</option>
+                <option value="Tripulado">Tripulado (ISS)</option>
+                <option value="Meteorologico">Meteorologico</option>
+                <option value="GEO">Geoestacionario</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<!-- Tabla de satelites -->
+<div class="table-responsive">
+    <table class="table table-dark table-sm table-hover">
+        <thead>
+            <tr class="table-secondary">
+                <th>Satelite</th>
+                <th>Tipo</th>
+                <th>Modo</th>
+                <th>Uplink</th>
+                <th>Downlink</th>
+                <th>Estado</th>
+                <th>Orbita</th>
+            </tr>
+        </thead>
+        <tbody id="satelites-tbody">
+        </tbody>
+    </table>
+</div>
+
+<!-- Guia rapida -->
+<div class="row g-4 mt-2">
+    <div class="col-lg-4">
+        <div class="card bg-dark border-secondary">
+            <div class="card-header bg-dark border-secondary">
+                <h6 class="card-title mb-0">Equipo Minimo</h6>
+            </div>
+            <div class="card-body small text-muted">
+                <ul class="mb-0">
+                    <li><strong>FM Satelites:</strong> HT dual-band (ej: Baofeng UV-5R) + antena Yagi portatil o Arrow antenna</li>
+                    <li><strong>SSB/CW Satelites:</strong> Transceptor multimodo (IC-705, FT-817) + antena direccional</li>
+                    <li><strong>QO-100:</strong> Transverter 2.4 GHz, LNB modificado, plato parabolico (60-80 cm)</li>
+                    <li><strong>Meteorologicos:</strong> RTL-SDR + antena V-dipole o QFH</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card bg-dark border-secondary">
+            <div class="card-header bg-dark border-secondary">
+                <h6 class="card-title mb-0">Terminologia</h6>
+            </div>
+            <div class="card-body small text-muted">
+                <ul class="mb-0">
+                    <li><strong>AOS:</strong> Acquisition of Signal — inicio del pase</li>
+                    <li><strong>LOS:</strong> Loss of Signal — fin del pase</li>
+                    <li><strong>LEO:</strong> Low Earth Orbit (200-2000 km)</li>
+                    <li><strong>MEO:</strong> Medium Earth Orbit (2000-35000 km)</li>
+                    <li><strong>GEO:</strong> Geostationary (35786 km)</li>
+                    <li><strong>SSO:</strong> Sun-Synchronous Orbit</li>
+                    <li><strong>CTCSS:</strong> Tono subaudio requerido para activar el repetidor</li>
+                    <li><strong>Doppler:</strong> Correccion de frecuencia por velocidad orbital</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card bg-dark border-secondary">
+            <div class="card-header bg-dark border-secondary">
+                <h6 class="card-title mb-0">Consejos</h6>
+            </div>
+            <div class="card-body small text-muted">
+                <ul class="mb-0">
+                    <li>Pases con elevacion &gt;30 grados son los mejores para contactos FM</li>
+                    <li>Corrige Doppler: en FM ajusta +/- 5 kHz; en SSB ajusta continuamente</li>
+                    <li>Usa pases bajos para practicar antes de intentar los buenos</li>
+                    <li>En FM satelites, transmite rapido: indicativo + grid + 73</li>
+                    <li>Herramientas: SatPC32, GPredict, Look4Sat (Android), AMSAT Pass Times</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Enlaces utiles -->
+<div class="card bg-dark border-secondary mt-4">
+    <div class="card-header bg-dark border-secondary">
+        <h6 class="card-title mb-0">Recursos externos</h6>
+    </div>
+    <div class="card-body small">
+        <div class="row">
+            <div class="col-md-4">
+                <ul class="list-unstyled mb-0">
+                    <li><a href="https://www.amsat.org/status/" target="_blank" rel="noopener" class="text-info">AMSAT Satellite Status</a></li>
+                    <li><a href="https://www.n2yo.com/" target="_blank" rel="noopener" class="text-info">N2YO Tracking</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <ul class="list-unstyled mb-0">
+                    <li><a href="https://www.heavens-above.com/" target="_blank" rel="noopener" class="text-info">Heavens Above</a></li>
+                    <li><a href="https://db.satnogs.org/" target="_blank" rel="noopener" class="text-info">SatNOGS Database</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <ul class="list-unstyled mb-0">
+                    <li><a href="https://www.ariss.org/" target="_blank" rel="noopener" class="text-info">ARISS (ISS Contacts)</a></li>
+                    <li><a href="https://www.amsat-ea.org/" target="_blank" rel="noopener" class="text-info">AMSAT-EA</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/satelites.js" asp-append-version="true"></script>
+}

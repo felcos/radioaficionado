@@ -1,0 +1,78 @@
+@{
+    ViewData["Title"] = "Espectro Radio";
+}
+
+<h2 class="mb-4">Espectro Radioelectrico</h2>
+<p class="text-muted">Tabla completa del espectro de frecuencias de 0 Hz a THz. Datos basados en IARU Region 1 y regulaciones ITU.</p>
+
+<!-- Filtros -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="input-group">
+            <span class="input-group-text bg-dark border-secondary text-light">Buscar</span>
+            <input type="text" class="form-control bg-dark text-light border-secondary" id="espectro-buscar" placeholder="Texto libre...">
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="input-group">
+            <span class="input-group-text bg-dark border-secondary text-light">Categoria</span>
+            <select class="form-select bg-dark text-light border-secondary" id="espectro-filtro-cat">
+                <option value="">Todas</option>
+                <option value="ham">HAM</option>
+                <option value="broadcasting">Broadcasting</option>
+                <option value="aeronautico">Aeronautico</option>
+                <option value="militar">Militar</option>
+                <option value="telecom">Telecom</option>
+                <option value="cientifico">Cientifico</option>
+                <option value="ism">ISM</option>
+                <option value="pirata">Pirata</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-check form-switch mt-2">
+            <input class="form-check-input" type="checkbox" id="espectro-filtro-ham">
+            <label class="form-check-label" for="espectro-filtro-ham">Solo bandas HAM</label>
+        </div>
+    </div>
+    <div class="col-md-3 text-end">
+        <span class="text-muted small">
+            Mostrando <strong id="espectro-total">0</strong> entradas
+            (<strong id="espectro-ham-count">0</strong> HAM)
+        </span>
+    </div>
+</div>
+
+<!-- Leyenda de colores -->
+<div class="mb-3 d-flex flex-wrap gap-2 small">
+    <span class="badge" style="background-color: #064e3b; border: 1px solid #10b981;">HAM</span>
+    <span class="badge" style="background-color: #1e1b4b; border: 1px solid #818cf8;">Broadcasting</span>
+    <span class="badge" style="background-color: #7c2d12; border: 1px solid #f97316;">Aeronautico</span>
+    <span class="badge" style="background-color: #450a0a; border: 1px solid #ef4444;">Militar</span>
+    <span class="badge" style="background-color: #172554; border: 1px solid #3b82f6;">Telecom</span>
+    <span class="badge" style="background-color: #3b0764; border: 1px solid #a855f7;">Cientifico</span>
+    <span class="badge" style="background-color: #422006; border: 1px solid #d97706;">ISM</span>
+    <span class="badge" style="background-color: #1c1917; border: 1px solid #78716c;">Pirata</span>
+</div>
+
+<!-- Tabla -->
+<div class="table-responsive">
+    <table class="table table-dark table-sm table-hover">
+        <thead>
+            <tr class="table-secondary">
+                <th style="min-width:180px;">Frecuencia</th>
+                <th>Banda</th>
+                <th>Long. Onda</th>
+                <th style="min-width:300px;">Uso / Descripcion</th>
+                <th class="text-center">HAM</th>
+                <th>Restricciones</th>
+            </tr>
+        </thead>
+        <tbody id="espectro-tbody">
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script src="~/js/espectroRadio.js" asp-append-version="true"></script>
+}

@@ -54,5 +54,22 @@ libs/nativas/win-x64/*.dll
 libs/nativas/linux-x64/*.so
 libs/nativas/osx-x64/*.dylib
 
+## Publish escritorio
+publish-escritorio/
+publish-escritorio-linux/
+publish-escritorio-mac/
+
+## Logs
+**/logs/*.log
+
+## Deployment artifacts
+*.tar.gz
+
+## Libman
+libman.json
+
 ## Claude
 .claude/
+*.key
+DESPLIEGUE.md
+conexion_vm.txt

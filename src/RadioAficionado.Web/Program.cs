@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -7,7 +8,11 @@ using RadioAficionado.Infraestructura;
 using RadioAficionado.Infraestructura.Postgres;
 using RadioAficionado.Nativo.ModosDigitales;
 using RadioAficionado.IA;
+using RadioAficionado.Web.Autenticacion;
 using RadioAficionado.Web.Data;
+using RadioAficionado.Web.Hubs;
+using RadioAficionado.Web.Middleware;
+using RadioAficionado.Web.Servicios;
 
 // Configurar Serilog
 Log.Logger = new LoggerConfiguration()
@@ -22,6 +27,9 @@ try
 
     builder.Host.UseSerilog();
 
+    // Registrar Serilog.ILogger para componentes que lo inyectan directamente
+    builder.Services.AddSingleton(Log.Logger);
+
     // CORS — permitir que la app de escritorio se comunique con la API
     builder.Services.AddCors(opciones =>
     {
@@ -35,10 +43,17 @@ try
 
     // Servicios
     builder.Services.AddControllersWithViews();
+    builder.Services.AddSignalR();
     builder.Services.AgregarCapaDeAplicacion();
     builder.Services.AgregarCapaDeInfraestructura();
     builder.Services.AgregarModosDigitales();
     builder.Services.AgregarCapaDeIa();
+
+    // Servicios de tunelado remoto
+    builder.Services.AddScoped<IServicioApiKeys, ServicioApiKeys>();
+    builder.Services.AddSingleton<RegistroServiciosConectados>();
+    builder.Services.AddSingleton<ControladorTimeoutPtt>();
+    builder.Services.AddSingleton<MetricasConexion>();
 
     // PostgreSQL — cadena de conexión desde configuración (obligatoria)
     string cadenaConexion = builder.Configuration.GetConnectionString("RadioAficionado")
@@ -79,6 +94,11 @@ try
     .AddEntityFrameworkStores<ContextoIdentidadRadioAficionado>()
     .AddDefaultTokenProviders();
 
+    // Esquema de autenticacion por clave de API (para el servicio local)
+    builder.Services.AddAuthentication()
+        .AddScheme<AuthenticationSchemeOptions, ApiKeyAuthenticationHandler>(
+            ApiKeyAuthenticationHandler.NombreEsquema, null);
+
     // Configurar cookie de autenticación
     builder.Services.ConfigureApplicationCookie(opciones =>
     {
@@ -101,6 +121,7 @@ try
 
     app.UseHttpsRedirection();
     app.UseStaticFiles();
+    app.UseMiddleware<RateLimitingMiddleware>();
     app.UseRouting();
     app.UseCors("PermitirEscritorio");
     app.UseAuthentication();
@@ -111,6 +132,16 @@ try
     app.MapControllerRoute(
         name: "default",
         pattern: "{controller=Inicio}/{action=Index}/{id?}");
+
+    // Hubs de SignalR para tunelado remoto
+    app.MapHub<HubTunelServicio>("/hubs/tunel-servicio");
+    app.MapHub<HubRelayRig>("/hubs/relay-rig");
+
+    // Endpoint de metricas (solo en desarrollo)
+    if (app.Environment.IsDevelopment())
+    {
+        app.MapGet("/api/metricas", (MetricasConexion metricas) => Results.Ok(metricas.ObtenerSnapshot()));
+    }
 
     app.Run();
 }

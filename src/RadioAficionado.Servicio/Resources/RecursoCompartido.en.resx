@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <!-- ==================== Sidebar ==================== -->
+  <data name="Nav_Operacion" xml:space="preserve"><value>Operation</value></data>
+  <data name="Nav_Logbook" xml:space="preserve"><value>Logbook</value></data>
+  <data name="Nav_DxCluster" xml:space="preserve"><value>DX Cluster</value></data>
+  <data name="Nav_Dxcc" xml:space="preserve"><value>DXCC</value></data>
+  <data name="Nav_Propagacion" xml:space="preserve"><value>Propagation</value></data>
+  <data name="Nav_PotaSota" xml:space="preserve"><value>POTA/SOTA</value></data>
+  <data name="Nav_Contest" xml:space="preserve"><value>Contest</value></data>
+  <data name="Nav_Satelites" xml:space="preserve"><value>Satellites</value></data>
+  <data name="Nav_MapaQsos" xml:space="preserve"><value>QSO Map</value></data>
+  <data name="Nav_Espectro" xml:space="preserve"><value>Spectrum</value></data>
+  <data name="Nav_Herramientas" xml:space="preserve"><value>Tools</value></data>
+  <data name="Nav_ExpandirMenu" xml:space="preserve"><value>Expand menu</value></data>
+  <data name="Nav_Menu" xml:space="preserve"><value>Menu</value></data>
+
+  <!-- ==================== Titulos de pagina ==================== -->
+  <data name="Titulo_Operacion" xml:space="preserve"><value>Operation</value></data>
+  <data name="Titulo_Logbook" xml:space="preserve"><value>Logbook</value></data>
+  <data name="Titulo_DxCluster" xml:space="preserve"><value>DX Cluster</value></data>
+  <data name="Titulo_Dxcc" xml:space="preserve"><value>DXCC Tracking</value></data>
+  <data name="Titulo_Propagacion" xml:space="preserve"><value>Solar Propagation</value></data>
+  <data name="Titulo_DashboardSolar" xml:space="preserve"><value>Solar Dashboard</value></data>
+  <data name="Titulo_Activaciones" xml:space="preserve"><value>POTA / SOTA Activations</value></data>
+  <data name="Titulo_Contest" xml:space="preserve"><value>Contest Operation</value></data>
+  <data name="Titulo_Satelites" xml:space="preserve"><value>Satellite Tracking</value></data>
+  <data name="Titulo_MapaQsos" xml:space="preserve"><value>QSO Map</value></data>
+  <data name="Titulo_Espectro" xml:space="preserve"><value>Radio Spectrum</value></data>
+  <data name="Titulo_Herramientas" xml:space="preserve"><value>Ham Radio Tools</value></data>
+
+  <!-- ==================== Barra Rig ==================== -->
+  <data name="Rig_SinConexion" xml:space="preserve"><value>Not connected</value></data>
+  <data name="Rig_Configuracion" xml:space="preserve"><value>Settings</value></data>
+
+  <!-- ==================== Panel Decodificaciones ==================== -->
+  <data name="Panel_Decodificaciones" xml:space="preserve"><value>Decodes</value></data>
+  <data name="Col_UTC" xml:space="preserve"><value>UTC</value></data>
+  <data name="Col_Mensaje" xml:space="preserve"><value>Message</value></data>
+
+  <!-- ==================== Panel TX ==================== -->
+  <data name="Panel_Transmision" xml:space="preserve"><value>Transmission</value></data>
+  <data name="TX_TextoLibre" xml:space="preserve"><value>Free text</value></data>
+  <data name="TX_FrecTx" xml:space="preserve"><value>TX Freq:</value></data>
+
+  <!-- ==================== Panel QSO ==================== -->
+  <data name="Panel_QsoEnCurso" xml:space="preserve"><value>QSO in progress</value></data>
+  <data name="QSO_Indicativo" xml:space="preserve"><value>Callsign</value></data>
+  <data name="QSO_LogQso" xml:space="preserve"><value>Log QSO</value></data>
+
+  <!-- ==================== Configuracion ==================== -->
+  <data name="Config_Titulo" xml:space="preserve"><value>Settings</value></data>
+  <data name="Config_TipoConexion" xml:space="preserve"><value>Connection type</value></data>
+  <data name="Config_CatSerial" xml:space="preserve"><value>CAT Serial (direct)</value></data>
+  <data name="Config_RigctldTcp" xml:space="preserve"><value>rigctld (TCP)</value></data>
+  <data name="Config_PuertoCom" xml:space="preserve"><value>COM Port</value></data>
+  <data name="Config_Refrescar" xml:space="preserve"><value>Refresh</value></data>
+  <data name="Config_Baudios" xml:space="preserve"><value>Baud rate</value></data>
+  <data name="Config_Modelo" xml:space="preserve"><value>Model</value></data>
+  <data name="Config_Automatico" xml:space="preserve"><value>Automatic</value></data>
+  <data name="Config_BitsDatos" xml:space="preserve"><value>Data bits</value></data>
+  <data name="Config_StopBits" xml:space="preserve"><value>Stop bits</value></data>
+  <data name="Config_Paridad" xml:space="preserve"><value>Parity</value></data>
+  <data name="Config_Host" xml:space="preserve"><value>Host</value></data>
+  <data name="Config_Puerto" xml:space="preserve"><value>Port</value></data>
+  <data name="Config_AudioEntrada" xml:space="preserve"><value>Audio device (input)</value></data>
+  <data name="Config_TasaMuestreo" xml:space="preserve"><value>Sample rate</value></data>
+  <data name="Config_Conectar" xml:space="preserve"><value>Connect</value></data>
+  <data name="Config_Desconectar" xml:space="preserve"><value>Disconnect</value></data>
+  <data name="Config_Cerrar" xml:space="preserve"><value>Close</value></data>
+  <data name="Config_Polling" xml:space="preserve"><value>Polling (ms)</value></data>
+
+  <!-- ==================== Logbook ==================== -->
+  <data name="Logbook_ArrastraAdif" xml:space="preserve"><value>Drag your ADIF file here</value></data>
+  <data name="Logbook_BuscarIndicativo" xml:space="preserve"><value>Search callsign...</value></data>
+  <data name="Logbook_ExportarAdif" xml:space="preserve"><value>Export ADIF</value></data>
+  <data name="Logbook_ImportarAdif" xml:space="preserve"><value>Import ADIF</value></data>
+  <data name="Col_FechaHora" xml:space="preserve"><value>Date/Time</value></data>
+  <data name="Col_Indicativo" xml:space="preserve"><value>Callsign</value></data>
+  <data name="Col_Banda" xml:space="preserve"><value>Band</value></data>
+  <data name="Col_Modo" xml:space="preserve"><value>Mode</value></data>
+  <data name="Col_RstEnv" xml:space="preserve"><value>RST Sent</value></data>
+  <data name="Col_RstRec" xml:space="preserve"><value>RST Rcvd</value></data>
+  <data name="Col_Grid" xml:space="preserve"><value>Grid</value></data>
+  <data name="Col_Confirmado" xml:space="preserve"><value>Confirmed</value></data>
+
+  <!-- ==================== DX Cluster ==================== -->
+  <data name="DxCluster_TodasBandas" xml:space="preserve"><value>All bands</value></data>
+  <data name="DxCluster_TodosModos" xml:space="preserve"><value>All modes</value></data>
+  <data name="DxCluster_Desconectado" xml:space="preserve"><value>Disconnected</value></data>
+  <data name="Col_Spotter" xml:space="preserve"><value>Spotter</value></data>
+  <data name="Col_Comentario" xml:space="preserve"><value>Comment</value></data>
+
+  <!-- ==================== DXCC ==================== -->
+  <data name="Dxcc_Trabajados" xml:space="preserve"><value>Worked</value></data>
+  <data name="Dxcc_Confirmados" xml:space="preserve"><value>Confirmed</value></data>
+  <data name="Dxcc_Meta" xml:space="preserve"><value>Goal</value></data>
+  <data name="Dxcc_Todos" xml:space="preserve"><value>All</value></data>
+  <data name="Dxcc_Necesitados" xml:space="preserve"><value>Needed</value></data>
+  <data name="Col_Entidad" xml:space="preserve"><value>Entity</value></data>
+  <data name="Col_Prefijo" xml:space="preserve"><value>Prefix</value></data>
+  <data name="Col_Continente" xml:space="preserve"><value>Continent</value></data>
+  <data name="Dxcc_MapaDxcc" xml:space="preserve"><value>DXCC Map</value></data>
+
+  <!-- ==================== Propagacion ==================== -->
+  <data name="Prop_Actualizar" xml:space="preserve"><value>Refresh</value></data>
+  <data name="Prop_SinDatos" xml:space="preserve"><value>No data</value></data>
+  <data name="Prop_IndicesSolares" xml:space="preserve"><value>Solar Indices</value></data>
+  <data name="Prop_VientoSolar" xml:space="preserve"><value>Solar Wind</value></data>
+  <data name="Prop_Velocidad" xml:space="preserve"><value>Speed</value></data>
+  <data name="Prop_Geomagnetico" xml:space="preserve"><value>Geomagnetic</value></data>
+  <data name="Prop_Ruido" xml:space="preserve"><value>Noise</value></data>
+  <data name="Prop_EscalasNoaa" xml:space="preserve"><value>NOAA Scales</value></data>
+  <data name="Prop_Radio" xml:space="preserve"><value>Radio</value></data>
+  <data name="Prop_Radiacion" xml:space="preserve"><value>Radiation</value></data>
+  <data name="Prop_CondicionesHf" xml:space="preserve"><value>HF Conditions</value></data>
+  <data name="Col_Dia" xml:space="preserve"><value>Day</value></data>
+  <data name="Col_Noche" xml:space="preserve"><value>Night</value></data>
+  <data name="Prop_CondicionesVhf" xml:space="preserve"><value>VHF Conditions</value></data>
+  <data name="Prop_Alertas" xml:space="preserve"><value>Alerts</value></data>
+  <data name="Prop_Cargando" xml:space="preserve"><value>Loading...</value></data>
+  <data name="Prop_SfiUltimos30" xml:space="preserve"><value>SFI - Last 30 days</value></data>
+  <data name="Prop_CondicionesBanda" xml:space="preserve"><value>Band conditions</value></data>
+  <data name="Prop_HistorialIndices" xml:space="preserve"><value>Index history</value></data>
+  <data name="Prop_Buena" xml:space="preserve"><value>Good</value></data>
+  <data name="Prop_Regular" xml:space="preserve"><value>Fair</value></data>
+  <data name="Prop_Mala" xml:space="preserve"><value>Poor</value></data>
+  <data name="Prop_Cerrada" xml:space="preserve"><value>Closed</value></data>
+
+  <!-- ==================== Activaciones ==================== -->
+  <data name="Act_BuscarReferencia" xml:space="preserve"><value>Search reference...</value></data>
+  <data name="Col_Referencia" xml:space="preserve"><value>Reference</value></data>
+  <data name="Col_Nombre" xml:space="preserve"><value>Name</value></data>
+  <data name="Col_Activador" xml:space="preserve"><value>Activator</value></data>
+
+  <!-- ==================== Contest ==================== -->
+  <data name="Contest_Seleccionar" xml:space="preserve"><value>Select contest...</value></data>
+  <data name="Contest_Iniciar" xml:space="preserve"><value>Start contest</value></data>
+  <data name="Contest_Puntos" xml:space="preserve"><value>Points</value></data>
+  <data name="Contest_Multiplicadores" xml:space="preserve"><value>Multipliers</value></data>
+  <data name="Contest_UltimosQsos" xml:space="preserve"><value>Recent QSOs</value></data>
+  <data name="Col_Intercambio" xml:space="preserve"><value>Exchange</value></data>
+  <data name="Col_Mult" xml:space="preserve"><value>Mult</value></data>
+  <data name="Col_Pts" xml:space="preserve"><value>Pts</value></data>
+
+  <!-- ==================== Satelites ==================== -->
+  <data name="Sat_Seleccionar" xml:space="preserve"><value>Select satellite...</value></data>
+  <data name="Sat_ActualizarTle" xml:space="preserve"><value>Update TLE</value></data>
+  <data name="Sat_ProximosPases" xml:space="preserve"><value>Upcoming passes</value></data>
+  <data name="Sat_InfoPase" xml:space="preserve"><value>Pass information</value></data>
+  <data name="Sat_SeleccioneSatelite" xml:space="preserve"><value>Select a satellite to see its passes.</value></data>
+  <data name="Col_Satelite" xml:space="preserve"><value>Satellite</value></data>
+  <data name="Col_MaxElev" xml:space="preserve"><value>Max Elev</value></data>
+  <data name="Col_Tipo" xml:space="preserve"><value>Type</value></data>
+
+  <!-- ==================== Mapa QSOs ==================== -->
+  <data name="Mapa_GridSquares" xml:space="preserve"><value>Grid squares</value></data>
+
+  <!-- ==================== Espectro ==================== -->
+  <data name="Espectro_Mostrando" xml:space="preserve"><value>Showing</value></data>
+  <data name="Espectro_Bandas" xml:space="preserve"><value>bands</value></data>
+  <data name="Espectro_SoloBandasHam" xml:space="preserve"><value>HAM bands only</value></data>
+  <data name="Espectro_TodasCategorias" xml:space="preserve"><value>All categories</value></data>
+  <data name="Espectro_Buscar" xml:space="preserve"><value>Search...</value></data>
+  <data name="Col_Frecuencia" xml:space="preserve"><value>Frequency</value></data>
+  <data name="Col_Longitud" xml:space="preserve"><value>Wavelength</value></data>
+  <data name="Col_Uso" xml:space="preserve"><value>Usage</value></data>
+  <data name="Col_Restricciones" xml:space="preserve"><value>Restrictions</value></data>
+
+  <!-- ==================== Herramientas ==================== -->
+  <data name="Herr_ConversorPotencia" xml:space="preserve"><value>Power Converter</value></data>
+  <data name="Herr_ConversorPotenciaDesc" xml:space="preserve"><value>Convert between dBm, Watts and milliwatts. Type in any field and the others update automatically.</value></data>
+  <data name="Herr_EjemplosComunes" xml:space="preserve"><value>Common examples</value></data>
+  <data name="Herr_UsoTipico" xml:space="preserve"><value>Typical use</value></data>
+  <data name="Herr_AmplificadorLineal" xml:space="preserve"><value>Linear amplifier</value></data>
+  <data name="Herr_TransceptorHf" xml:space="preserve"><value>Standard HF transceiver</value></data>
+  <data name="Herr_TransceptorVhf" xml:space="preserve"><value>VHF/UHF transceiver</value></data>
+  <data name="Herr_MovilVhf" xml:space="preserve"><value>VHF mobile</value></data>
+  <data name="Herr_QrpPortatil" xml:space="preserve"><value>QRP / Portable</value></data>
+  <data name="Herr_QrpExtremo" xml:space="preserve"><value>Extreme QRP</value></data>
+  <data name="Herr_Referencia" xml:space="preserve"><value>Reference</value></data>
+  <data name="Herr_DistanciaGrids" xml:space="preserve"><value>Grid Locator Distance</value></data>
+  <data name="Herr_DistanciaGridsDesc" xml:space="preserve"><value>Calculate distance and bearing between two Maidenhead grid locators (4 or 6 characters).</value></data>
+  <data name="Herr_CalcularDistancia" xml:space="preserve"><value>Calculate distance</value></data>
+  <data name="Herr_ConversorMaidenhead" xml:space="preserve"><value>Maidenhead &amp;harr; Coordinates Converter</value></data>
+  <data name="Herr_GridACoordenadas" xml:space="preserve"><value>Grid &amp;rarr; Coordinates</value></data>
+  <data name="Herr_CoordenadasAGrid" xml:space="preserve"><value>Coordinates &amp;rarr; Grid</value></data>
+  <data name="Herr_Convertir" xml:space="preserve"><value>Convert</value></data>
+  <data name="Herr_MiUbicacion" xml:space="preserve"><value>My location</value></data>
+  <data name="Herr_Latitud" xml:space="preserve"><value>Latitude</value></data>
+  <data name="Herr_Longitud" xml:space="preserve"><value>Longitude</value></data>
+  <data name="Herr_PlanBandas" xml:space="preserve"><value>HF Band Plan - IARU Region 1</value></data>
+  <data name="Herr_PlanBandasDesc" xml:space="preserve"><value>Amateur radio HF + VHF bands per IARU Region 1 band plan (Europe/Spain).</value></data>
+  <data name="Col_Inicio" xml:space="preserve"><value>Start (kHz)</value></data>
+  <data name="Col_Fin" xml:space="preserve"><value>End (kHz)</value></data>
+  <data name="Col_Modos" xml:space="preserve"><value>Modes</value></data>
+  <data name="Col_Notas" xml:space="preserve"><value>Notes</value></data>
+  <data name="Herr_CodigosRst" xml:space="preserve"><value>RST Codes (Readability, Strength, Tone)</value></data>
+  <data name="Herr_CodigosRstDesc" xml:space="preserve"><value>Signal reporting system. In SSB only R and S are used (RS). In CW all three are used (RST).</value></data>
+  <data name="Herr_Legibilidad" xml:space="preserve"><value>R - Readability</value></data>
+  <data name="Herr_Intensidad" xml:space="preserve"><value>S - Strength</value></data>
+  <data name="Herr_Tono" xml:space="preserve"><value>T - Tone (CW only)</value></data>
+  <data name="Col_Significado" xml:space="preserve"><value>Meaning</value></data>
+  <data name="Herr_AlfabetoNato" xml:space="preserve"><value>NATO Phonetic Alphabet</value></data>
+  <data name="Herr_AlfabetoNatoDesc" xml:space="preserve"><value>International phonetic code used in radio communications to spell out callsigns.</value></data>
+  <data name="Col_Letra" xml:space="preserve"><value>Letter</value></data>
+  <data name="Col_Fonetico" xml:space="preserve"><value>Phonetic</value></data>
+  <data name="Col_Pronunciacion" xml:space="preserve"><value>Pronunciation</value></data>
+  <data name="Col_Numero" xml:space="preserve"><value>Number</value></data>
+
+  <!-- ==================== Selector idioma ==================== -->
+  <data name="Idioma_Titulo" xml:space="preserve"><value>Language</value></data>
+
+  <!-- ==================== Pestanas secundarias ==================== -->
+  <data name="Tab_Logbook" xml:space="preserve"><value>Logbook</value></data>
+  <data name="Tab_DxCluster" xml:space="preserve"><value>DX Cluster</value></data>
+  <data name="Tab_Dxcc" xml:space="preserve"><value>DXCC</value></data>
+  <data name="Tab_Propagacion" xml:space="preserve"><value>Propagation</value></data>
+  <data name="Tab_PotaSota" xml:space="preserve"><value>POTA/SOTA</value></data>
+  <data name="Tab_Contest" xml:space="preserve"><value>Contest</value></data>
+  <data name="Tab_Satelites" xml:space="preserve"><value>Satellites</value></data>
+</root>

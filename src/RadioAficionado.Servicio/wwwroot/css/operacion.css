@@ -562,6 +562,47 @@
     opacity: 1;
 }
 
+/* Selector de idioma en sidebar */
+.sidebar-idioma {
+    padding: 8px 0;
+    border-top: 1px solid #1a1a2e;
+}
+
+.sidebar-idioma .btn-idioma {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    color: #888;
+    text-decoration: none;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    overflow: hidden;
+    transition: all 0.15s;
+    cursor: pointer;
+}
+
+.sidebar-idioma .btn-idioma:hover {
+    color: #ccc;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.sidebar-idioma .btn-idioma .icono {
+    font-size: 1.1rem;
+    min-width: 24px;
+    text-align: center;
+}
+
+.sidebar-idioma .btn-idioma .texto-nav {
+    opacity: 0;
+    transition: opacity 0.15s;
+    font-weight: 600;
+}
+
+.sidebar.expandido .sidebar-idioma .btn-idioma .texto-nav {
+    opacity: 1;
+}
+
 .contenido-principal {
     flex: 1;
     overflow: hidden;
@@ -606,4 +647,154 @@
 
 #config-estado {
     font-size: 0.8rem;
+}
+
+/* ================================================================
+   RESPONSIVE - MOBILE
+   ================================================================ */
+
+/* Overlay para cerrar sidebar en movil */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 99;
+}
+
+.sidebar-overlay.visible {
+    display: block;
+}
+
+@media (max-width: 768px) {
+    /* Layout: sidebar como overlay, contenido ocupa todo */
+    .layout-con-sidebar {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+        overflow: auto;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: -260px;
+        width: 260px;
+        min-width: 260px;
+        height: 100vh;
+        z-index: 200;
+        transition: left 0.25s ease;
+    }
+
+    .sidebar.expandido {
+        left: 0;
+        width: 260px;
+        min-width: 260px;
+    }
+
+    .sidebar.expandido .sidebar-nav li a .texto-nav {
+        opacity: 1;
+    }
+
+    /* Boton hamburguesa fijo en la esquina superior */
+    .sidebar-toggle-movil {
+        display: block;
+        position: fixed;
+        top: 8px;
+        left: 8px;
+        z-index: 201;
+        background: #0a0e14;
+        border: 1px solid #333;
+        color: #888;
+        font-size: 1.4rem;
+        padding: 4px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .sidebar-toggle-movil:hover {
+        color: #fff;
+    }
+
+    .contenido-principal {
+        overflow: auto;
+        width: 100%;
+    }
+
+    /* Operacion: apilar todo en vertical */
+    .contenedor-operacion {
+        grid-template-rows: auto 35vh auto;
+        height: auto;
+        min-height: 100vh;
+    }
+
+    /* Barra rig */
+    .barra-rig {
+        padding-top: 40px; /* espacio para hamburguesa */
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+
+    .frecuencia-led {
+        font-size: 1.4rem;
+        min-width: 160px;
+        padding: 2px 8px;
+    }
+
+    .grupo-bandas, .grupo-modos {
+        flex-wrap: wrap;
+    }
+
+    /* Zona inferior: apilar decodificaciones y TX */
+    .zona-inferior {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr auto;
+        overflow: auto;
+    }
+
+    .zona-tx {
+        max-height: none;
+    }
+
+    /* Pagina panel */
+    .pagina-panel {
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .pagina-panel-header {
+        padding-top: 44px; /* espacio para hamburguesa */
+    }
+
+    .pagina-panel-body {
+        overflow-y: visible;
+        padding: 8px 12px;
+    }
+
+    /* Tablas: scroll horizontal si se desbordan */
+    .pagina-panel-body .table-responsive,
+    .pagina-panel-body table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* Tablet intermedio */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .zona-inferior {
+        grid-template-columns: 1fr 250px;
+    }
+
+    .frecuencia-led {
+        font-size: 1.6rem;
+        min-width: 180px;
+    }
+}
+
+/* Desktop: boton hamburguesa movil oculto */
+@media (min-width: 769px) {
+    .sidebar-toggle-movil {
+        display: none;
+    }
 }

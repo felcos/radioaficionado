@@ -1,0 +1,297 @@
+@{
+    ViewData["Title"] = L["Titulo_Herramientas"].Value;
+    ViewData["Seccion"] = "Herramientas";
+}
+
+<div class="herramientas-contenedor">
+    <div class="pagina-panel-header">
+        <h2>@L["Titulo_Herramientas"]</h2>
+    </div>
+
+    <!-- ===== Conversor de potencia ===== -->
+    <div class="herramienta-card">
+        <h2 class="herramienta-card-titulo">@L["Herr_ConversorPotencia"]</h2>
+        <p class="herramienta-descripcion">@L["Herr_ConversorPotenciaDesc"]</p>
+        <div class="herramienta-grid-3">
+            <div class="herramienta-campo">
+                <label for="potencia-dbm">dBm</label>
+                <input type="number" id="potencia-dbm" step="any" placeholder="Ej: 50" />
+            </div>
+            <div class="herramienta-campo">
+                <label for="potencia-watts">Watts</label>
+                <input type="number" id="potencia-watts" step="any" placeholder="Ej: 100" />
+            </div>
+            <div class="herramienta-campo">
+                <label for="potencia-mw">mW</label>
+                <input type="number" id="potencia-mw" step="any" placeholder="Ej: 100000" />
+            </div>
+        </div>
+        <div class="herramienta-ejemplos">
+            <h3>@L["Herr_EjemplosComunes"]</h3>
+            <table class="tabla-herramienta tabla-compacta">
+                <thead>
+                    <tr><th>Watts</th><th>dBm</th><th>@L["Herr_UsoTipico"]</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>1000 W</td><td>60 dBm</td><td>@L["Herr_AmplificadorLineal"]</td></tr>
+                    <tr><td>100 W</td><td>50 dBm</td><td>@L["Herr_TransceptorHf"]</td></tr>
+                    <tr><td>50 W</td><td>47 dBm</td><td>@L["Herr_TransceptorVhf"]</td></tr>
+                    <tr><td>25 W</td><td>44 dBm</td><td>@L["Herr_MovilVhf"]</td></tr>
+                    <tr><td>5 W</td><td>37 dBm</td><td>@L["Herr_QrpPortatil"]</td></tr>
+                    <tr><td>1 W</td><td>30 dBm</td><td>@L["Herr_QrpExtremo"]</td></tr>
+                    <tr><td>0.5 W</td><td>27 dBm</td><td>FT8 QRP</td></tr>
+                    <tr><td>0.001 W</td><td>0 dBm</td><td>@L["Herr_Referencia"]</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ===== Calculadora de distancia entre grids ===== -->
+    <div class="herramienta-card">
+        <h2 class="herramienta-card-titulo">@L["Herr_DistanciaGrids"]</h2>
+        <p class="herramienta-descripcion">@L["Herr_DistanciaGridsDesc"]</p>
+        <div class="herramienta-grid-2">
+            <div class="herramienta-campo">
+                <label for="distancia-grid-a">Grid A</label>
+                <input type="text" id="distancia-grid-a" maxlength="6" placeholder="Ej: IN80dk" />
+            </div>
+            <div class="herramienta-campo">
+                <label for="distancia-grid-b">Grid B</label>
+                <input type="text" id="distancia-grid-b" maxlength="6" placeholder="Ej: FN31pr" />
+            </div>
+        </div>
+        <button type="button" id="btn-calcular-distancia" class="btn-herramienta">@L["Herr_CalcularDistancia"]</button>
+        <div id="resultado-distancia" class="herramienta-resultado"></div>
+    </div>
+
+    <!-- ===== Conversor Maidenhead <-> Coordenadas ===== -->
+    <div class="herramienta-card">
+        <h2 class="herramienta-card-titulo">@Html.Raw(L["Herr_ConversorMaidenhead"].Value)</h2>
+
+        <div class="herramienta-seccion">
+            <h3>@Html.Raw(L["Herr_GridACoordenadas"].Value)</h3>
+            <div class="herramienta-fila">
+                <div class="herramienta-campo">
+                    <label for="maidenhead-grid">Grid Locator</label>
+                    <input type="text" id="maidenhead-grid" maxlength="6" placeholder="Ej: IN80dk" />
+                </div>
+                <button type="button" id="btn-grid-a-coord" class="btn-herramienta">@L["Herr_Convertir"]</button>
+            </div>
+            <div id="resultado-grid-coord" class="herramienta-resultado"></div>
+        </div>
+
+        <div class="herramienta-seccion">
+            <h3>@Html.Raw(L["Herr_CoordenadasAGrid"].Value)</h3>
+            <div class="herramienta-fila">
+                <div class="herramienta-campo">
+                    <label for="maidenhead-lat">@L["Herr_Latitud"]</label>
+                    <input type="number" id="maidenhead-lat" step="any" placeholder="Ej: 40.4168" />
+                </div>
+                <div class="herramienta-campo">
+                    <label for="maidenhead-lng">@L["Herr_Longitud"]</label>
+                    <input type="number" id="maidenhead-lng" step="any" placeholder="Ej: -3.7038" />
+                </div>
+                <button type="button" id="btn-coord-a-grid" class="btn-herramienta">@L["Herr_Convertir"]</button>
+                <button type="button" id="btn-mi-ubicacion" class="btn-herramienta btn-secundario">@L["Herr_MiUbicacion"]</button>
+            </div>
+            <div id="resultado-coord-grid" class="herramienta-resultado"></div>
+        </div>
+    </div>
+
+    <!-- ===== Plan de bandas HF (IARU Region 1) ===== -->
+    <div class="herramienta-card">
+        <h2 class="herramienta-card-titulo">@L["Herr_PlanBandas"]</h2>
+        <p class="herramienta-descripcion">@L["Herr_PlanBandasDesc"]</p>
+        <div class="tabla-scroll">
+            <table class="tabla-herramienta tabla-bandas">
+                <thead>
+                    <tr>
+                        <th>@L["Col_Banda"]</th>
+                        <th>@L["Col_Inicio"]</th>
+                        <th>@L["Col_Fin"]</th>
+                        <th>@L["Col_Modos"]</th>
+                        <th>@L["Col_Notas"]</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 160m -->
+                    <tr class="fila-cw"><td rowspan="3">160m</td><td>1.810</td><td>1.838</td><td>CW</td><td>CW exclusivo</td></tr>
+                    <tr class="fila-digital"><td>1.838</td><td>1.843</td><td>Digital</td><td>FT8: 1.840 kHz</td></tr>
+                    <tr class="fila-ssb"><td>1.843</td><td>2.000</td><td>SSB / Digital</td><td>LSB preferente</td></tr>
+
+                    <!-- 80m -->
+                    <tr class="fila-cw"><td rowspan="4">80m</td><td>3.500</td><td>3.570</td><td>CW</td><td>CW exclusivo; Contest: 3.510-3.560</td></tr>
+                    <tr class="fila-digital"><td>3.570</td><td>3.600</td><td>Digital</td><td>FT8: 3.573 kHz</td></tr>
+                    <tr class="fila-ssb"><td>3.600</td><td>3.800</td><td>SSB / Digital</td><td>LSB preferente; DX: 3.790-3.800</td></tr>
+                    <tr class="fila-ssb"><td>3.775</td><td>3.800</td><td>SSB</td><td>DX window intercontinental</td></tr>
+
+                    <!-- 60m -->
+                    <tr class="fila-digital"><td>60m</td><td>5.351,5</td><td>5.366,5</td><td>Todos</td><td>15 W EIRP max; asignacion secundaria</td></tr>
+
+                    <!-- 40m -->
+                    <tr class="fila-cw"><td rowspan="3">40m</td><td>7.000</td><td>7.040</td><td>CW</td><td>CW exclusivo</td></tr>
+                    <tr class="fila-digital"><td>7.040</td><td>7.100</td><td>Digital</td><td>FT8: 7.074 kHz</td></tr>
+                    <tr class="fila-ssb"><td>7.100</td><td>7.200</td><td>SSB</td><td>LSB preferente</td></tr>
+
+                    <!-- 30m -->
+                    <tr class="fila-cw"><td rowspan="2">30m</td><td>10.100</td><td>10.130</td><td>CW</td><td>200 W max; asignacion secundaria</td></tr>
+                    <tr class="fila-digital"><td>10.130</td><td>10.150</td><td>Digital</td><td>FT8: 10.136 kHz</td></tr>
+
+                    <!-- 20m -->
+                    <tr class="fila-cw"><td rowspan="3">20m</td><td>14.000</td><td>14.070</td><td>CW</td><td>CW exclusivo</td></tr>
+                    <tr class="fila-digital"><td>14.070</td><td>14.099</td><td>Digital</td><td>FT8: 14.074 kHz</td></tr>
+                    <tr class="fila-ssb"><td>14.112</td><td>14.350</td><td>SSB</td><td>USB preferente; DX: 14.195-14.205</td></tr>
+
+                    <!-- 17m -->
+                    <tr class="fila-cw"><td rowspan="3">17m</td><td>18.068</td><td>18.095</td><td>CW</td><td>CW exclusivo</td></tr>
+                    <tr class="fila-digital"><td>18.095</td><td>18.109</td><td>Digital</td><td>FT8: 18.100 kHz</td></tr>
+                    <tr class="fila-ssb"><td>18.111</td><td>18.168</td><td>SSB</td><td>USB preferente</td></tr>
+
+                    <!-- 15m -->
+                    <tr class="fila-cw"><td rowspan="3">15m</td><td>21.000</td><td>21.070</td><td>CW</td><td>CW exclusivo</td></tr>
+                    <tr class="fila-digital"><td>21.070</td><td>21.149</td><td>Digital</td><td>FT8: 21.074 kHz</td></tr>
+                    <tr class="fila-ssb"><td>21.151</td><td>21.450</td><td>SSB</td><td>USB preferente</td></tr>
+
+                    <!-- 12m -->
+                    <tr class="fila-cw"><td rowspan="3">12m</td><td>24.890</td><td>24.915</td><td>CW</td><td>CW exclusivo</td></tr>
+                    <tr class="fila-digital"><td>24.915</td><td>24.929</td><td>Digital</td><td>FT8: 24.915 kHz</td></tr>
+                    <tr class="fila-ssb"><td>24.931</td><td>24.990</td><td>SSB</td><td>USB preferente</td></tr>
+
+                    <!-- 10m -->
+                    <tr class="fila-cw"><td rowspan="4">10m</td><td>28.000</td><td>28.070</td><td>CW</td><td>CW exclusivo</td></tr>
+                    <tr class="fila-digital"><td>28.070</td><td>28.190</td><td>Digital</td><td>FT8: 28.074 kHz; Balizas: 28.190-28.225</td></tr>
+                    <tr class="fila-ssb"><td>28.300</td><td>29.100</td><td>SSB</td><td>USB preferente</td></tr>
+                    <tr class="fila-fm"><td>29.520</td><td>29.700</td><td>FM</td><td>Repetidores FM; canales de 10 kHz</td></tr>
+
+                    <!-- 6m -->
+                    <tr class="fila-cw"><td rowspan="4">6m</td><td>50.000</td><td>50.100</td><td>CW</td><td>CW y balizas</td></tr>
+                    <tr class="fila-digital"><td>50.100</td><td>50.500</td><td>Digital / SSB</td><td>FT8: 50.313 kHz; SSB calling: 50.150</td></tr>
+                    <tr class="fila-ssb"><td>50.500</td><td>51.000</td><td>SSB</td><td>USB preferente</td></tr>
+                    <tr class="fila-fm"><td>51.000</td><td>52.000</td><td>FM / Digital</td><td>FM y repetidores</td></tr>
+
+                    <!-- 2m -->
+                    <tr class="fila-cw"><td rowspan="4">2m</td><td>144.000</td><td>144.150</td><td>CW / EME</td><td>CW y rebote lunar</td></tr>
+                    <tr class="fila-ssb"><td>144.150</td><td>144.400</td><td>SSB / CW</td><td>FT8: 144.174 kHz; SSB calling: 144.300</td></tr>
+                    <tr class="fila-digital"><td>144.400</td><td>144.800</td><td>Digital / Balizas</td><td>APRS: 144.800 MHz</td></tr>
+                    <tr class="fila-fm"><td>145.000</td><td>146.000</td><td>FM</td><td>Repetidores y simplex; Calling: 145.500</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="leyenda-bandas">
+            <span class="leyenda-item leyenda-cw">CW</span>
+            <span class="leyenda-item leyenda-ssb">SSB</span>
+            <span class="leyenda-item leyenda-digital">Digital</span>
+            <span class="leyenda-item leyenda-fm">FM</span>
+        </div>
+    </div>
+
+    <!-- ===== Tabla de codigos RST ===== -->
+    <div class="herramienta-card">
+        <h2 class="herramienta-card-titulo">@L["Herr_CodigosRst"]</h2>
+        <p class="herramienta-descripcion">@L["Herr_CodigosRstDesc"]</p>
+
+        <div class="herramienta-grid-3-tablas">
+            <div>
+                <h3>@L["Herr_Legibilidad"]</h3>
+                <table class="tabla-herramienta">
+                    <thead><tr><th>R</th><th>@L["Col_Significado"]</th></tr></thead>
+                    <tbody>
+                        <tr><td>1</td><td>Ilegible</td></tr>
+                        <tr><td>2</td><td>Apenas legible, palabras sueltas</td></tr>
+                        <tr><td>3</td><td>Legible con dificultad</td></tr>
+                        <tr><td>4</td><td>Legible sin dificultad</td></tr>
+                        <tr><td>5</td><td>Perfectamente legible</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <h3>@L["Herr_Intensidad"]</h3>
+                <table class="tabla-herramienta">
+                    <thead><tr><th>S</th><th>@L["Col_Significado"]</th></tr></thead>
+                    <tbody>
+                        <tr><td>1</td><td>Senal apenas perceptible</td></tr>
+                        <tr><td>2</td><td>Senal muy debil</td></tr>
+                        <tr><td>3</td><td>Senal debil</td></tr>
+                        <tr><td>4</td><td>Senal aceptable</td></tr>
+                        <tr><td>5</td><td>Senal moderada</td></tr>
+                        <tr><td>6</td><td>Senal buena</td></tr>
+                        <tr><td>7</td><td>Senal moderadamente fuerte</td></tr>
+                        <tr><td>8</td><td>Senal fuerte</td></tr>
+                        <tr><td>9</td><td>Senal extremadamente fuerte</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <h3>@L["Herr_Tono"]</h3>
+                <table class="tabla-herramienta">
+                    <thead><tr><th>T</th><th>@L["Col_Significado"]</th></tr></thead>
+                    <tbody>
+                        <tr><td>1</td><td>Zumbido muy grave, 60 Hz</td></tr>
+                        <tr><td>2</td><td>Zumbido grave, AC muy aspero</td></tr>
+                        <tr><td>3</td><td>Tono bajo, rectificacion AC aspera</td></tr>
+                        <tr><td>4</td><td>Tono casi bueno, ligero zumbido</td></tr>
+                        <tr><td>5</td><td>Tono modulado musicalmente</td></tr>
+                        <tr><td>6</td><td>Tono modulado, ligero silbido</td></tr>
+                        <tr><td>7</td><td>Tono casi puro, leve ondulacion</td></tr>
+                        <tr><td>8</td><td>Tono casi perfecto, minima ondulacion</td></tr>
+                        <tr><td>9</td><td>Tono perfecto, sin ondulacion</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== Alfabeto fonetico NATO ===== -->
+    <div class="herramienta-card">
+        <h2 class="herramienta-card-titulo">@L["Herr_AlfabetoNato"]</h2>
+        <p class="herramienta-descripcion">@L["Herr_AlfabetoNatoDesc"]</p>
+        <div class="tabla-scroll">
+            <table class="tabla-herramienta tabla-fonetico">
+                <thead>
+                    <tr>
+                        <th>@L["Col_Letra"]</th><th>@L["Col_Fonetico"]</th><th>@L["Col_Pronunciacion"]</th>
+                        <th>@L["Col_Letra"]</th><th>@L["Col_Fonetico"]</th><th>@L["Col_Pronunciacion"]</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>A</td><td>Alpha</td><td>AL-fah</td><td>N</td><td>November</td><td>no-VEM-ber</td></tr>
+                    <tr><td>B</td><td>Bravo</td><td>BRAH-voh</td><td>O</td><td>Oscar</td><td>OSS-car</td></tr>
+                    <tr><td>C</td><td>Charlie</td><td>CHAR-lee</td><td>P</td><td>Papa</td><td>pah-PAH</td></tr>
+                    <tr><td>D</td><td>Delta</td><td>DELL-tah</td><td>Q</td><td>Quebec</td><td>keh-BECK</td></tr>
+                    <tr><td>E</td><td>Echo</td><td>ECK-oh</td><td>R</td><td>Romeo</td><td>ROW-me-oh</td></tr>
+                    <tr><td>F</td><td>Foxtrot</td><td>FOKS-trot</td><td>S</td><td>Sierra</td><td>see-AIR-rah</td></tr>
+                    <tr><td>G</td><td>Golf</td><td>GOLF</td><td>T</td><td>Tango</td><td>TANG-go</td></tr>
+                    <tr><td>H</td><td>Hotel</td><td>hoh-TELL</td><td>U</td><td>Uniform</td><td>YOU-nee-form</td></tr>
+                    <tr><td>I</td><td>India</td><td>IN-dee-ah</td><td>V</td><td>Victor</td><td>VIK-tah</td></tr>
+                    <tr><td>J</td><td>Juliet</td><td>JEW-lee-ETT</td><td>W</td><td>Whiskey</td><td>WISS-key</td></tr>
+                    <tr><td>K</td><td>Kilo</td><td>KEY-loh</td><td>X</td><td>X-ray</td><td>ECKS-ray</td></tr>
+                    <tr><td>L</td><td>Lima</td><td>LEE-mah</td><td>Y</td><td>Yankee</td><td>YANG-key</td></tr>
+                    <tr><td>M</td><td>Mike</td><td>MIKE</td><td>Z</td><td>Zulu</td><td>ZOO-loo</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="tabla-scroll" style="margin-top: 1rem;">
+            <table class="tabla-herramienta tabla-fonetico">
+                <thead>
+                    <tr><th>@L["Col_Numero"]</th><th>@L["Col_Fonetico"]</th><th>@L["Col_Pronunciacion"]</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>0</td><td>Zero</td><td>ZEE-roh</td></tr>
+                    <tr><td>1</td><td>One</td><td>WUN</td></tr>
+                    <tr><td>2</td><td>Two</td><td>TOO</td></tr>
+                    <tr><td>3</td><td>Three</td><td>TREE</td></tr>
+                    <tr><td>4</td><td>Four</td><td>FOW-er</td></tr>
+                    <tr><td>5</td><td>Five</td><td>FIFE</td></tr>
+                    <tr><td>6</td><td>Six</td><td>SIX</td></tr>
+                    <tr><td>7</td><td>Seven</td><td>SEV-en</td></tr>
+                    <tr><td>8</td><td>Eight</td><td>AIT</td></tr>
+                    <tr><td>9</td><td>Nine</td><td>NIN-er</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/herramientas.js"></script>
+}

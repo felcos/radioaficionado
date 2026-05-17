@@ -1,161 +1,203 @@
-@model InicioViewModel
 @{
-    ViewData["Title"] = "Inicio";
+    ViewData["Title"] = "Software de Radio Amateur Todo-en-Uno";
+    ViewData["SinContainer"] = true;
 }
 
 <!-- Hero Section -->
-<section class="text-center py-5 mb-4">
-    <h1 class="display-4 fw-bold">
-        <span class="text-ra-acento">Radio</span>Aficionado
-    </h1>
-    <p class="lead text-ra-suave mt-3">
-        Logbook público de contactos de radio. Registra, explora y comparte tus QSOs con la comunidad.
-    </p>
-    <div class="mt-4">
-        <a asp-controller="Logbook" asp-action="Index" class="btn btn-ra-acento btn-lg">
-            Ver Logbook Completo
-        </a>
-    </div>
-</section>
-
-<!-- Estadísticas -->
-<section class="mb-5">
-    <h2 class="h4 text-ra-acento mb-4 text-center">Estadísticas del Logbook</h2>
-    <div class="row g-3">
-        <div class="col-6 col-md-3">
-            <div class="card bg-ra-tarjeta border-ra-borde text-center h-100">
-                <div class="card-body">
-                    <div class="display-6 fw-bold text-ra-acento">@Model.TotalQsos</div>
-                    <div class="text-ra-suave small mt-1">QSOs Totales</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-md-3">
-            <div class="card bg-ra-tarjeta border-ra-borde text-center h-100">
-                <div class="card-body">
-                    <div class="display-6 fw-bold text-ra-acento">@Model.TotalIndicativosUnicos</div>
-                    <div class="text-ra-suave small mt-1">Indicativos Únicos</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-md-3">
-            <div class="card bg-ra-tarjeta border-ra-borde text-center h-100">
-                <div class="card-body">
-                    <div class="display-6 fw-bold text-ra-acento">@Model.TotalBandas</div>
-                    <div class="text-ra-suave small mt-1">Bandas Activas</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-md-3">
-            <div class="card bg-ra-tarjeta border-ra-borde text-center h-100">
-                <div class="card-body">
-                    <div class="display-6 fw-bold text-ra-acento">@Model.TotalModos</div>
-                    <div class="text-ra-suave small mt-1">Modos Utilizados</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    @if (Model.UltimoQso.HasValue)
-    {
-        <p class="text-center text-ra-suave mt-3 small">
-            Último contacto: @Model.UltimoQso.Value.ToString("dd/MM/yyyy HH:mm") UTC
+<section class="landing-hero text-center py-5">
+    <div class="container">
+        <h1 class="display-3 fw-bold mb-3">
+            <span class="text-ra-verde">Radio</span>Aficionado
+        </h1>
+        <p class="lead text-ra-suave mx-auto mb-4" style="max-width: 700px;">
+            Software de radio amateur todo-en-uno. Logbook, modos digitales, control de radio,
+            espectro, propagacion y mucho mas — todo desde una sola plataforma.
         </p>
-    }
-</section>
-
-<!-- Últimos QSOs -->
-@if (Model.UltimosQsos.Count > 0)
-{
-    <section class="mb-5">
-        <h2 class="h4 text-ra-acento mb-4 text-center">Últimos Contactos</h2>
-        <div class="table-responsive">
-            <table class="table table-dark table-striped table-hover tabla-ra">
-                <thead>
-                    <tr>
-                        <th>Fecha/Hora (UTC)</th>
-                        <th>Indicativo Propio</th>
-                        <th>Indicativo Contacto</th>
-                        <th>Frecuencia</th>
-                        <th>Banda</th>
-                        <th>Modo</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (QsoResumenViewModel qso in Model.UltimosQsos)
-                    {
-                        <tr>
-                            <td>@qso.FechaHora.ToString("dd/MM/yyyy HH:mm")</td>
-                            <td class="fw-bold">@qso.IndicativoPropio</td>
-                            <td class="fw-bold text-ra-acento">@qso.IndicativoContacto</td>
-                            <td>@qso.Frecuencia</td>
-                            <td>@(qso.Banda ?? "—")</td>
-                            <td><span class="badge bg-ra-modo">@qso.Modo</span></td>
-                            <td>
-                                <a asp-controller="Logbook" asp-action="Detalle" asp-route-id="@qso.Id"
-                                   class="btn btn-sm btn-outline-ra-acento">
-                                    Ver
-                                </a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-        <div class="text-center mt-3">
-            <a asp-controller="Logbook" asp-action="Index" class="btn btn-outline-ra-acento">
-                Ver todos los contactos
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="#" class="btn btn-landing-verde btn-lg px-4">
+                Descargar App de Escritorio
+            </a>
+            <a asp-controller="Cuenta" asp-action="Registrar" class="btn btn-outline-landing-verde btn-lg px-4">
+                Crear Cuenta Gratis
             </a>
         </div>
-    </section>
-}
-else
-{
-    <section class="mb-5 text-center">
-        <div class="card bg-ra-tarjeta border-ra-borde p-5">
-            <p class="text-ra-suave mb-0">
-                Aún no hay contactos registrados en el logbook. Los QSOs aparecerán aquí cuando se añadan.
-            </p>
-        </div>
-    </section>
-}
+    </div>
+</section>
 
 <!-- Features -->
-<section class="mb-5">
-    <h2 class="h4 text-ra-acento mb-4 text-center">Características</h2>
-    <div class="row g-4">
-        <div class="col-md-4">
-            <div class="card bg-ra-tarjeta border-ra-borde h-100">
-                <div class="card-body text-center">
-                    <div class="display-6 mb-2">73</div>
-                    <h3 class="h5 text-ra-acento">Logbook Público</h3>
-                    <p class="text-ra-suave small">
-                        Consulta todos los contactos con paginación, filtros por banda, modo e indicativo.
-                    </p>
+<section class="py-5" id="features">
+    <div class="container">
+        <h2 class="text-center text-ra-verde mb-2">Funcionalidades</h2>
+        <p class="text-center text-ra-suave mb-5">Todo lo que un radioaficionado necesita en un solo lugar</p>
+        <div class="row g-4">
+            <div class="col-6 col-lg-3">
+                <div class="card landing-feature-card h-100">
+                    <div class="card-body text-center">
+                        <div class="landing-feature-icon mb-3">&#128214;</div>
+                        <h3 class="h6 text-ra-verde">Logbook</h3>
+                        <p class="text-ra-suave small mb-0">
+                            Registro de QSOs con filtros, paginacion y formato ADIF 3.1.4.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="card landing-feature-card h-100">
+                    <div class="card-body text-center">
+                        <div class="landing-feature-icon mb-3">&#127760;</div>
+                        <h3 class="h6 text-ra-verde">DX Cluster</h3>
+                        <p class="text-ra-suave small mb-0">
+                            Spots en tiempo real de estaciones DX activas en todas las bandas.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="card landing-feature-card h-100">
+                    <div class="card-body text-center">
+                        <div class="landing-feature-icon mb-3">&#127919;</div>
+                        <h3 class="h6 text-ra-verde">DXCC Tracking</h3>
+                        <p class="text-ra-suave small mb-0">
+                            Seguimiento de entidades DXCC trabajadas y confirmadas.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="card landing-feature-card h-100">
+                    <div class="card-body text-center">
+                        <div class="landing-feature-icon mb-3">&#9728;&#65039;</div>
+                        <h3 class="h6 text-ra-verde">Propagacion Solar</h3>
+                        <p class="text-ra-suave small mb-0">
+                            Indices solares, predicciones de propagacion HF y alertas.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="card landing-feature-card h-100">
+                    <div class="card-body text-center">
+                        <div class="landing-feature-icon mb-3">&#128225;</div>
+                        <h3 class="h6 text-ra-verde">Modos Digitales (FT8)</h3>
+                        <p class="text-ra-suave small mb-0">
+                            Decodificacion nativa de FT8, FT4, JT65, JT9, WSPR y mas.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="card landing-feature-card h-100">
+                    <div class="card-body text-center">
+                        <div class="landing-feature-icon mb-3">&#128251;</div>
+                        <h3 class="h6 text-ra-verde">Control de Radio CAT</h3>
+                        <p class="text-ra-suave small mb-0">
+                            Control directo de tu radio via CAT/CI-V con rigctld o serie.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="card landing-feature-card h-100">
+                    <div class="card-body text-center">
+                        <div class="landing-feature-icon mb-3">&#127912;</div>
+                        <h3 class="h6 text-ra-verde">Espectro / Waterfall</h3>
+                        <p class="text-ra-suave small mb-0">
+                            Visualizacion de espectro en tiempo real con FFT de alta resolucion.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="card landing-feature-card h-100">
+                    <div class="card-body text-center">
+                        <div class="landing-feature-icon mb-3">&#128736;</div>
+                        <h3 class="h6 text-ra-verde">Herramientas</h3>
+                        <p class="text-ra-suave small mb-0">
+                            Generador QSL, mapa de contactos, estadisticas y mas utilidades.
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card bg-ra-tarjeta border-ra-borde h-100">
-                <div class="card-body text-center">
-                    <div class="display-6 mb-2">CQ</div>
-                    <h3 class="h5 text-ra-acento">Formato ADIF</h3>
-                    <p class="text-ra-suave small">
-                        Compatible con el estándar ADIF 3.1.4 para modos y submodos de operación.
-                    </p>
+    </div>
+</section>
+
+<!-- Descarga -->
+<section class="py-5 landing-descarga-section" id="descarga">
+    <div class="container text-center">
+        <h2 class="text-ra-verde mb-3">Descarga la App de Escritorio</h2>
+        <p class="text-ra-suave mx-auto mb-4" style="max-width: 600px;">
+            Disponible para Windows, Linux y macOS. Interfaz nativa con Avalonia, rendimiento nativo
+            y sin dependencias externas.
+        </p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="#" class="btn btn-landing-verde btn-lg px-4">
+                Windows (x64)
+            </a>
+            <a href="#" class="btn btn-outline-landing-verde btn-lg px-4">
+                Linux (x64)
+            </a>
+            <a href="#" class="btn btn-outline-landing-verde btn-lg px-4">
+                macOS (arm64)
+            </a>
+        </div>
+        <p class="text-ra-suave small mt-3">Requiere .NET 8 Runtime</p>
+    </div>
+</section>
+
+<!-- Comunidad -->
+<section class="py-5" id="comunidad">
+    <div class="container text-center">
+        <h2 class="text-ra-verde mb-3">Unete a la Comunidad</h2>
+        <p class="text-ra-suave mx-auto mb-4" style="max-width: 600px;">
+            Registrate gratis para obtener tu perfil publico de operador, participar en el foro,
+            acceder a estadisticas avanzadas y compartir tu logbook con otros radioaficionados.
+        </p>
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-4">
+                <div class="card landing-feature-card h-100">
+                    <div class="card-body text-center">
+                        <div class="landing-feature-icon mb-3">&#128100;</div>
+                        <h3 class="h6 text-ra-verde">Perfil Publico</h3>
+                        <p class="text-ra-suave small mb-0">
+                            Tu tarjeta de presentacion como operador con indicativo, localizador y estadisticas.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card landing-feature-card h-100">
+                    <div class="card-body text-center">
+                        <div class="landing-feature-icon mb-3">&#128172;</div>
+                        <h3 class="h6 text-ra-verde">Foro</h3>
+                        <p class="text-ra-suave small mb-0">
+                            Comparte experiencias, resuelve dudas y conecta con otros radioaficionados.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card landing-feature-card h-100">
+                    <div class="card-body text-center">
+                        <div class="landing-feature-icon mb-3">&#128200;</div>
+                        <h3 class="h6 text-ra-verde">Estadisticas</h3>
+                        <p class="text-ra-suave small mb-0">
+                            Graficos de bandas, modos, continentes y evolucion temporal de tu actividad.
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card bg-ra-tarjeta border-ra-borde h-100">
-                <div class="card-body text-center">
-                    <div class="display-6 mb-2">DX</div>
-                    <h3 class="h5 text-ra-acento">Estadísticas</h3>
-                    <p class="text-ra-suave small">
-                        Visualiza tus estadísticas: contactos totales, bandas activas, modos utilizados.
-                    </p>
-                </div>
-            </div>
+        <div class="mt-5">
+            <a asp-controller="Cuenta" asp-action="Registrar" class="btn btn-landing-verde btn-lg px-5">
+                Registrarse Gratis
+            </a>
+            <p class="text-ra-suave small mt-2">
+                Ya tienes cuenta?
+                <a asp-controller="Cuenta" asp-action="IniciarSesion" class="text-ra-verde text-decoration-none">
+                    Inicia sesion
+                </a>
+            </p>
         </div>
     </div>
 </section>

@@ -1,5 +1,83 @@
 # Changelog — RadioAficionado
 
+## [3.5.0] — 2026-05-17 — Control remoto completo del rig (ADR-005 Fases 1-5)
+
+### feat: tunelado remoto — API keys, hubs SignalR, cliente relay (Fase 1)
+- DTOs compartidos en RadioAficionado.Compartido: ComandoRemotoRig, RespuestaRemotoRig, EstadoRigRemotoDto, TipoComandoRig, LineaEspectroRemotaDto, MensajeDecodificadoRemotoDto, SenalizacionWebRtc
+- Entidad ClaveApi en Dominio con tabla "claves_api" (hash SHA-256 + salt, prefijo, expiracion)
+- ServicioApiKeys: generar/validar/desactivar claves con FixedTimeEquals
+- ApiKeyAuthenticationHandler: esquema "ApiKey" custom para header X-Api-Key
+- RegistroServiciosConectados: singleton ConcurrentDictionary (userId -> connectionId)
+- HubTunelServicio: hub para conexion del Servicio local (auth ApiKey), reportar estado/respuestas/waterfall/decodificaciones/senalizacion
+- HubRelayRig: hub para el browser (auth cookie), enviar comandos y senalizacion WebRTC
+- ClienteRelaySignalR: IHostedService con reconexion exponencial, ejecuta comandos, suscribe waterfall/decodificaciones
+- ConversorEstadoRemoto: mapeo EstadoRig -> EstadoRigRemotoDto
+
+### feat: vista web de control remoto + gestion API keys (Fase 2)
+- ControlRemotoController: vista con display LCD de frecuencia, S-meter, PTT, controles
+- ApiKeysController: CRUD de claves API con ValidateAntiForgeryToken
+- Vista ControlRemoto/Index.cshtml: display tipo LCD, modos, bandas, boton PTT con countdown 180s
+- Vista ApiKeys/Index.cshtml: tabla de claves, generacion, copia, desactivacion
+- controlRemoto.js: IIFE con SignalR /hubs/relay-rig, handlers de estado/respuesta/conexion
+- Nav links en _Layout.cshtml para Control Remoto y API Keys (usuarios autenticados)
+
+### feat: relay waterfall y decodificaciones (Fase 3)
+- IClienteHubRelay ampliada: RecibirLineaEspectro, RecibirMensajeDecodificado, RecibirSenalizacion
+- IClienteHubTunel ampliada: RecibirSenalizacion para WebRTC
+- HubTunelServicio: relay throttleado de waterfall a 10fps con Stopwatch + decodificaciones
+- ClienteRelaySignalR: suscripcion a IServicioWaterfall (8fps throttle) + IRegistroDecodificadores
+
+### feat: senalizacion WebRTC audio stub (Fase 4)
+- AdaptadorWebRtcAudio: stub con logging para SDP offer/answer y candidatos ICE
+- HubRelayRig.EnviarSenalizacion: relay de senalizacion browser -> servicio
+- SenalizacionWebRtc DTO compartido con TipoSenalizacion enum
+
+### feat: hardening — rate limiting, PTT timeout, metricas (Fase 5)
+- RateLimitingMiddleware: 20 req/seg por usuario para rutas /hubs/, respuesta 429 con Retry-After
+- ControladorTimeoutPtt: singleton con timer cada 5s, desactiva PTT tras 180s via EjecutarComandoRig
+- MetricasConexion: contadores atomicos Interlocked (servicios, browsers, comandos, errores)
+- Endpoint /api/metricas (solo desarrollo) para snapshot de metricas
+
+## [3.3.0] — 2026-05-16 — Dashboard solar, Mapa QSOs, Espectro, Herramientas, 39 rigs
+
+### feat: dashboard solar con datos NOAA + N0NBH en tiempo real
+- Cliente `IClienteDatosSolares` con 6 endpoints NOAA JSON + XML N0NBH en paralelo
+- Cache SemaphoreSlim con double-check (5 min actual, 30 min historico)
+- Fusionado en pagina Propagacion: indices solares, viento solar, escalas NOAA, condiciones HF/VHF, alertas, grafico historico SFI/Kp
+- JS: `solarDashboard.js` IIFE con Chart.js
+- 18 tests unitarios para parsing y cache
+
+### feat: mapa QSOs con great circle arcs
+- Leaflet + Leaflet.Geodesic para lineas de great circle
+- Conversor Maidenhead, calculo Haversine, filtro por banda, toggle grid overlay
+- JS: `mapaQsos.js` IIFE
+
+### feat: tabla espectro radioelectrico (0 Hz - 250 GHz)
+- 58+ entradas cubriendo todo el espectro sin huecos
+- 8 categorias coloreadas: HAM, Broadcasting, Aeronautico, Militar, Telecom, Cientifico, ISM, Pirata
+- Filtros: solo HAM, por categoria, busqueda texto
+- JS: `espectroRadio.js` IIFE
+
+### feat: herramientas para radioaficionados
+- Conversor potencia dBm/Watts/mW con tabla de ejemplos
+- Calculadora distancia entre grids Maidenhead (km, millas, azimut)
+- Conversor Maidenhead <-> coordenadas con geolocalizacion
+- Plan de bandas HF IARU Region 1 (160m a 2m) coloreado por modo
+- Tabla codigos RST (R, S, T)
+- Alfabeto fonetico NATO completo (letras + numeros)
+- JS: `herramientas.js` IIFE, todo client-side
+
+### feat: 39 modelos de radio con control CAT directo
+- Yaesu: 16 modelos (FT-991, FT-891, FT-710, FTDX-10, FTDX-101, etc.)
+- Icom: 12 modelos con direcciones CI-V correctas (IC-7300, IC-705, IC-9700, etc.)
+- Kenwood: 8 modelos (TS-890, TS-590, TS-990, TH-D74, TH-D75, etc.)
+- Elecraft: 5 modelos (K3, KX3, K4, KX2, K2)
+- FlexRadio: 3 modelos (Flex-6400, 6600, 6700) — stub para soporte futuro
+
+### feat: sidebar ampliado
+- Nuevos enlaces: Mapa QSOs, Espectro, Herramientas
+- Total 12 secciones en sidebar de operacion
+
 ## [3.2.0] — 2026-05-16 — Graficos, ADIF drag-drop, Docker, CI/CD
 
 ### feat: mapa mundial DXCC con Leaflet

@@ -1,0 +1,354 @@
+@{
+    ViewData["Title"] = "Control Remoto del Rig";
+    string usuarioId = ViewData["UsuarioId"]?.ToString() ?? string.Empty;
+    bool servicioConectado = (bool)(ViewData["ServicioConectado"] ?? false);
+}
+
+<style>
+    .pantalla-frecuencia {
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 3rem;
+        color: #00ff41;
+        background-color: #0a0a0a;
+        border: 2px solid var(--ra-borde, #333);
+        border-radius: 8px;
+        padding: 1rem 1.5rem;
+        text-align: center;
+        text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+        letter-spacing: 0.1em;
+    }
+
+    .indicador-conexion {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.875rem;
+    }
+
+    .indicador-conexion .punto {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    .indicador-conectado {
+        background-color: rgba(25, 135, 84, 0.2);
+        color: #198754;
+        border: 1px solid #198754;
+    }
+
+    .indicador-conectado .punto {
+        background-color: #198754;
+        box-shadow: 0 0 6px #198754;
+    }
+
+    .indicador-desconectado {
+        background-color: rgba(220, 53, 69, 0.2);
+        color: #dc3545;
+        border: 1px solid #dc3545;
+    }
+
+    .indicador-desconectado .punto {
+        background-color: #dc3545;
+        box-shadow: 0 0 6px #dc3545;
+    }
+
+    .badge-modo {
+        font-size: 1rem;
+        padding: 0.4rem 0.8rem;
+    }
+
+    .smeter-contenedor {
+        height: 24px;
+        background-color: #1a1a2e;
+        border-radius: 4px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .smeter-barra {
+        height: 100%;
+        transition: width 0.3s ease;
+        border-radius: 4px;
+    }
+
+    .smeter-etiqueta {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 0.75rem;
+        font-weight: bold;
+        color: white;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    }
+
+    .btn-ptt {
+        width: 100%;
+        padding: 1rem;
+        font-size: 1.25rem;
+        font-weight: 700;
+        border-radius: 8px;
+        transition: all 0.2s;
+    }
+
+    .btn-ptt-inactivo {
+        background-color: #2d3748;
+        border: 2px solid #4a5568;
+        color: #e2e8f0;
+    }
+
+    .btn-ptt-inactivo:hover {
+        background-color: #4a5568;
+        color: #fff;
+    }
+
+    .btn-ptt-activo {
+        background-color: #dc3545;
+        border: 2px solid #ff6b6b;
+        color: #fff;
+        box-shadow: 0 0 20px rgba(220, 53, 69, 0.5);
+    }
+
+    .indicador-txrx {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.25rem 0.75rem;
+        border-radius: 4px;
+        font-weight: 700;
+        font-size: 0.875rem;
+        min-width: 50px;
+    }
+
+    .indicador-rx {
+        background-color: rgba(25, 135, 84, 0.3);
+        color: #198754;
+        border: 1px solid #198754;
+    }
+
+    .indicador-tx {
+        background-color: rgba(220, 53, 69, 0.3);
+        color: #dc3545;
+        border: 1px solid #dc3545;
+        animation: parpadeo-tx 0.8s infinite;
+    }
+
+    @@keyframes parpadeo-tx {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+    }
+
+    .log-comandos {
+        max-height: 300px;
+        overflow-y: auto;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 0.8rem;
+        background-color: #0a0a0a;
+        border: 1px solid var(--ra-borde, #333);
+        border-radius: 6px;
+        padding: 0.75rem;
+    }
+
+    .log-entrada {
+        padding: 0.15rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .log-timestamp {
+        color: #6c757d;
+    }
+
+    .log-exito {
+        color: #198754;
+    }
+
+    .log-error {
+        color: #dc3545;
+    }
+
+    .log-info {
+        color: #0dcaf0;
+    }
+
+    .ptt-countdown {
+        font-size: 0.75rem;
+        color: #ffc107;
+        margin-top: 0.25rem;
+    }
+
+    .panel-controles .form-label {
+        color: var(--ra-texto-suave, #adb5bd);
+        font-size: 0.875rem;
+        margin-bottom: 0.25rem;
+    }
+</style>
+
+<div class="container-fluid">
+    <!-- Indicador de conexion -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="mb-0">Control Remoto del Rig</h4>
+        <div id="indicadorConexion" class="indicador-conexion @(servicioConectado ? "indicador-conectado" : "indicador-desconectado")">
+            <span class="punto"></span>
+            <span id="textoConexion">@(servicioConectado ? "Servicio conectado" : "Servicio desconectado")</span>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <!-- Panel izquierdo: Display del rig -->
+        <div class="col-md-8">
+            <div class="card bg-dark border-secondary">
+                <div class="card-body">
+                    <!-- Frecuencia -->
+                    <div class="pantalla-frecuencia mb-3" id="displayFrecuencia">
+                        ---.---.--- Hz
+                    </div>
+
+                    <!-- Badges de estado -->
+                    <div class="d-flex flex-wrap gap-2 mb-3 align-items-center">
+                        <span class="badge bg-primary badge-modo" id="badgeModo">---</span>
+                        <span class="badge bg-info badge-modo" id="badgeBanda">---</span>
+                        <span class="badge bg-secondary badge-modo" id="badgeVfo">VFO A</span>
+                        <span class="badge bg-secondary badge-modo" id="badgeSplit">Split OFF</span>
+
+                        <div class="ms-auto">
+                            <span id="indicadorTxRx" class="indicador-txrx indicador-rx">RX</span>
+                        </div>
+                    </div>
+
+                    <!-- S-Meter -->
+                    <div class="mb-2">
+                        <label class="form-label text-secondary small mb-1">S-Meter</label>
+                        <div class="smeter-contenedor">
+                            <div id="smeterBarra" class="smeter-barra" style="width: 0%; background: linear-gradient(90deg, #198754 0%, #ffc107 60%, #dc3545 100%);">
+                            </div>
+                            <span id="smeterEtiqueta" class="smeter-etiqueta">S0</span>
+                        </div>
+                    </div>
+
+                    <!-- Potencia -->
+                    <div>
+                        <label class="form-label text-secondary small mb-1">Potencia: <span id="valorPotenciaDisplay">0</span> W</label>
+                        <div class="progress" style="height: 8px; background-color: #1a1a2e;">
+                            <div id="barraPotencia" class="progress-bar bg-warning" role="progressbar"
+                                 style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel derecho: Controles -->
+        <div class="col-md-4">
+            <div class="card bg-dark border-secondary panel-controles">
+                <div class="card-body">
+                    <h6 class="card-title text-light mb-3">Controles</h6>
+
+                    <!-- Frecuencia -->
+                    <div class="mb-3">
+                        <label for="inputFrecuencia" class="form-label">Frecuencia (Hz)</label>
+                        <div class="input-group input-group-sm">
+                            <input type="number" class="form-control bg-dark text-light border-secondary"
+                                   id="inputFrecuencia" placeholder="14074000" min="1" max="300000000000">
+                            <button class="btn btn-outline-info" type="button" id="btnCambiarFrecuencia">
+                                Cambiar
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Modo -->
+                    <div class="mb-3">
+                        <label for="selectModo" class="form-label">Modo</label>
+                        <select class="form-select form-select-sm bg-dark text-light border-secondary" id="selectModo">
+                            <option value="USB">USB</option>
+                            <option value="LSB">LSB</option>
+                            <option value="CW">CW</option>
+                            <option value="FM">FM</option>
+                            <option value="AM">AM</option>
+                            <option value="FT8">FT8</option>
+                            <option value="FT4">FT4</option>
+                            <option value="RTTY">RTTY</option>
+                            <option value="PSK31">PSK31</option>
+                        </select>
+                    </div>
+
+                    <!-- Banda -->
+                    <div class="mb-3">
+                        <label for="selectBanda" class="form-label">Banda</label>
+                        <select class="form-select form-select-sm bg-dark text-light border-secondary" id="selectBanda">
+                            <option value="160m">160m</option>
+                            <option value="80m">80m</option>
+                            <option value="40m">40m</option>
+                            <option value="30m">30m</option>
+                            <option value="20m" selected>20m</option>
+                            <option value="17m">17m</option>
+                            <option value="15m">15m</option>
+                            <option value="12m">12m</option>
+                            <option value="10m">10m</option>
+                            <option value="6m">6m</option>
+                            <option value="2m">2m</option>
+                        </select>
+                    </div>
+
+                    <!-- Potencia -->
+                    <div class="mb-3">
+                        <label for="sliderPotencia" class="form-label">
+                            Potencia: <span id="valorSliderPotencia">50</span> W
+                        </label>
+                        <input type="range" class="form-range" id="sliderPotencia"
+                               min="0" max="100" value="50" step="1">
+                    </div>
+
+                    <!-- PTT -->
+                    <div class="mb-3">
+                        <button id="btnPtt" class="btn btn-ptt btn-ptt-inactivo" type="button">
+                            PTT - TRANSMITIR
+                        </button>
+                        <div id="pttCountdown" class="ptt-countdown text-center" style="display: none;">
+                            Timeout en: <span id="pttTimer">180</span>s
+                        </div>
+                    </div>
+
+                    <!-- Conectar / Desconectar -->
+                    <div class="d-grid gap-2">
+                        <button id="btnConectar" class="btn btn-sm btn-outline-success" type="button">
+                            Conectar Rig
+                        </button>
+                        <button id="btnDesconectar" class="btn btn-sm btn-outline-danger" type="button">
+                            Desconectar Rig
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Log de comandos -->
+    <div class="row mt-3">
+        <div class="col-12">
+            <div class="card bg-dark border-secondary">
+                <div class="card-header bg-dark border-secondary d-flex justify-content-between align-items-center">
+                    <span class="text-light small">Log de comandos</span>
+                    <button id="btnLimpiarLog" class="btn btn-outline-secondary btn-sm">Limpiar</button>
+                </div>
+                <div class="card-body p-0">
+                    <div id="logComandos" class="log-comandos">
+                        <div class="log-entrada log-info">Esperando conexion...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="usuarioId" value="@usuarioId" />
+
+@section Scripts {
+    <script src="~/lib/signalr/signalr.min.js"></script>
+    <script src="~/js/controlRemoto.js" asp-append-version="true"></script>
+}

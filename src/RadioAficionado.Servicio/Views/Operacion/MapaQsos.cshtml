@@ -1,0 +1,45 @@
+@{
+    ViewData["Title"] = L["Titulo_MapaQsos"].Value;
+    ViewData["Seccion"] = "MapaQsos";
+}
+
+<div class="pagina-panel">
+    <div class="pagina-panel-header">
+        <h2>@L["Titulo_MapaQsos"]</h2>
+    </div>
+    <div class="pagina-panel-body">
+        <div class="mapa-qsos-toolbar">
+            <div class="mapa-qsos-filtros">
+                <select class="form-select form-select-sm" id="mapa-filtro-banda" style="width: auto; display: inline-block;">
+                    <option value="">@L["DxCluster_TodasBandas"]</option>
+                    <option value="Banda160m">160m</option>
+                    <option value="Banda80m">80m</option>
+                    <option value="Banda40m">40m</option>
+                    <option value="Banda20m">20m</option>
+                    <option value="Banda15m">15m</option>
+                    <option value="Banda10m">10m</option>
+                </select>
+                <label class="form-check form-check-inline" style="color: #8b949e; font-size: 0.8rem;">
+                    <input class="form-check-input" type="checkbox" id="mapa-toggle-grids">
+                    @L["Mapa_GridSquares"]
+                </label>
+            </div>
+            <div class="mapa-qsos-stats">
+                <span class="mapa-stat">QSOs: <strong id="mapa-total-qsos">0</strong></span>
+                <span class="mapa-stat">Grids: <strong id="mapa-total-grids">0</strong></span>
+                <span class="mapa-stat">Max: <strong id="mapa-dist-max">--</strong></span>
+            </div>
+        </div>
+        <div id="mapa-qsos" style="height: calc(100vh - 200px); border-radius: 6px; border: 1px solid #30363d;"></div>
+    </div>
+</div>
+
+@section Estilos {
+    <link rel="stylesheet" href="~/lib/leaflet/leaflet.css" />
+}
+
+@section Scripts {
+    <script src="~/lib/leaflet/leaflet.js"></script>
+    <script src="~/lib/leaflet/Leaflet.Geodesic.min.js"></script>
+    <script src="~/js/mapaQsos.js"></script>
+}

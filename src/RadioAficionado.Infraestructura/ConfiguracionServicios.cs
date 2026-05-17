@@ -50,6 +50,9 @@ public static class ConfiguracionServicios
         servicios.AddSingleton<ConfiguracionPropagacion>();
         servicios.AddSingleton<IServicioPropagacion, ServicioPropagacion>();
 
+        // Cliente de datos solares en tiempo real (NOAA + N0NBH)
+        servicios.AddHttpClient<IClienteDatosSolares, ClienteDatosSolares>();
+
         // Sincronización de QSOs con la API web
         servicios.AddHttpClient<IServicioSincronizacion, ServicioSincronizacion>();
 

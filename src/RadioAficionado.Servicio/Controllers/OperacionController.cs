@@ -78,4 +78,31 @@ public sealed class OperacionController : Controller
         ViewData["Seccion"] = "Satelites";
         return View();
     }
+
+    /// <summary>
+    /// Mapa mundial de QSOs con great circle lines.
+    /// </summary>
+    public IActionResult MapaQsos()
+    {
+        ViewData["Seccion"] = "MapaQsos";
+        return View();
+    }
+
+    /// <summary>
+    /// Tabla del espectro radioelectrico con todas las bandas desde 0 Hz hasta THz.
+    /// </summary>
+    public IActionResult Espectro()
+    {
+        ViewData["Seccion"] = "Espectro";
+        return View();
+    }
+
+    /// <summary>
+    /// Herramientas utiles para radioaficionados: conversor potencia, distancia grids, RST, fonetico NATO.
+    /// </summary>
+    public IActionResult Herramientas()
+    {
+        ViewData["Seccion"] = "Herramientas";
+        return View();
+    }
 }

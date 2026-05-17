@@ -1139,10 +1139,622 @@
 }
 
 /* ================================================================
+   DASHBOARD SOLAR
+   ================================================================ */
+
+.solar-grid-principal {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.solar-grid-secundario {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.solar-card {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.solar-card h6 {
+    color: #8b949e;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #21262d;
+    padding-bottom: 8px;
+}
+
+.solar-indice {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+    font-size: 0.85rem;
+}
+
+.solar-indice span:first-child {
+    color: #8b949e;
+}
+
+.solar-escalas-grid {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+.solar-escala-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: #8b949e;
+}
+
+.solar-escala-badge {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.escala-none {
+    background: #21262d;
+    color: #8b949e;
+}
+
+.escala-minor {
+    background: #854d0e;
+    color: #fef08a;
+}
+
+.escala-moderate {
+    background: #9a3412;
+    color: #fed7aa;
+}
+
+.escala-severe {
+    background: #991b1b;
+    color: #fecaca;
+}
+
+.solar-sin-alertas {
+    color: #8b949e;
+    font-size: 0.8rem;
+    font-style: italic;
+    text-align: center;
+    padding: 16px 0;
+}
+
+.solar-alerta-item {
+    padding: 6px 0;
+    border-bottom: 1px solid #21262d;
+    font-size: 0.8rem;
+}
+
+.solar-alerta-codigo {
+    color: #f97316;
+    font-weight: 600;
+    font-family: monospace;
+}
+
+.solar-alerta-texto {
+    color: #c9d1d9;
+}
+
+/* Clases de condición de propagación */
+.prop-bueno, .prop-buena {
+    color: #22c55e;
+    font-weight: 600;
+}
+
+.prop-regular {
+    color: #eab308;
+    font-weight: 600;
+}
+
+.prop-malo, .prop-mala {
+    color: #ef4444;
+    font-weight: 600;
+}
+
+.prop-cerrada {
+    color: #6b7280;
+}
+
+/* ================================================================
+   MAPA QSOS
+   ================================================================ */
+
+.mapa-qsos-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.mapa-qsos-filtros {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.mapa-qsos-stats {
+    display: flex;
+    gap: 16px;
+    font-size: 0.8rem;
+    color: #8b949e;
+}
+
+.mapa-stat strong {
+    color: #c9d1d9;
+}
+
+/* ================================================================
+   HERRAMIENTAS
+   ================================================================ */
+
+.herramientas-contenedor {
+    max-width: 1200px;
+    padding: 0;
+}
+
+.herramienta-card {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.herramienta-card-titulo {
+    color: var(--color-info, #58a6ff);
+    font-size: 1.3rem;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+.herramienta-descripcion {
+    color: #8b949e;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.herramienta-seccion {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #21262d;
+}
+
+.herramienta-seccion:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.herramienta-seccion h3 {
+    color: #c9d1d9;
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.herramienta-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.herramienta-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.herramienta-grid-3-tablas {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+.herramienta-grid-3-tablas h3 {
+    color: var(--color-info, #58a6ff);
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+}
+
+.herramienta-fila {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    margin-bottom: 0.5rem;
+}
+
+.herramienta-campo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.herramienta-campo label {
+    color: #c9d1d9;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.herramienta-campo input {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 4px;
+    color: #c9d1d9;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.herramienta-campo input:focus {
+    border-color: var(--color-info, #58a6ff);
+    box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.15);
+}
+
+.herramienta-campo input::placeholder {
+    color: #484f58;
+}
+
+.btn-herramienta {
+    background: #238636;
+    color: #ffffff;
+    border: 1px solid #2ea043;
+    border-radius: 4px;
+    padding: 0.5rem 1.2rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+    height: fit-content;
+}
+
+.btn-herramienta:hover {
+    background: #2ea043;
+}
+
+.btn-secundario {
+    background: #21262d;
+    border-color: #30363d;
+}
+
+.btn-secundario:hover {
+    background: #30363d;
+}
+
+.herramienta-resultado {
+    background: #0d1117;
+    border: 1px solid #21262d;
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+    margin-top: 0.75rem;
+    color: #c9d1d9;
+    min-height: 2rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.resultado-fila {
+    margin-bottom: 0.25rem;
+}
+
+.error-texto {
+    color: #f85149;
+}
+
+.herramienta-ejemplos {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #21262d;
+}
+
+.herramienta-ejemplos h3 {
+    color: #8b949e;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.tabla-scroll {
+    overflow-x: auto;
+}
+
+.tabla-herramienta {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.tabla-herramienta th {
+    background: #0d1117;
+    color: var(--color-info, #58a6ff);
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+    border-bottom: 2px solid #30363d;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.tabla-herramienta td {
+    padding: 0.4rem 0.75rem;
+    border-bottom: 1px solid #21262d;
+    color: #c9d1d9;
+}
+
+.tabla-herramienta tbody tr:hover {
+    background: #1c2128;
+}
+
+.tabla-compacta {
+    max-width: 500px;
+}
+
+/* Colores por segmento de bandas */
+.fila-cw { border-left: 3px solid #f0883e; }
+.fila-cw td:first-child { color: #f0883e; font-weight: 600; }
+.fila-ssb { border-left: 3px solid #3fb950; }
+.fila-digital { border-left: 3px solid #a371f7; }
+.fila-fm { border-left: 3px solid #79c0ff; }
+
+.leyenda-bandas {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #21262d;
+}
+
+.leyenda-item {
+    font-size: 0.85rem;
+    color: #8b949e;
+    padding-left: 0.75rem;
+    border-left: 3px solid transparent;
+}
+
+.leyenda-cw { border-left-color: #f0883e; }
+.leyenda-ssb { border-left-color: #3fb950; }
+.leyenda-digital { border-left-color: #a371f7; }
+.leyenda-fm { border-left-color: #79c0ff; }
+
+.tabla-fonetico td:first-child,
+.tabla-fonetico td:nth-child(4) {
+    font-weight: 700;
+    color: var(--color-info, #58a6ff);
+    font-size: 1.05rem;
+}
+
+/* ================================================================
+   ESPECTRO RADIOELECTRICO
+   ================================================================ */
+
+.espectro-leyenda {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.espectro-leyenda-item {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    border: 1px solid;
+}
+
+.espectro-filtros {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.espectro-filtros .form-select,
+.espectro-filtros .form-control {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    color: #c9d1d9;
+    font-size: 0.8rem;
+}
+
+.espectro-filtros .form-select:focus,
+.espectro-filtros .form-control:focus {
+    background: #0d1117;
+    border-color: var(--color-acento);
+    color: #c9d1d9;
+    box-shadow: 0 0 0 2px rgba(0, 255, 65, 0.15);
+}
+
+.espectro-filtros .form-check-input {
+    background-color: #21262d;
+    border-color: #30363d;
+}
+
+.espectro-filtros .form-check-input:checked {
+    background-color: #10b981;
+    border-color: #10b981;
+}
+
+.espectro-stats {
+    font-size: 0.85rem;
+    color: #8b949e;
+    margin-left: 12px;
+}
+
+.espectro-tabla-wrapper {
+    overflow-y: auto;
+    max-height: calc(100vh - 260px);
+    border: 1px solid #30363d;
+    border-radius: 4px;
+    background: #0d1117;
+}
+
+.espectro-tabla {
+    font-family: 'Courier New', 'Consolas', monospace;
+    font-size: 0.8rem;
+    margin-bottom: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.espectro-tabla thead th {
+    position: sticky;
+    top: 0;
+    background: #161b22;
+    color: #8b949e;
+    font-weight: 600;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 6px 8px;
+    border-bottom: 2px solid #30363d;
+    white-space: nowrap;
+    z-index: 1;
+}
+
+.espectro-tabla td {
+    padding: 5px 8px;
+    border-bottom: 1px solid #21262d;
+    vertical-align: middle;
+}
+
+.espectro-tabla tbody tr:hover {
+    filter: brightness(1.3);
+}
+
+/* Colores de fila por categoria */
+.espectro-tabla tbody tr.cat-ham {
+    background: rgba(16, 185, 129, 0.08);
+    border-left: 3px solid #10b981;
+}
+
+.espectro-tabla tbody tr.cat-broadcasting {
+    background: rgba(129, 140, 248, 0.08);
+    border-left: 3px solid #818cf8;
+}
+
+.espectro-tabla tbody tr.cat-aeronautico {
+    background: rgba(249, 115, 22, 0.08);
+    border-left: 3px solid #f97316;
+}
+
+.espectro-tabla tbody tr.cat-militar {
+    background: rgba(239, 68, 68, 0.08);
+    border-left: 3px solid #ef4444;
+}
+
+.espectro-tabla tbody tr.cat-telecom {
+    background: rgba(59, 130, 246, 0.08);
+    border-left: 3px solid #3b82f6;
+}
+
+.espectro-tabla tbody tr.cat-cientifico {
+    background: rgba(168, 85, 247, 0.08);
+    border-left: 3px solid #a855f7;
+}
+
+.espectro-tabla tbody tr.cat-ism {
+    background: rgba(217, 119, 6, 0.08);
+    border-left: 3px solid #d97706;
+}
+
+.espectro-tabla tbody tr.cat-pirata {
+    background: rgba(120, 113, 108, 0.08);
+    border-left: 3px solid #78716c;
+}
+
+/* Celdas especializadas */
+.espectro-freq {
+    white-space: nowrap;
+    font-weight: 600;
+}
+
+.espectro-onda {
+    white-space: nowrap;
+    color: #8b949e;
+}
+
+.espectro-uso {
+    white-space: normal;
+    max-width: 400px;
+    line-height: 1.3;
+}
+
+.espectro-restriccion {
+    font-size: 0.75rem;
+    color: #8b949e;
+}
+
+.espectro-ham-col {
+    text-align: center;
+}
+
+/* Badges */
+.espectro-badge {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 8px;
+    font-size: 0.6rem;
+    font-weight: 700;
+}
+
+.espectro-badge-ham {
+    background: rgba(16, 185, 129, 0.25);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+.espectro-badge-no {
+    background: rgba(120, 113, 108, 0.15);
+    color: #57534e;
+    border: 1px solid rgba(120, 113, 108, 0.2);
+}
+
+.espectro-badge-cat {
+    display: inline-block;
+    font-size: 0.6rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    opacity: 0.8;
+}
+
+/* ================================================================
    RESPONSIVE
    ================================================================ */
 
 @media (max-width: 768px) {
+    .solar-grid-principal,
+    .solar-grid-secundario {
+        grid-template-columns: 1fr;
+    }
+
     .propagacion-grid {
         grid-template-columns: 1fr;
     }
@@ -1162,5 +1774,37 @@
     .dxcc-resumen {
         flex-wrap: wrap;
         gap: 8px;
+    }
+
+    .espectro-filtros {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .espectro-leyenda {
+        gap: 4px;
+    }
+
+    .herramienta-grid-3,
+    .herramienta-grid-3-tablas {
+        grid-template-columns: 1fr;
+    }
+
+    .herramienta-grid-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .herramienta-fila {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .tabla-fonetico td:nth-child(4),
+    .tabla-fonetico td:nth-child(5),
+    .tabla-fonetico td:nth-child(6),
+    .tabla-fonetico th:nth-child(4),
+    .tabla-fonetico th:nth-child(5),
+    .tabla-fonetico th:nth-child(6) {
+        display: none;
     }
 }

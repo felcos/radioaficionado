@@ -31,6 +31,11 @@ public class ContextoIdentidadRadioAficionado : IdentityDbContext<UsuarioRadio>
     public DbSet<RespuestaForo> RespuestasForo { get; set; } = null!;
 
     /// <summary>
+    /// Claves de API para autenticacion del servicio local.
+    /// </summary>
+    public DbSet<ClaveApi> ClavesApi { get; set; } = null!;
+
+    /// <summary>
     /// Configura el modelo de identidad con convenciones específicas del proyecto.
     /// </summary>
     /// <param name="modelBuilder">Constructor del modelo.</param>
@@ -149,6 +154,61 @@ public class ContextoIdentidadRadioAficionado : IdentityDbContext<UsuarioRadio>
                 .OnDelete(DeleteBehavior.Restrict);
 
             entidad.HasIndex(r => r.HiloId);
+        });
+
+        // Configuracion de ClaveApi
+        modelBuilder.Entity<ClaveApi>(entidad =>
+        {
+            entidad.ToTable("claves_api", t =>
+            {
+                t.HasCheckConstraint("ck_claves_api_activa", "activa IN (TRUE, FALSE)");
+            });
+            entidad.HasKey(c => c.Id);
+            entidad.Property(c => c.Id)
+                .HasColumnName("id")
+                .HasDefaultValueSql("gen_random_uuid()");
+            entidad.Property(c => c.UsuarioId)
+                .HasColumnName("usuario_id")
+                .IsRequired();
+            entidad.Property(c => c.Nombre)
+                .HasColumnName("nombre")
+                .HasMaxLength(200)
+                .IsRequired();
+            entidad.Property(c => c.HashClave)
+                .HasColumnName("hash_clave")
+                .HasColumnType("text")
+                .IsRequired();
+            entidad.Property(c => c.Salt)
+                .HasColumnName("salt")
+                .HasColumnType("text")
+                .IsRequired();
+            entidad.Property(c => c.Prefijo)
+                .HasColumnName("prefijo")
+                .HasMaxLength(8)
+                .IsRequired();
+            entidad.Property(c => c.Activa)
+                .HasColumnName("activa")
+                .HasDefaultValue(true);
+            entidad.Property(c => c.FechaCreacion)
+                .HasColumnName("fecha_creacion")
+                .HasColumnType("timestamptz")
+                .HasDefaultValueSql("NOW()");
+            entidad.Property(c => c.FechaUltimoUso)
+                .HasColumnName("fecha_ultimo_uso")
+                .HasColumnType("timestamptz");
+            entidad.Property(c => c.FechaExpiracion)
+                .HasColumnName("fecha_expiracion")
+                .HasColumnType("timestamptz");
+
+            entidad.HasOne(c => c.Usuario)
+                .WithMany()
+                .HasForeignKey(c => c.UsuarioId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entidad.HasIndex(c => c.UsuarioId)
+                .HasDatabaseName("ix_claves_api_usuario_id");
+            entidad.HasIndex(c => c.Prefijo)
+                .HasDatabaseName("ix_claves_api_prefijo");
         });
     }
 }

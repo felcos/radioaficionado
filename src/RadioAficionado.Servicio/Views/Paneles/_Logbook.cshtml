@@ -2,19 +2,19 @@
     <div id="logbook-dropzone" class="logbook-dropzone" style="display:none;">
         <div class="logbook-dropzone-contenido">
             <span class="logbook-dropzone-icono">&#128229;</span>
-            <span>Arrastra tu archivo ADIF aqui</span>
+            <span>@L["Logbook_ArrastraAdif"]</span>
         </div>
     </div>
     <div class="logbook-toolbar">
         <div class="logbook-busqueda">
-            <input type="text" id="logbook-buscar" class="form-control form-control-sm" placeholder="Buscar indicativo..." />
+            <input type="text" id="logbook-buscar" class="form-control form-control-sm" placeholder="@L["Logbook_BuscarIndicativo"]" />
         </div>
         <div class="logbook-acciones">
-            <button class="btn btn-sm btn-outline-light" id="btn-exportar-adif" title="Exportar ADIF">
-                Exportar ADIF
+            <button class="btn btn-sm btn-outline-light" id="btn-exportar-adif" title="@L["Logbook_ExportarAdif"]">
+                @L["Logbook_ExportarAdif"]
             </button>
-            <button class="btn btn-sm btn-importar-adif" id="btn-importar-adif" title="Importar ADIF">
-                Importar ADIF
+            <button class="btn btn-sm btn-importar-adif" id="btn-importar-adif" title="@L["Logbook_ImportarAdif"]">
+                @L["Logbook_ImportarAdif"]
             </button>
             <input type="file" id="input-archivo-adif" accept=".adi,.adif" style="display:none;" />
             <span class="logbook-total" id="logbook-total">0 QSOs</span>
@@ -24,15 +24,15 @@
         <table class="table table-dark table-sm" id="tabla-logbook">
             <thead>
                 <tr>
-                    <th>Fecha/Hora</th>
-                    <th>Indicativo</th>
-                    <th>Banda</th>
-                    <th>Modo</th>
-                    <th>RST Env</th>
-                    <th>RST Rec</th>
-                    <th>Grid</th>
+                    <th>@L["Col_FechaHora"]</th>
+                    <th>@L["Col_Indicativo"]</th>
+                    <th>@L["Col_Banda"]</th>
+                    <th>@L["Col_Modo"]</th>
+                    <th>@L["Col_RstEnv"]</th>
+                    <th>@L["Col_RstRec"]</th>
+                    <th>@L["Col_Grid"]</th>
                     <th>DXCC</th>
-                    <th>Confirmado</th>
+                    <th>@L["Col_Confirmado"]</th>
                 </tr>
             </thead>
             <tbody id="logbook-tbody">

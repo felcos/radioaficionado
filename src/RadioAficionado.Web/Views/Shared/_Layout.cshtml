@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - RadioAficionado</title>
     <meta name="description" content="Logbook público de radioaficionado. Registro de contactos de radio (QSOs)." />
+    <link rel="icon" type="image/svg+xml" href="~/favicon.svg" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/sitio.css" asp-append-version="true" />
 </head>
@@ -32,17 +33,42 @@
                             <a class="nav-link" asp-controller="Logbook" asp-action="Index">Logbook</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" asp-controller="Operadores" asp-action="Index">Operadores</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" title="Descargar aplicacion de escritorio">
+                                Descargar App
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark">
+                                <li><a class="dropdown-item" href="~/descargas/RadioAficionado-Windows-x64.tar.gz">Windows (x64)</a></li>
+                                <li><a class="dropdown-item" href="~/descargas/RadioAficionado-Linux-x64.tar.gz">Linux (x64)</a></li>
+                                <li><a class="dropdown-item" href="~/descargas/RadioAficionado-macOS-x64.tar.gz">macOS (x64)</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" asp-controller="Logbook" asp-action="Mapa">Mapa</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Estadisticas" asp-action="Index">Estadisticas</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Operadores" asp-action="Index">Operadores</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link" asp-controller="Foro" asp-action="Index">Foro</a>
                         </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Utilidades</a>
+                            <ul class="dropdown-menu dropdown-menu-dark">
+                                <li><a class="dropdown-item" asp-controller="Utilidades" asp-action="Herramientas">Herramientas</a></li>
+                                <li><a class="dropdown-item" asp-controller="Utilidades" asp-action="Espectro">Espectro Radio</a></li>
+                                <li><a class="dropdown-item" asp-controller="Utilidades" asp-action="Propagacion">Propagacion Solar</a></li>
+                                <li><a class="dropdown-item" asp-controller="Utilidades" asp-action="Satelites">Satelites</a></li>
+                            </ul>
+                        </li>
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="ControlRemoto" asp-action="Index">Control Remoto</a>
+                            </li>
+                        }
                     </ul>
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         @if (User.Identity?.IsAuthenticated == true)
@@ -51,20 +77,23 @@
                                 <a class="nav-link" asp-controller="LogbookPrivado" asp-action="Index">Mi Logbook</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-ra-acento" asp-controller="Cuenta" asp-action="Perfil">
+                                <a class="nav-link" asp-controller="ApiKeys" asp-action="Index">API Keys</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-ra-acento fw-bold" asp-controller="Cuenta" asp-action="Perfil">
                                     @User.Identity.Name
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <form asp-controller="Cuenta" asp-action="CerrarSesion" method="post" class="d-inline">
-                                    <button type="submit" class="nav-link btn btn-link text-ra-suave">Cerrar sesión</button>
+                                    <button type="submit" class="nav-link btn btn-link text-ra-suave">Cerrar sesion</button>
                                 </form>
                             </li>
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Cuenta" asp-action="IniciarSesion">Iniciar sesión</a>
+                                <a class="nav-link" asp-controller="Cuenta" asp-action="IniciarSesion">Iniciar sesion</a>
                             </li>
                             <li class="nav-item">
                                 <a class="btn btn-ra-acento btn-sm ms-2 mt-1" asp-controller="Cuenta" asp-action="Registrar">Registrarse</a>
@@ -76,7 +105,7 @@
         </nav>
     </header>
 
-    <main class="container py-4">
+    <main class="@(ViewData["SinContainer"] is true ? "" : "container py-4")">
         @RenderBody()
     </main>
 

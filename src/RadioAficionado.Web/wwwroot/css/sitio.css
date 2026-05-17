@@ -224,3 +224,101 @@ code {
         font-size: 1.5rem;
     }
 }
+
+/* ============================================================
+   Landing Page
+   ============================================================ */
+
+.text-ra-verde {
+    color: #00ff41 !important;
+}
+
+/* --- Hero --- */
+.landing-hero {
+    padding-top: 4rem !important;
+    padding-bottom: 4rem !important;
+    background: linear-gradient(180deg, #0d1117 0%, #161b22 100%);
+}
+
+.landing-hero .display-3 {
+    letter-spacing: -1px;
+}
+
+/* --- Botones landing --- */
+.btn-landing-verde {
+    background-color: #00ff41;
+    border-color: #00ff41;
+    color: #0d1117;
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
+
+.btn-landing-verde:hover,
+.btn-landing-verde:focus {
+    background-color: #33ff6b;
+    border-color: #33ff6b;
+    color: #0d1117;
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+}
+
+.btn-outline-landing-verde {
+    border-color: #00ff41;
+    color: #00ff41;
+    font-weight: 600;
+    background-color: transparent;
+    transition: all 0.2s ease;
+}
+
+.btn-outline-landing-verde:hover,
+.btn-outline-landing-verde:focus {
+    background-color: #00ff41;
+    border-color: #00ff41;
+    color: #0d1117;
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+}
+
+/* --- Feature cards --- */
+.landing-feature-card {
+    background-color: #161b22 !important;
+    border: 1px solid #30363d !important;
+    border-radius: 12px !important;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.landing-feature-card:hover {
+    transform: translateY(-4px);
+    border-color: #00ff41 !important;
+}
+
+.landing-feature-icon {
+    font-size: 2.2rem;
+    line-height: 1;
+}
+
+/* --- Seccion descarga --- */
+.landing-descarga-section {
+    background-color: #161b22;
+    border-top: 1px solid #30363d;
+    border-bottom: 1px solid #30363d;
+}
+
+/* --- Landing responsive --- */
+@media (max-width: 767.98px) {
+    .landing-hero {
+        padding-top: 2.5rem !important;
+        padding-bottom: 2.5rem !important;
+    }
+
+    .landing-hero .display-3 {
+        font-size: 2.2rem;
+    }
+
+    .landing-feature-icon {
+        font-size: 1.8rem;
+    }
+
+    .btn-lg {
+        font-size: 0.95rem;
+        padding: 0.6rem 1.2rem;
+    }
+}

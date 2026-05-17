@@ -31,8 +31,8 @@ body {
     color: var(--color-texto);
     margin: 0;
     padding: 0;
-    overflow: hidden;
     height: 100vh;
+    overflow: hidden;
 }
 
 /* Scrollbar oscuro */
@@ -57,4 +57,16 @@ body {
     min-height: 80px;
     color: var(--color-texto-tenue);
     font-style: italic;
+}
+
+/* ================================================================
+   RESPONSIVE - MOBILE
+   ================================================================ */
+
+@media (max-width: 768px) {
+    body {
+        overflow: auto;
+        height: auto;
+        min-height: 100vh;
+    }
 }

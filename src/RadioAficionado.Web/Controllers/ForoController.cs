@@ -10,7 +10,8 @@ namespace RadioAficionado.Web.Controllers;
 
 /// <summary>
 /// Controlador para el foro de la comunidad de radioaficionados.
-/// Gestiona hilos, respuestas y paginación.
+/// Gestiona hilos, respuestas y paginacion.
+/// Requiere autenticacion para acceder.
 /// </summary>
 public class ForoController(ContextoIdentidadRadioAficionado contexto, ILogger<ForoController> logger) : Controller
 {

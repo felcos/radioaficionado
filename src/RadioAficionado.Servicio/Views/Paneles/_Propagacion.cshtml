@@ -1,11 +1,11 @@
 <div class="panel-propagacion-contenido">
     <div class="propagacion-toolbar">
-        <button class="btn btn-sm btn-outline-light" id="btn-actualizar-propagacion">Actualizar</button>
-        <span class="propagacion-ultima-actualizacion" id="propagacion-actualizacion">Sin datos</span>
+        <button class="btn btn-sm btn-outline-light" id="btn-actualizar-propagacion">@L["Prop_Actualizar"]</button>
+        <span class="propagacion-ultima-actualizacion" id="propagacion-actualizacion">@L["Prop_SinDatos"]</span>
     </div>
     <div class="propagacion-grid">
         <div class="propagacion-indices">
-            <h6>Indices solares</h6>
+            <h6>@L["Prop_IndicesSolares"]</h6>
             <div class="propagacion-indice">
                 <span class="propagacion-label">SFI:</span>
                 <span class="propagacion-valor" id="prop-sfi">--</span>
@@ -24,26 +24,26 @@
             </div>
         </div>
         <div class="propagacion-bandas">
-            <h6>Condiciones por banda</h6>
+            <h6>@L["Prop_CondicionesBanda"]</h6>
             <table class="table table-dark table-sm" id="tabla-propagacion">
                 <thead>
                     <tr>
-                        <th>Banda</th>
-                        <th>Dia</th>
-                        <th>Noche</th>
+                        <th>@L["Col_Banda"]</th>
+                        <th>@L["Col_Dia"]</th>
+                        <th>@L["Col_Noche"]</th>
                     </tr>
                 </thead>
                 <tbody id="propagacion-tbody">
-                    <tr><td>80m-40m</td><td class="prop-buena">Buena</td><td class="prop-buena">Buena</td></tr>
-                    <tr><td>30m-20m</td><td class="prop-buena">Buena</td><td class="prop-regular">Regular</td></tr>
-                    <tr><td>17m-15m</td><td class="prop-regular">Regular</td><td class="prop-mala">Mala</td></tr>
-                    <tr><td>12m-10m</td><td class="prop-mala">Mala</td><td class="prop-cerrada">Cerrada</td></tr>
+                    <tr><td>80m-40m</td><td class="prop-buena">@L["Prop_Buena"]</td><td class="prop-buena">@L["Prop_Buena"]</td></tr>
+                    <tr><td>30m-20m</td><td class="prop-buena">@L["Prop_Buena"]</td><td class="prop-regular">@L["Prop_Regular"]</td></tr>
+                    <tr><td>17m-15m</td><td class="prop-regular">@L["Prop_Regular"]</td><td class="prop-mala">@L["Prop_Mala"]</td></tr>
+                    <tr><td>12m-10m</td><td class="prop-mala">@L["Prop_Mala"]</td><td class="prop-cerrada">@L["Prop_Cerrada"]</td></tr>
                 </tbody>
             </table>
         </div>
     </div>
     <div class="propagacion-grafico-contenedor" style="margin-top: 16px;">
-        <h6 style="color: #8b949e; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid #21262d;">Historial de indices</h6>
+        <h6 style="color: #8b949e; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid #21262d;">@L["Prop_HistorialIndices"]</h6>
         <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 12px; height: 200px;">
             <canvas id="grafico-propagacion"></canvas>
         </div>

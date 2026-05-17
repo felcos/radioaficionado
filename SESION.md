@@ -1,8 +1,81 @@
 # Sesion — RadioAficionado
 
-## Ultima sesion: 2026-05-16
+## Ultima sesion: 2026-05-17
 
 ### Lo que se hizo
+
+#### ADR-005 Fases 1-5 completas: Control remoto del rig (2026-05-16 — 2026-05-17)
+
+**Fase 1 — Infraestructura:**
+- DTOs compartidos: ComandoRemotoRig, RespuestaRemotoRig, EstadoRigRemotoDto, TipoComandoRig, LineaEspectroRemotaDto, MensajeDecodificadoRemotoDto, SenalizacionWebRtc
+- Entidad ClaveApi + tabla claves_api (SHA-256 + salt, prefijo, FK usuario)
+- ServicioApiKeys, ApiKeyAuthenticationHandler, RegistroServiciosConectados
+- HubTunelServicio (auth ApiKey) + HubRelayRig (auth cookie)
+- ClienteRelaySignalR (IHostedService, reconexion exponencial)
+- ConfiguracionRemoto, ConversorEstadoRemoto
+
+**Fase 2 — Vista web:**
+- ControlRemotoController + ApiKeysController
+- Vistas: control remoto LCD + gestion API keys
+- controlRemoto.js con SignalR /hubs/relay-rig
+- Nav links para usuarios autenticados
+
+**Fase 3 — Relay waterfall/decodificaciones:**
+- IClienteHubRelay/IClienteHubTunel ampliadas
+- Throttle waterfall: 8fps servicio->web, 10fps web->browser
+- Suscripcion a IServicioWaterfall + IRegistroDecodificadores
+
+**Fase 4 — WebRTC audio (stub):**
+- AdaptadorWebRtcAudio stub con logging
+- Senalizacion SDP/ICE relay browser <-> servicio
+
+**Fase 5 — Hardening:**
+- RateLimitingMiddleware (20 req/seg, 429 + Retry-After)
+- ControladorTimeoutPtt (180s max, desactiva via EjecutarComandoRig por usuario)
+- MetricasConexion (contadores atomicos Interlocked)
+- Endpoint /api/metricas (solo desarrollo)
+
+**Bugs corregidos durante integracion:**
+- ConversorEstadoRemoto: object initializer -> constructor posicional
+- ClienteRelaySignalR: payload tipo mismatch, logger tipo mismatch
+- ApiKeysController: using incorrecto (Dominio.Interfaces -> Web.Servicios)
+- ControladorTimeoutPtt: llamaba RecibirCambiarPtt inexistente -> EjecutarComandoRig + sync-over-async
+- Vista ApiKeys: UltimoUso -> FechaUltimoUso
+
+**Tests:** 1362 pasando, 0 fallos + tests nuevos para Fases 2-5 en progreso
+
+#### Dashboard solar, Mapa QSOs, Espectro, Herramientas, 39 rigs (2026-05-16)
+
+**Dashboard solar NOAA en tiempo real:**
+- ClienteDatosSolares con 6 endpoints NOAA + XML N0NBH, cache SemaphoreSlim
+- Fusionado en Propagacion: SFI, Kp, viento solar, escalas NOAA, condiciones HF/VHF, alertas, grafico historico
+- 18 tests unitarios para todos los parsers
+
+**Mapa QSOs:**
+- Leaflet + Geodesic great circle lines, conversor Maidenhead, Haversine, filtro por banda
+
+**Tabla Espectro Radioelectrico:**
+- 58+ entradas de 0 Hz a 250 GHz, 8 categorias coloreadas, filtros
+
+**Herramientas para radioaficionados:**
+- Conversor potencia, distancia grids, conversor Maidenhead, plan bandas IARU R1, RST, alfabeto NATO
+
+**39 modelos de radio CAT:**
+- Yaesu 16, Icom 12 (CI-V), Kenwood 8, Elecraft 5, FlexRadio 3
+
+**Sidebar:** 12 secciones (Operacion, Logbook, DX Cluster, DXCC, Propagacion, POTA/SOTA, Contest, Satelites, Mapa QSOs, Espectro, Herramientas)
+
+**Tests:** 1348 tests pasando (0 fallos)
+
+### Pendiente
+- Migracion EF para tabla claves_api en PostgreSQL (pendiente: requiere conexion a DB)
+- Implementacion real WebRTC con SIPSorcery (actualmente stub)
+- i18n RadioAficionado.Web (solo Servicio esta internacionalizado)
+- Test end-to-end con radio real conectada via rigctld + control remoto web
+
+### Siguiente paso sugerido
+- Migracion EF para tabla claves_api: `dotnet ef migrations add AgregarClavesApi`
+- Integrar SIPSorcery para audio WebRTC real (reemplazar AdaptadorWebRtcAudio stub)
 
 #### Graficos, ADIF drag-drop, Docker, CI/CD (2026-05-16)
 

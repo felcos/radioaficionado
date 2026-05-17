@@ -2,20 +2,20 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content bg-dark text-light border-secondary">
             <div class="modal-header border-secondary">
-                <h5 class="modal-title" id="titulo-modal-config">Configuracion</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                <h5 class="modal-title" id="titulo-modal-config">@L["Config_Titulo"]</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="@L["Config_Cerrar"]"></button>
             </div>
             <div class="modal-body">
                 <!-- Tipo de conexion -->
                 <div class="mb-3">
-                    <label class="form-label">Tipo de conexion</label>
+                    <label class="form-label">@L["Config_TipoConexion"]</label>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="tipo-conexion" id="tipo-cat" value="cat" checked>
-                        <label class="form-check-label" for="tipo-cat">CAT Serial (directo)</label>
+                        <label class="form-check-label" for="tipo-cat">@L["Config_CatSerial"]</label>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="tipo-conexion" id="tipo-rigctld" value="rigctld">
-                        <label class="form-check-label" for="tipo-rigctld">rigctld (TCP)</label>
+                        <label class="form-check-label" for="tipo-rigctld">@L["Config_RigctldTcp"]</label>
                     </div>
                 </div>
 
@@ -23,13 +23,13 @@
                 <div id="config-cat" class="config-seccion">
                     <div class="row g-2">
                         <div class="col-md-4">
-                            <label class="form-label">Puerto COM</label>
+                            <label class="form-label">@L["Config_PuertoCom"]</label>
                             <select class="form-select form-select-sm bg-dark text-light" id="config-puerto">
                             </select>
-                            <button class="btn btn-sm btn-outline-secondary mt-1" id="btn-refrescar-puertos">Refrescar</button>
+                            <button class="btn btn-sm btn-outline-secondary mt-1" id="btn-refrescar-puertos">@L["Config_Refrescar"]</button>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">Baudios</label>
+                            <label class="form-label">@L["Config_Baudios"]</label>
                             <select class="form-select form-select-sm bg-dark text-light" id="config-baudios">
                                 <option value="4800">4800</option>
                                 <option value="9600">9600</option>
@@ -40,9 +40,9 @@
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">Modelo</label>
+                            <label class="form-label">@L["Config_Modelo"]</label>
                             <select class="form-select form-select-sm bg-dark text-light" id="config-modelo">
-                                <option value="Automatico" selected>Automatico</option>
+                                <option value="Automatico" selected>@L["Config_Automatico"]</option>
                                 <option value="YaesuFt991">Yaesu FT-991</option>
                                 <option value="YaesuFt991A">Yaesu FT-991A</option>
                                 <option value="YaesuFt891">Yaesu FT-891</option>
@@ -62,14 +62,14 @@
                     </div>
                     <div class="row g-2 mt-2">
                         <div class="col-md-3">
-                            <label class="form-label">Bits datos</label>
+                            <label class="form-label">@L["Config_BitsDatos"]</label>
                             <select class="form-select form-select-sm bg-dark text-light" id="config-bits-datos">
                                 <option value="7">7</option>
                                 <option value="8" selected>8</option>
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Stop bits</label>
+                            <label class="form-label">@L["Config_StopBits"]</label>
                             <select class="form-select form-select-sm bg-dark text-light" id="config-stop-bits">
                                 <option value="1" selected>1</option>
                                 <option value="2">1.5</option>
@@ -77,7 +77,7 @@
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Paridad</label>
+                            <label class="form-label">@L["Config_Paridad"]</label>
                             <select class="form-select form-select-sm bg-dark text-light" id="config-paridad">
                                 <option value="None" selected>None</option>
                                 <option value="Even">Even</option>
@@ -108,7 +108,7 @@
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Polling (ms)</label>
+                            <label class="form-label">@L["Config_Polling"]</label>
                             <input type="number" class="form-control form-control-sm bg-dark text-light" id="config-polling" value="200" min="100" max="2000">
                         </div>
                     </div>
@@ -118,11 +118,11 @@
                 <div id="config-rigctld" class="config-seccion" style="display:none;">
                     <div class="row g-2">
                         <div class="col-md-8">
-                            <label class="form-label">Host</label>
+                            <label class="form-label">@L["Config_Host"]</label>
                             <input type="text" class="form-control form-control-sm bg-dark text-light" id="config-host" value="localhost">
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">Puerto</label>
+                            <label class="form-label">@L["Config_Puerto"]</label>
                             <input type="number" class="form-control form-control-sm bg-dark text-light" id="config-puerto-tcp" value="4532">
                         </div>
                     </div>
@@ -132,13 +132,13 @@
 
                 <!-- Audio -->
                 <div class="mb-3">
-                    <label class="form-label">Dispositivo de audio (entrada)</label>
+                    <label class="form-label">@L["Config_AudioEntrada"]</label>
                     <select class="form-select form-select-sm bg-dark text-light" id="config-audio">
                     </select>
-                    <button class="btn btn-sm btn-outline-secondary mt-1" id="btn-refrescar-audio">Refrescar</button>
+                    <button class="btn btn-sm btn-outline-secondary mt-1" id="btn-refrescar-audio">@L["Config_Refrescar"]</button>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Tasa de muestreo</label>
+                    <label class="form-label">@L["Config_TasaMuestreo"]</label>
                     <select class="form-select form-select-sm bg-dark text-light" id="config-sample-rate">
                         <option value="12000">12000 Hz</option>
                         <option value="24000">24000 Hz</option>
@@ -150,9 +150,9 @@
                 <div class="alert alert-secondary py-1 mb-0" id="config-estado"></div>
             </div>
             <div class="modal-footer border-secondary">
-                <button type="button" class="btn btn-success" id="btn-conectar-rig">Conectar</button>
-                <button type="button" class="btn btn-danger" id="btn-desconectar-rig" disabled>Desconectar</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-success" id="btn-conectar-rig">@L["Config_Conectar"]</button>
+                <button type="button" class="btn btn-danger" id="btn-desconectar-rig" disabled>@L["Config_Desconectar"]</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@L["Config_Cerrar"]</button>
             </div>
         </div>
     </div>

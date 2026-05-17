@@ -13,12 +13,14 @@ namespace RadioAficionado.Servicio.Tests.Controllers;
 public sealed class PropagacionApiControllerTests
 {
     private readonly Mock<IServicioPropagacion> _mockServicio;
+    private readonly Mock<IClienteDatosSolares> _mockClienteSolar;
     private readonly PropagacionApiController _controlador;
 
     public PropagacionApiControllerTests()
     {
         _mockServicio = new Mock<IServicioPropagacion>();
-        _controlador = new PropagacionApiController(_mockServicio.Object);
+        _mockClienteSolar = new Mock<IClienteDatosSolares>();
+        _controlador = new PropagacionApiController(_mockServicio.Object, _mockClienteSolar.Object);
     }
 
     [Fact]
@@ -99,10 +101,21 @@ public sealed class PropagacionApiControllerTests
     public void Constructor_ConServicioNulo_LanzaArgumentNullException()
     {
         // Act
-        Action accion = () => new PropagacionApiController(null!);
+        Action accion = () => new PropagacionApiController(null!, _mockClienteSolar.Object);
 
         // Assert
         accion.Should().Throw<ArgumentNullException>()
             .WithParameterName("servicioPropagacion");
+    }
+
+    [Fact]
+    public void Constructor_ConClienteSolarNulo_LanzaArgumentNullException()
+    {
+        // Act
+        Action accion = () => new PropagacionApiController(_mockServicio.Object, null!);
+
+        // Assert
+        accion.Should().Throw<ArgumentNullException>()
+            .WithParameterName("clienteDatosSolares");
     }
 }

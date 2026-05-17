@@ -1,5 +1,11 @@
+@{
+    string culturaActual = Context.GetRouteValue("cultura")?.ToString() ?? "es";
+    string otraCultura = culturaActual == "en" ? "es" : "en";
+    string otraCulturaTexto = culturaActual == "en" ? "ES" : "EN";
+    string langHtml = culturaActual == "en" ? "en" : "es";
+}
 <!DOCTYPE html>
-<html lang="es">
+<html lang="@langHtml">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,60 +17,95 @@
     @await RenderSectionAsync("Estilos", required: false)
 </head>
 <body class="bg-dark text-light">
+    <!-- Boton hamburguesa movil (visible solo en <769px) -->
+    <button class="sidebar-toggle-movil" id="btn-sidebar-movil" title="@L["Nav_Menu"]">&#9776;</button>
+    <!-- Overlay para cerrar sidebar en movil -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
     <div class="layout-con-sidebar">
         <!-- Sidebar de navegacion -->
         <nav class="sidebar" id="sidebar">
-            <button class="sidebar-toggle" id="btn-sidebar-toggle" title="Expandir menu">&#9776;</button>
+            <button class="sidebar-toggle" id="btn-sidebar-toggle" title="@L["Nav_ExpandirMenu"]">&#9776;</button>
             <ul class="sidebar-nav">
                 <li>
-                    <a href="@Url.Action("Index", "Operacion")" class="@(ViewData["Seccion"]?.ToString() == "Operacion" ? "activa" : "")">
+                    <a href="@Url.RouteUrl("localizada", new { cultura = culturaActual, controller = "Operacion", action = "Index" })" class="@(ViewData["Seccion"]?.ToString() == "Operacion" ? "activa" : "")">
                         <span class="icono">&#128225;</span>
-                        <span class="texto-nav">Operacion</span>
+                        <span class="texto-nav">@L["Nav_Operacion"]</span>
                     </a>
                 </li>
                 <li>
-                    <a href="@Url.Action("Logbook", "Operacion")" class="@(ViewData["Seccion"]?.ToString() == "Logbook" ? "activa" : "")">
+                    <a href="@Url.RouteUrl("localizada", new { cultura = culturaActual, controller = "Operacion", action = "Logbook" })" class="@(ViewData["Seccion"]?.ToString() == "Logbook" ? "activa" : "")">
                         <span class="icono">&#128214;</span>
-                        <span class="texto-nav">Logbook</span>
+                        <span class="texto-nav">@L["Nav_Logbook"]</span>
                     </a>
                 </li>
                 <li>
-                    <a href="@Url.Action("DxCluster", "Operacion")" class="@(ViewData["Seccion"]?.ToString() == "DxCluster" ? "activa" : "")">
+                    <a href="@Url.RouteUrl("localizada", new { cultura = culturaActual, controller = "Operacion", action = "DxCluster" })" class="@(ViewData["Seccion"]?.ToString() == "DxCluster" ? "activa" : "")">
                         <span class="icono">&#128225;</span>
-                        <span class="texto-nav">DX Cluster</span>
+                        <span class="texto-nav">@L["Nav_DxCluster"]</span>
                     </a>
                 </li>
                 <li>
-                    <a href="@Url.Action("Dxcc", "Operacion")" class="@(ViewData["Seccion"]?.ToString() == "Dxcc" ? "activa" : "")">
+                    <a href="@Url.RouteUrl("localizada", new { cultura = culturaActual, controller = "Operacion", action = "Dxcc" })" class="@(ViewData["Seccion"]?.ToString() == "Dxcc" ? "activa" : "")">
                         <span class="icono">&#127758;</span>
-                        <span class="texto-nav">DXCC</span>
+                        <span class="texto-nav">@L["Nav_Dxcc"]</span>
                     </a>
                 </li>
                 <li>
-                    <a href="@Url.Action("Propagacion", "Operacion")" class="@(ViewData["Seccion"]?.ToString() == "Propagacion" ? "activa" : "")">
+                    <a href="@Url.RouteUrl("localizada", new { cultura = culturaActual, controller = "Operacion", action = "Propagacion" })" class="@(ViewData["Seccion"]?.ToString() == "Propagacion" ? "activa" : "")">
                         <span class="icono">&#127774;</span>
-                        <span class="texto-nav">Propagacion</span>
+                        <span class="texto-nav">@L["Nav_Propagacion"]</span>
                     </a>
                 </li>
                 <li>
-                    <a href="@Url.Action("Activaciones", "Operacion")" class="@(ViewData["Seccion"]?.ToString() == "Activaciones" ? "activa" : "")">
+                    <a href="@Url.RouteUrl("localizada", new { cultura = culturaActual, controller = "Operacion", action = "Activaciones" })" class="@(ViewData["Seccion"]?.ToString() == "Activaciones" ? "activa" : "")">
                         <span class="icono">&#9968;</span>
-                        <span class="texto-nav">POTA/SOTA</span>
+                        <span class="texto-nav">@L["Nav_PotaSota"]</span>
                     </a>
                 </li>
                 <li>
-                    <a href="@Url.Action("Contest", "Operacion")" class="@(ViewData["Seccion"]?.ToString() == "Contest" ? "activa" : "")">
+                    <a href="@Url.RouteUrl("localizada", new { cultura = culturaActual, controller = "Operacion", action = "Contest" })" class="@(ViewData["Seccion"]?.ToString() == "Contest" ? "activa" : "")">
                         <span class="icono">&#127942;</span>
-                        <span class="texto-nav">Contest</span>
+                        <span class="texto-nav">@L["Nav_Contest"]</span>
                     </a>
                 </li>
                 <li>
-                    <a href="@Url.Action("Satelites", "Operacion")" class="@(ViewData["Seccion"]?.ToString() == "Satelites" ? "activa" : "")">
+                    <a href="@Url.RouteUrl("localizada", new { cultura = culturaActual, controller = "Operacion", action = "Satelites" })" class="@(ViewData["Seccion"]?.ToString() == "Satelites" ? "activa" : "")">
                         <span class="icono">&#128752;</span>
-                        <span class="texto-nav">Satelites</span>
+                        <span class="texto-nav">@L["Nav_Satelites"]</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.RouteUrl("localizada", new { cultura = culturaActual, controller = "Operacion", action = "MapaQsos" })" class="@(ViewData["Seccion"]?.ToString() == "MapaQsos" ? "activa" : "")">
+                        <span class="icono">&#127760;</span>
+                        <span class="texto-nav">@L["Nav_MapaQsos"]</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.RouteUrl("localizada", new { cultura = culturaActual, controller = "Operacion", action = "Espectro" })" class="@(ViewData["Seccion"]?.ToString() == "Espectro" ? "activa" : "")">
+                        <span class="icono">&#127897;</span>
+                        <span class="texto-nav">@L["Nav_Espectro"]</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.RouteUrl("localizada", new { cultura = culturaActual, controller = "Operacion", action = "Herramientas" })" class="@(ViewData["Seccion"]?.ToString() == "Herramientas" ? "activa" : "")">
+                        <span class="icono">&#128295;</span>
+                        <span class="texto-nav">@L["Nav_Herramientas"]</span>
                     </a>
                 </li>
             </ul>
+            <!-- Selector de idioma -->
+            <div class="sidebar-idioma">
+                @{
+                    string accionActual = Context.GetRouteValue("action")?.ToString() ?? "Index";
+                    string controladorActual = Context.GetRouteValue("controller")?.ToString() ?? "Operacion";
+                }
+                <a href="@Url.RouteUrl("localizada", new { cultura = otraCultura, controller = controladorActual, action = accionActual })"
+                   class="btn-idioma" title="@L["Idioma_Titulo"]">
+                    <span class="icono">&#127760;</span>
+                    <span class="texto-nav">@otraCulturaTexto</span>
+                </a>
+            </div>
         </nav>
 
         <!-- Contenido principal -->
@@ -72,6 +113,46 @@
             @RenderBody()
         </div>
     </div>
+
+    <!-- i18n para JavaScript -->
+    <script>
+        'use strict';
+        window.i18n = {
+            cultura: '@culturaActual',
+            sinConexion: '@L["Rig_SinConexion"].Value.Replace("'", "\\'")',
+            decodificaciones: '@L["Panel_Decodificaciones"].Value.Replace("'", "\\'")',
+            transmision: '@L["Panel_Transmision"].Value.Replace("'", "\\'")',
+            textoLibre: '@L["TX_TextoLibre"].Value.Replace("'", "\\'")',
+            qsoEnCurso: '@L["Panel_QsoEnCurso"].Value.Replace("'", "\\'")',
+            indicativo: '@L["QSO_Indicativo"].Value.Replace("'", "\\'")',
+            logQso: '@L["QSO_LogQso"].Value.Replace("'", "\\'")',
+            buscarIndicativo: '@L["Logbook_BuscarIndicativo"].Value.Replace("'", "\\'")',
+            exportarAdif: '@L["Logbook_ExportarAdif"].Value.Replace("'", "\\'")',
+            importarAdif: '@L["Logbook_ImportarAdif"].Value.Replace("'", "\\'")',
+            arrastraAdif: '@L["Logbook_ArrastraAdif"].Value.Replace("'", "\\'")',
+            todasBandas: '@L["DxCluster_TodasBandas"].Value.Replace("'", "\\'")',
+            todosModos: '@L["DxCluster_TodosModos"].Value.Replace("'", "\\'")',
+            desconectado: '@L["DxCluster_Desconectado"].Value.Replace("'", "\\'")',
+            trabajados: '@L["Dxcc_Trabajados"].Value.Replace("'", "\\'")',
+            confirmados: '@L["Dxcc_Confirmados"].Value.Replace("'", "\\'")',
+            actualizar: '@L["Prop_Actualizar"].Value.Replace("'", "\\'")',
+            sinDatos: '@L["Prop_SinDatos"].Value.Replace("'", "\\'")',
+            cargando: '@L["Prop_Cargando"].Value.Replace("'", "\\'")',
+            buena: '@L["Prop_Buena"].Value.Replace("'", "\\'")',
+            regular: '@L["Prop_Regular"].Value.Replace("'", "\\'")',
+            mala: '@L["Prop_Mala"].Value.Replace("'", "\\'")',
+            cerrada: '@L["Prop_Cerrada"].Value.Replace("'", "\\'")',
+            buscarReferencia: '@L["Act_BuscarReferencia"].Value.Replace("'", "\\'")',
+            seleccionarContest: '@L["Contest_Seleccionar"].Value.Replace("'", "\\'")',
+            iniciarContest: '@L["Contest_Iniciar"].Value.Replace("'", "\\'")',
+            seleccionarSatelite: '@L["Sat_Seleccionar"].Value.Replace("'", "\\'")',
+            seleccioneSatelite: '@L["Sat_SeleccioneSatelite"].Value.Replace("'", "\\'")',
+            conectar: '@L["Config_Conectar"].Value.Replace("'", "\\'")',
+            desconectar: '@L["Config_Desconectar"].Value.Replace("'", "\\'")',
+            refrescar: '@L["Config_Refrescar"].Value.Replace("'", "\\'")',
+            buscar: '@L["Espectro_Buscar"].Value.Replace("'", "\\'")'
+        };
+    </script>
 
     <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/signalr/signalr.min.js"></script>
@@ -81,9 +162,50 @@
         (function () {
             const sidebar = document.getElementById('sidebar');
             const btnToggle = document.getElementById('btn-sidebar-toggle');
+            const btnMovil = document.getElementById('btn-sidebar-movil');
+            const overlay = document.getElementById('sidebar-overlay');
+
+            function cerrarSidebar() {
+                if (sidebar) sidebar.classList.remove('expandido');
+                if (overlay) overlay.classList.remove('visible');
+            }
+
+            function abrirSidebar() {
+                if (sidebar) sidebar.classList.add('expandido');
+                if (window.innerWidth < 769 && overlay) overlay.classList.add('visible');
+            }
+
             if (btnToggle && sidebar) {
                 btnToggle.addEventListener('click', function () {
-                    sidebar.classList.toggle('expandido');
+                    if (sidebar.classList.contains('expandido')) {
+                        cerrarSidebar();
+                    } else {
+                        abrirSidebar();
+                    }
+                });
+            }
+
+            if (btnMovil) {
+                btnMovil.addEventListener('click', function () {
+                    if (sidebar && sidebar.classList.contains('expandido')) {
+                        cerrarSidebar();
+                    } else {
+                        abrirSidebar();
+                    }
+                });
+            }
+
+            if (overlay) {
+                overlay.addEventListener('click', cerrarSidebar);
+            }
+
+            // Cerrar sidebar al navegar en movil (click en enlace)
+            if (sidebar) {
+                const enlaces = sidebar.querySelectorAll('.sidebar-nav a');
+                enlaces.forEach(function (enlace) {
+                    enlace.addEventListener('click', function () {
+                        if (window.innerWidth < 769) cerrarSidebar();
+                    });
                 });
             }
         })();

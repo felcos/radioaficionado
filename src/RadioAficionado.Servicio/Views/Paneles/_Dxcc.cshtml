@@ -1,13 +1,13 @@
 <div class="panel-dxcc-contenido">
     <div class="dxcc-toolbar">
         <div class="dxcc-resumen">
-            <span class="dxcc-stat">Trabajados: <strong id="dxcc-trabajados">0</strong></span>
-            <span class="dxcc-stat">Confirmados: <strong id="dxcc-confirmados">0</strong></span>
-            <span class="dxcc-stat">Meta: <strong>340</strong></span>
+            <span class="dxcc-stat">@L["Dxcc_Trabajados"]: <strong id="dxcc-trabajados">0</strong></span>
+            <span class="dxcc-stat">@L["Dxcc_Confirmados"]: <strong id="dxcc-confirmados">0</strong></span>
+            <span class="dxcc-stat">@L["Dxcc_Meta"]: <strong>340</strong></span>
         </div>
         <div class="dxcc-filtros">
             <select class="form-select form-select-sm" id="dxcc-filtro-banda" style="width: auto; display: inline-block;">
-                <option value="">Todas las bandas</option>
+                <option value="">@L["DxCluster_TodasBandas"]</option>
                 <option value="160m">160m</option>
                 <option value="80m">80m</option>
                 <option value="40m">40m</option>
@@ -17,15 +17,15 @@
                 <option value="6m">6m</option>
             </select>
             <select class="form-select form-select-sm" id="dxcc-filtro-estado" style="width: auto; display: inline-block;">
-                <option value="">Todos</option>
-                <option value="necesitado">Necesitados</option>
-                <option value="trabajado">Trabajados</option>
-                <option value="confirmado">Confirmados</option>
+                <option value="">@L["Dxcc_Todos"]</option>
+                <option value="necesitado">@L["Dxcc_Necesitados"]</option>
+                <option value="trabajado">@L["Dxcc_Trabajados"]</option>
+                <option value="confirmado">@L["Dxcc_Confirmados"]</option>
             </select>
         </div>
     </div>
     <div class="dxcc-filtro-continente" id="dxcc-filtro-continente">
-        <button class="btn-continente activo" data-continente="">Todos</button>
+        <button class="btn-continente activo" data-continente="">@L["Dxcc_Todos"]</button>
         <button class="btn-continente" data-continente="AF">AF</button>
         <button class="btn-continente" data-continente="AS">AS</button>
         <button class="btn-continente" data-continente="EU">EU</button>
@@ -44,9 +44,9 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Entidad</th>
-                    <th>Prefijo</th>
-                    <th>Continente</th>
+                    <th>@L["Col_Entidad"]</th>
+                    <th>@L["Col_Prefijo"]</th>
+                    <th>@L["Col_Continente"]</th>
                     <th>160m</th>
                     <th>80m</th>
                     <th>40m</th>
@@ -61,7 +61,7 @@
         </table>
     </div>
     <div class="dxcc-mapa-contenedor" style="margin-top: 12px;">
-        <h6 style="color: #8b949e; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Mapa DXCC</h6>
+        <h6 style="color: #8b949e; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">@L["Dxcc_MapaDxcc"]</h6>
         <div id="mapa-dxcc" style="height: 300px; border: 1px solid #30363d; border-radius: 6px;"></div>
     </div>
 </div>

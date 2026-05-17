@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RadioAficionado.Dominio.Dxcc;
 using RadioAficionado.Dominio.Entidades;
@@ -10,6 +11,7 @@ namespace RadioAficionado.Web.Controllers;
 /// <summary>
 /// Controlador para el dashboard de estadisticas del logbook.
 /// Proporciona datos agregados y endpoints JSON para los graficos.
+/// Requiere autenticacion para acceder.
 /// </summary>
 public class EstadisticasController(IRepositorioQso repositorioQso, ILogger<EstadisticasController> logger) : Controller
 {

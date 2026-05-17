@@ -1,17 +1,75 @@
 @{
-    ViewData["Title"] = "Propagacion";
+    ViewData["Title"] = L["Titulo_Propagacion"].Value;
+    ViewData["Seccion"] = "Propagacion";
 }
 
 <div class="pagina-panel">
     <div class="pagina-panel-header">
-        <h2>Propagacion Solar</h2>
+        <h2>@L["Titulo_DashboardSolar"]</h2>
+        <button class="btn btn-sm btn-outline-light" id="btn-actualizar-solar">@L["Prop_Actualizar"]</button>
+        <span class="propagacion-ultima-actualizacion" id="solar-actualizacion"></span>
     </div>
     <div class="pagina-panel-body">
-        <partial name="~/Views/Paneles/_Propagacion.cshtml" />
+        <!-- Indices principales -->
+        <div class="solar-grid-principal">
+            <div class="solar-card">
+                <h6>@L["Prop_IndicesSolares"]</h6>
+                <div class="solar-indice"><span>SFI</span><span class="propagacion-valor" id="solar-sfi">--</span></div>
+                <div class="solar-indice"><span>SN</span><span class="propagacion-valor" id="solar-sn">--</span></div>
+                <div class="solar-indice"><span>A-Index</span><span class="propagacion-valor" id="solar-a">--</span></div>
+                <div class="solar-indice"><span>K-Index</span><span class="propagacion-valor" id="solar-kp">--</span></div>
+                <div class="solar-indice"><span>X-Ray</span><span class="propagacion-valor" id="solar-xray">--</span></div>
+            </div>
+            <div class="solar-card">
+                <h6>@L["Prop_VientoSolar"]</h6>
+                <div class="solar-indice"><span>@L["Prop_Velocidad"]</span><span class="propagacion-valor" id="solar-viento-vel">--</span></div>
+                <div class="solar-indice"><span>Bt</span><span class="propagacion-valor" id="solar-bt">--</span></div>
+                <div class="solar-indice"><span>Bz (GSM)</span><span class="propagacion-valor" id="solar-bz">--</span></div>
+                <div class="solar-indice"><span>@L["Prop_Geomagnetico"]</span><span class="propagacion-valor" id="solar-geomag">--</span></div>
+                <div class="solar-indice"><span>@L["Prop_Ruido"]</span><span class="propagacion-valor" id="solar-ruido">--</span></div>
+            </div>
+            <div class="solar-card">
+                <h6>@L["Prop_EscalasNoaa"]</h6>
+                <div class="solar-escalas-grid">
+                    <div class="solar-escala-item"><span id="solar-escala-r" class="solar-escala-badge escala-none">R0</span><span>@L["Prop_Radio"]</span></div>
+                    <div class="solar-escala-item"><span id="solar-escala-s" class="solar-escala-badge escala-none">S0</span><span>@L["Prop_Radiacion"]</span></div>
+                    <div class="solar-escala-item"><span id="solar-escala-g" class="solar-escala-badge escala-none">G0</span><span>@L["Prop_Geomagnetico"]</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Condiciones HF -->
+        <div class="solar-grid-secundario">
+            <div class="solar-card">
+                <h6>@L["Prop_CondicionesHf"]</h6>
+                <table class="table table-dark table-sm">
+                    <thead><tr><th>@L["Col_Banda"]</th><th>@L["Col_Dia"]</th><th>@L["Col_Noche"]</th></tr></thead>
+                    <tbody id="solar-hf-tbody"></tbody>
+                </table>
+            </div>
+            <div class="solar-card">
+                <h6>@L["Prop_CondicionesVhf"]</h6>
+                <div class="solar-indice"><span>Aurora VHF</span><span id="solar-vhf-aurora">--</span></div>
+                <div class="solar-indice"><span>E-Skip Europa</span><span id="solar-vhf-eskip-eu">--</span></div>
+                <div class="solar-indice"><span>E-Skip NA</span><span id="solar-vhf-eskip-na">--</span></div>
+            </div>
+            <div class="solar-card">
+                <h6>@L["Prop_Alertas"]</h6>
+                <div id="solar-alertas"><div class="solar-sin-alertas">@L["Prop_Cargando"]</div></div>
+            </div>
+        </div>
+
+        <!-- Grafico historico -->
+        <div class="solar-card" style="margin-top: 16px;">
+            <h6>@L["Prop_SfiUltimos30"]</h6>
+            <div style="height: 250px;">
+                <canvas id="grafico-historico-solar"></canvas>
+            </div>
+        </div>
     </div>
 </div>
 
 @section Scripts {
     <script src="~/lib/chartjs/chart.umd.min.js"></script>
-    <script src="~/js/propagacion.js"></script>
+    <script src="~/js/solarDashboard.js"></script>
 }

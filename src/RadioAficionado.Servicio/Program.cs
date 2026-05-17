@@ -1,3 +1,6 @@
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Localization.Routing;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -14,6 +17,7 @@ using RadioAficionado.Nativo.Rotador;
 using RadioAficionado.Nativo.Sdr;
 using RadioAficionado.IA;
 using RadioAficionado.Servicio.Hubs;
+using RadioAficionado.Servicio.Remoto;
 using RadioAficionado.Servicio.Servicios;
 
 // Configurar Serilog
@@ -33,9 +37,16 @@ try
     builder.Services.AddSingleton(Log.Logger);
 
     // ------------------------------------------------------------------
+    // Localizacion (i18n)
+    // ------------------------------------------------------------------
+    builder.Services.AddLocalization(opciones => opciones.ResourcesPath = "Resources");
+
+    // ------------------------------------------------------------------
     // Servicios MVC + SignalR
     // ------------------------------------------------------------------
-    builder.Services.AddControllersWithViews();
+    builder.Services.AddControllersWithViews()
+        .AddViewLocalization()
+        .AddDataAnnotationsLocalization();
     builder.Services.AddSignalR();
 
     // ------------------------------------------------------------------
@@ -67,6 +78,13 @@ try
     builder.Services.AddSingleton<IServicioOperacionDigital, ServicioOperacionDigital>();
     builder.Services.AddHostedService<ServidorUdpWsjtx>();
     builder.Services.AddHostedService<ClienteDxClusterTelnet>();
+
+    // ------------------------------------------------------------------
+    // Conexion remota al servidor web (tunelado SignalR)
+    // ------------------------------------------------------------------
+    builder.Services.Configure<ConfiguracionRemoto>(
+        builder.Configuration.GetSection("Remoto"));
+    builder.Services.AddHostedService<ClienteRelaySignalR>();
 
     // ------------------------------------------------------------------
     // Health check para el lanzador WebView2
@@ -116,6 +134,27 @@ try
     // ------------------------------------------------------------------
     app.UseStaticFiles();
     app.UseRouting();
+
+    // Localizacion: es (por defecto) y en, detectado por ruta
+    CultureInfo culturaEs = new CultureInfo("es");
+    CultureInfo culturaEn = new CultureInfo("en");
+    List<CultureInfo> culturasSoportadas = new List<CultureInfo> { culturaEs, culturaEn };
+
+    RequestLocalizationOptions opcionesLocalizacion = new RequestLocalizationOptions
+    {
+        DefaultRequestCulture = new RequestCulture(culturaEs),
+        SupportedCultures = culturasSoportadas,
+        SupportedUICultures = culturasSoportadas
+    };
+
+    opcionesLocalizacion.RequestCultureProviders.Insert(0, new RouteDataRequestCultureProvider
+    {
+        RouteDataStringKey = "cultura",
+        UIRouteDataStringKey = "cultura"
+    });
+
+    app.UseRequestLocalization(opcionesLocalizacion);
+
     app.UseSerilogRequestLogging();
 
     // ------------------------------------------------------------------
@@ -128,9 +167,16 @@ try
     app.MapHub<HubDecodificaciones>("/hubs/decodificaciones");
     app.MapHub<HubEstado>("/hubs/estado");
 
+    // Ruta con prefijo de cultura: /es/Operacion/Index, /en/Operacion/Index
+    app.MapControllerRoute(
+        name: "localizada",
+        pattern: "{cultura:regex(^(es|en)$)}/{controller=Operacion}/{action=Index}/{id?}");
+
+    // Ruta sin prefijo de cultura (espanol por defecto)
     app.MapControllerRoute(
         name: "default",
-        pattern: "{controller=Operacion}/{action=Index}/{id?}");
+        pattern: "{controller=Operacion}/{action=Index}/{id?}",
+        defaults: new { cultura = "es" });
 
     Log.Information("RadioAficionado.Servicio iniciado en http://localhost:5200");
     app.Run();

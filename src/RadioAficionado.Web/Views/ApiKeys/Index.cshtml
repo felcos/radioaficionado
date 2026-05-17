@@ -1,0 +1,165 @@
+@model IReadOnlyList<RadioAficionado.Dominio.Entidades.ClaveApi>
+@{
+    ViewData["Title"] = "Claves de API";
+    string? claveGenerada = TempData["ClaveGenerada"]?.ToString();
+    string? nombreClave = TempData["NombreClave"]?.ToString();
+    string? error = TempData["Error"]?.ToString();
+    string? exito = TempData["Exito"]?.ToString();
+}
+
+<div class="container">
+    <h4 class="mb-4">Claves de API</h4>
+
+    <p class="text-secondary mb-4">
+        Las claves de API permiten que tu servicio de escritorio se conecte de forma segura al servidor.
+        Cada clave solo se muestra una vez al crearla. Guardala en un lugar seguro.
+    </p>
+
+    @if (!string.IsNullOrWhiteSpace(claveGenerada))
+    {
+        <div class="alert border-warning bg-dark mb-4" role="alert" style="border-left: 4px solid #ffc107 !important;">
+            <h6 class="alert-heading text-warning mb-2">Clave generada: @nombreClave</h6>
+            <p class="text-secondary small mb-2">
+                Copia esta clave ahora. No podras volver a verla.
+            </p>
+            <div class="d-flex align-items-center gap-2">
+                <code id="claveGeneradaTexto"
+                      class="d-block p-2 rounded flex-grow-1"
+                      style="background-color: #1a1a2e; color: #ffc107; font-size: 0.95rem; word-break: break-all;">
+                    @claveGenerada
+                </code>
+                <button type="button" class="btn btn-outline-warning btn-sm" onclick="copiarClave()">
+                    Copiar
+                </button>
+            </div>
+        </div>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(error))
+    {
+        <div class="alert alert-danger" role="alert">@error</div>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(exito))
+    {
+        <div class="alert alert-success" role="alert">@exito</div>
+    }
+
+    <!-- Formulario para generar nueva clave -->
+    <div class="card bg-dark border-secondary mb-4">
+        <div class="card-body">
+            <h6 class="card-title text-light">Generar nueva clave</h6>
+            <form asp-action="Generar" method="post">
+                @Html.AntiForgeryToken()
+                <div class="row g-2 align-items-end">
+                    <div class="col-md-8">
+                        <label for="nombre" class="form-label text-secondary small">Nombre descriptivo</label>
+                        <input type="text" class="form-control form-control-sm bg-dark text-light border-secondary"
+                               id="nombre" name="nombre" placeholder="Ej: PC de la estacion, Portatil campo"
+                               required maxlength="100">
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-outline-info btn-sm w-100">
+                            Generar clave
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tabla de claves -->
+    <div class="card bg-dark border-secondary">
+        <div class="card-body p-0">
+            @if (Model.Count == 0)
+            {
+                <div class="text-center text-secondary py-4">
+                    No tienes claves de API creadas.
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover mb-0">
+                        <thead>
+                            <tr class="border-secondary">
+                                <th class="text-secondary small">Nombre</th>
+                                <th class="text-secondary small">Prefijo</th>
+                                <th class="text-secondary small">Estado</th>
+                                <th class="text-secondary small">Creada</th>
+                                <th class="text-secondary small">Ultimo uso</th>
+                                <th class="text-secondary small text-end">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (RadioAficionado.Dominio.Entidades.ClaveApi clave in Model)
+                            {
+                                <tr class="border-secondary">
+                                    <td>@clave.Nombre</td>
+                                    <td>
+                                        <code style="color: #0dcaf0;">@clave.Prefijo...</code>
+                                    </td>
+                                    <td>
+                                        @if (clave.Activa)
+                                        {
+                                            <span class="badge bg-success">Activa</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">Inactiva</span>
+                                        }
+                                    </td>
+                                    <td class="text-secondary small">
+                                        @clave.FechaCreacion.ToString("dd/MM/yyyy HH:mm")
+                                    </td>
+                                    <td class="text-secondary small">
+                                        @(clave.FechaUltimoUso.HasValue
+                                            ? clave.FechaUltimoUso.Value.ToString("dd/MM/yyyy HH:mm")
+                                            : "Nunca")
+                                    </td>
+                                    <td class="text-end">
+                                        @if (clave.Activa)
+                                        {
+                                            <form asp-action="Desactivar" method="post" class="d-inline"
+                                                  onsubmit="return confirm('¿Desactivar esta clave? Los servicios que la usen dejaran de funcionar.');">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@clave.Id" />
+                                                <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                    Desactivar
+                                                </button>
+                                            </form>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        'use strict';
+
+        function copiarClave() {
+            const elemento = document.getElementById('claveGeneradaTexto');
+            if (!elemento) return;
+
+            const texto = elemento.textContent.trim();
+            navigator.clipboard.writeText(texto).then(function () {
+                const btn = elemento.nextElementSibling;
+                if (btn) {
+                    btn.textContent = 'Copiada';
+                    btn.classList.replace('btn-outline-warning', 'btn-warning');
+                    setTimeout(function () {
+                        btn.textContent = 'Copiar';
+                        btn.classList.replace('btn-warning', 'btn-outline-warning');
+                    }, 2000);
+                }
+            });
+        }
+    </script>
+}

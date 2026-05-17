@@ -1,7 +1,7 @@
 <div class="panel-contest-contenido">
     <div class="contest-toolbar">
         <select class="form-select form-select-sm" id="contest-seleccionar" style="width: auto; display: inline-block;">
-            <option value="">Seleccionar contest...</option>
+            <option value="">@L["Contest_Seleccionar"]</option>
             <option value="cqww-ssb">CQ WW SSB</option>
             <option value="cqww-cw">CQ WW CW</option>
             <option value="cqwpx-ssb">CQ WPX SSB</option>
@@ -10,7 +10,7 @@
             <option value="arrl-dx-cw">ARRL DX CW</option>
             <option value="iaru-hf">IARU HF Championship</option>
         </select>
-        <button class="btn btn-sm btn-outline-light" id="btn-contest-iniciar">Iniciar contest</button>
+        <button class="btn btn-sm btn-outline-light" id="btn-contest-iniciar">@L["Contest_Iniciar"]</button>
     </div>
     <div class="contest-resumen">
         <div class="contest-stat">
@@ -18,11 +18,11 @@
             <span class="contest-valor" id="contest-qsos">0</span>
         </div>
         <div class="contest-stat">
-            <span class="contest-label">Puntos</span>
+            <span class="contest-label">@L["Contest_Puntos"]</span>
             <span class="contest-valor" id="contest-puntos">0</span>
         </div>
         <div class="contest-stat">
-            <span class="contest-label">Multiplicadores</span>
+            <span class="contest-label">@L["Contest_Multiplicadores"]</span>
             <span class="contest-valor" id="contest-multiplicadores">0</span>
         </div>
         <div class="contest-stat">
@@ -39,17 +39,17 @@
         </div>
     </div>
     <div class="contest-ultimos-qsos">
-        <h6>Ultimos QSOs</h6>
+        <h6>@L["Contest_UltimosQsos"]</h6>
         <table class="table table-dark table-sm" id="tabla-contest-qsos">
             <thead>
                 <tr>
-                    <th>UTC</th>
-                    <th>Indicativo</th>
-                    <th>RST Env</th>
-                    <th>RST Rec</th>
-                    <th>Intercambio</th>
-                    <th>Mult</th>
-                    <th>Pts</th>
+                    <th>@L["Col_UTC"]</th>
+                    <th>@L["Col_Indicativo"]</th>
+                    <th>@L["Col_RstEnv"]</th>
+                    <th>@L["Col_RstRec"]</th>
+                    <th>@L["Col_Intercambio"]</th>
+                    <th>@L["Col_Mult"]</th>
+                    <th>@L["Col_Pts"]</th>
                 </tr>
             </thead>
             <tbody id="contest-qsos-tbody">

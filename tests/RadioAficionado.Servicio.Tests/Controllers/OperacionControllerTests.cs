@@ -115,4 +115,43 @@ public sealed class OperacionControllerTests
         ViewResult vista = resultado.Should().BeOfType<ViewResult>().Subject;
         vista.ViewData["Seccion"].Should().Be("Satelites");
     }
+
+    [Fact]
+    public void MapaQsos_SinParametros_RetornaViewResultConSeccionMapaQsos()
+    {
+        // Arrange — controlador ya instanciado
+
+        // Act
+        IActionResult resultado = _controlador.MapaQsos();
+
+        // Assert
+        ViewResult vista = resultado.Should().BeOfType<ViewResult>().Subject;
+        vista.ViewData["Seccion"].Should().Be("MapaQsos");
+    }
+
+    [Fact]
+    public void Espectro_SinParametros_RetornaViewResultConSeccionEspectro()
+    {
+        // Arrange — controlador ya instanciado
+
+        // Act
+        IActionResult resultado = _controlador.Espectro();
+
+        // Assert
+        ViewResult vista = resultado.Should().BeOfType<ViewResult>().Subject;
+        vista.ViewData["Seccion"].Should().Be("Espectro");
+    }
+
+    [Fact]
+    public void Herramientas_SinParametros_RetornaViewResultConSeccionHerramientas()
+    {
+        // Arrange — controlador ya instanciado
+
+        // Act
+        IActionResult resultado = _controlador.Herramientas();
+
+        // Assert
+        ViewResult vista = resultado.Should().BeOfType<ViewResult>().Subject;
+        vista.ViewData["Seccion"].Should().Be("Herramientas");
+    }
 }
