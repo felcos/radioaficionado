@@ -30,7 +30,7 @@ public enum ModoOperacion
     /// <summary>Digitalvoice — voz digital generica.</summary>
     DIGITALVOICE,
 
-    /// <summary>DominoEX — IFK con correccion de errores.</summary>
+    /// <summary>DominoEX — Incremental Frequency Keying con correccion de errores.</summary>
     DOMINO,
 
     /// <summary>Dynamic Relay Exchange (DSTAR data).</summary>
@@ -44,6 +44,9 @@ public enum ModoOperacion
 
     /// <summary>FSK441 — meteor scatter.</summary>
     FSK441,
+
+    /// <summary>FSQ — Fast Simple QSO. Modo conversacional rapido y robusto.</summary>
+    FSQ,
 
     /// <summary>FT8 (Franke-Taylor 8-FSK). El modo digital mas popular.</summary>
     FT8,
@@ -208,6 +211,8 @@ public enum SubModoOperacion
     QPSK63,
     /// <summary>QPSK de 125 baudios.</summary>
     QPSK125,
+    /// <summary>PSK de 250 baudios.</summary>
+    PSK250,
 
     // --- PKT submodos ---
     /// <summary>APRS — Automatic Packet Reporting System.</summary>
@@ -226,6 +231,8 @@ public enum SubModoOperacion
     MFSK32,
     /// <summary>MFSK de 64 tonos.</summary>
     MFSK64,
+    /// <summary>MFSK de 128 tonos.</summary>
+    MFSK128,
 
     // --- HELL submodos ---
     /// <summary>Feld Hell original.</summary>
@@ -283,7 +290,33 @@ public enum SubModoOperacion
     /// <summary>Q65D — periodo de 120 segundos.</summary>
     Q65D,
     /// <summary>Q65E — periodo de 300 segundos.</summary>
-    Q65E
+    Q65E,
+
+    // --- THOR submodos ---
+    /// <summary>THOR4 — 4 tonos, muy lento y robusto.</summary>
+    THOR4,
+    /// <summary>THOR8 — 8 tonos.</summary>
+    THOR8,
+    /// <summary>THOR16 — 16 tonos, buena velocidad.</summary>
+    THOR16,
+
+    // --- DominoEX submodos ---
+    /// <summary>DominoEX4 — 4 baudios, muy robusto.</summary>
+    DOMINOEX4,
+    /// <summary>DominoEX8 — 8 baudios.</summary>
+    DOMINOEX8,
+    /// <summary>DominoEX16 — 16 baudios.</summary>
+    DOMINOEX16,
+
+    // --- FSQ submodos ---
+    /// <summary>FSQ2 — 2 baudios, maximo alcance.</summary>
+    FSQ2,
+    /// <summary>FSQ3 — 3 baudios.</summary>
+    FSQ3,
+    /// <summary>FSQ4_5 — 4.5 baudios, modo por defecto.</summary>
+    FSQ4_5,
+    /// <summary>FSQ6 — 6 baudios, rapido.</summary>
+    FSQ6
 }
 
 /// <summary>
@@ -309,10 +342,11 @@ public static class ModoOperacionExtensiones
             SubModoOperacion.FREEDV or SubModoOperacion.M17 or SubModoOperacion.P25 or
             SubModoOperacion.NXDN => ModoOperacion.DIGITALVOICE,
             SubModoOperacion.PSK31 or SubModoOperacion.PSK63 or SubModoOperacion.PSK125 or
+            SubModoOperacion.PSK250 or
             SubModoOperacion.QPSK31 or SubModoOperacion.QPSK63 or SubModoOperacion.QPSK125 => ModoOperacion.PSK,
             SubModoOperacion.APRS or SubModoOperacion.AX25 => ModoOperacion.PKT,
             SubModoOperacion.MFSK4 or SubModoOperacion.MFSK8 or SubModoOperacion.MFSK16 or
-            SubModoOperacion.MFSK32 or SubModoOperacion.MFSK64 => ModoOperacion.MFSK,
+            SubModoOperacion.MFSK32 or SubModoOperacion.MFSK64 or SubModoOperacion.MFSK128 => ModoOperacion.MFSK,
             SubModoOperacion.FMHELL or SubModoOperacion.PSKHELL or SubModoOperacion.HELL80 => ModoOperacion.HELL,
             SubModoOperacion.JT65A or SubModoOperacion.JT65B or SubModoOperacion.JT65C => ModoOperacion.JT65,
             SubModoOperacion.OLIVIA_8_250 or SubModoOperacion.OLIVIA_8_500 or SubModoOperacion.OLIVIA_16_500 or
@@ -322,6 +356,9 @@ public static class ModoOperacionExtensiones
             SubModoOperacion.AMTOR or SubModoOperacion.NAVTEX => ModoOperacion.TOR,
             SubModoOperacion.Q65A or SubModoOperacion.Q65B or SubModoOperacion.Q65C or
             SubModoOperacion.Q65D or SubModoOperacion.Q65E => ModoOperacion.Q65,
+            SubModoOperacion.THOR4 or SubModoOperacion.THOR8 or SubModoOperacion.THOR16 => ModoOperacion.THOR,
+            SubModoOperacion.DOMINOEX4 or SubModoOperacion.DOMINOEX8 or SubModoOperacion.DOMINOEX16 => ModoOperacion.DOMINO,
+            SubModoOperacion.FSQ2 or SubModoOperacion.FSQ3 or SubModoOperacion.FSQ4_5 or SubModoOperacion.FSQ6 => ModoOperacion.FSQ,
             _ => throw new ArgumentOutOfRangeException(nameof(subModo), subModo, "Submodo no reconocido.")
         };
     }

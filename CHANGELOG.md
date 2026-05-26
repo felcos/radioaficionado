@@ -1,5 +1,44 @@
 # Changelog — RadioAficionado
 
+## [5.0.0] — 2026-05-26 — Modos digitales adicionales: PSK250, MFSK128, THOR, DominoEX, FSQ
+
+### feat: 5 nuevos decodificadores de modos digitales
+- DecodificadorPsk250: BPSK a 250 baudios con tabla Varicode
+- DecodificadorMfsk128: MFSK de 128 tonos con deteccion Goertzel
+- DecodificadorThor: IFK con FEC (THOR4/8/16), 18 tonos
+- DecodificadorDominoEx: IFK sin FEC (DOMINOEX4/8/16), 18 tonos
+- DecodificadorFsq: MFSK conversacional (FSQ2/3/4.5/6), 33 tonos
+
+### feat: nuevos submodos y modo FSQ
+- ModoOperacion: añadido FSQ
+- SubModoOperacion: añadidos PSK250, MFSK128, THOR4/8/16, DOMINOEX4/8/16, FSQ2/3/4_5/6
+- ObtenerModoPrincipal(): mappings para los 12 nuevos submodos
+
+### feat: registro DI de decodificadores
+- ConfiguracionServiciosModosDigitales: 5 nuevas configuraciones + 5 decodificadores registrados
+
+### tests: 30 tests para decodificadores adicionales
+- DecodificadoresAdicionalesTests: propiedades, ciclo de vida, procesamiento audio, dispose doble, submodos
+
+### Archivos creados
+- src/RadioAficionado.Nativo.ModosDigitales/Psk250/ConfiguracionPsk250.cs
+- src/RadioAficionado.Nativo.ModosDigitales/Psk250/DecodificadorPsk250.cs
+- src/RadioAficionado.Nativo.ModosDigitales/Mfsk128/ConfiguracionMfsk128.cs
+- src/RadioAficionado.Nativo.ModosDigitales/Mfsk128/DecodificadorMfsk128.cs
+- src/RadioAficionado.Nativo.ModosDigitales/Thor/ConfiguracionThor.cs
+- src/RadioAficionado.Nativo.ModosDigitales/Thor/DecodificadorThor.cs
+- src/RadioAficionado.Nativo.ModosDigitales/DominoEx/ConfiguracionDominoEx.cs
+- src/RadioAficionado.Nativo.ModosDigitales/DominoEx/DecodificadorDominoEx.cs
+- src/RadioAficionado.Nativo.ModosDigitales/Fsq/ConfiguracionFsq.cs
+- src/RadioAficionado.Nativo.ModosDigitales/Fsq/DecodificadorFsq.cs
+- tests/RadioAficionado.Infraestructura.Tests/ModosDigitales/DecodificadoresAdicionalesTests.cs
+
+### Archivos modificados
+- src/RadioAficionado.Dominio/ObjetosDeValor/ModoOperacion.cs
+- src/RadioAficionado.Nativo.ModosDigitales/ConfiguracionServiciosModosDigitales.cs
+
+---
+
 ## [4.0.0] — 2026-05-26 — Calidad de vida: formato fecha, notas estacion, backup, busqueda global
 
 ### feat: formato de fecha configurable

@@ -13,6 +13,11 @@ using RadioAficionado.Nativo.ModosDigitales.Sstv;
 using RadioAficionado.Nativo.ModosDigitales.Wspr;
 using RadioAficionado.Nativo.ModosDigitales.Ft2;
 using RadioAficionado.Nativo.ModosDigitales.Q65;
+using RadioAficionado.Nativo.ModosDigitales.Psk250;
+using RadioAficionado.Nativo.ModosDigitales.Mfsk128;
+using RadioAficionado.Nativo.ModosDigitales.Thor;
+using RadioAficionado.Nativo.ModosDigitales.DominoEx;
+using RadioAficionado.Nativo.ModosDigitales.Fsq;
 
 namespace RadioAficionado.Nativo.ModosDigitales;
 
@@ -69,6 +74,11 @@ public static class ConfiguracionServiciosModosDigitales
         servicios.AddSingleton(configuracionWspr ?? new ConfiguracionWspr());
         servicios.AddSingleton(configuracionFt2 ?? new ConfiguracionFt2());
         servicios.AddSingleton(configuracionQ65 ?? new ConfiguracionQ65());
+        servicios.AddSingleton(new ConfiguracionPsk250());
+        servicios.AddSingleton(new ConfiguracionMfsk128());
+        servicios.AddSingleton(new ConfiguracionThor());
+        servicios.AddSingleton(new ConfiguracionDominoEx());
+        servicios.AddSingleton(new ConfiguracionFsq());
 
         // Decodificadores
         servicios.AddSingleton<IDecodificadorDigital, DecodificadorFt8>();
@@ -84,6 +94,11 @@ public static class ConfiguracionServiciosModosDigitales
         servicios.AddSingleton<IDecodificadorDigital, DecodificadorWspr>();
         servicios.AddSingleton<IDecodificadorDigital, DecodificadorFt2>();
         servicios.AddSingleton<IDecodificadorDigital, DecodificadorQ65>();
+        servicios.AddSingleton<IDecodificadorDigital, DecodificadorPsk250>();
+        servicios.AddSingleton<IDecodificadorDigital, DecodificadorMfsk128>();
+        servicios.AddSingleton<IDecodificadorDigital, DecodificadorThor>();
+        servicios.AddSingleton<IDecodificadorDigital, DecodificadorDominoEx>();
+        servicios.AddSingleton<IDecodificadorDigital, DecodificadorFsq>();
 
         // Registro central
         servicios.AddSingleton<IRegistroDecodificadores>(sp =>

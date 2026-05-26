@@ -32,12 +32,18 @@
 - Modal configuracion: selector formato fecha, textarea notas, checkbox backup, boton backup manual
 - 17 tests nuevos (9 backup + 8 configuracion)
 
+#### Fase 18: Modos digitales adicionales (2026-05-26)
+- 5 nuevos decodificadores: PSK250 (BPSK 250 baud), MFSK128 (128 tonos Goertzel), THOR (IFK+FEC), DominoEX (IFK), FSQ (MFSK conversacional)
+- ModoOperacion.FSQ + 12 nuevos submodos (PSK250, MFSK128, THOR4/8/16, DOMINOEX4/8/16, FSQ2/3/4_5/6)
+- Registro DI completo en ConfiguracionServiciosModosDigitales
+- 30 tests unitarios (propiedades, ciclo de vida, audio, dispose, submodos)
+- 1480 tests totales, 0 fallos
+
 ### Que quedo pendiente
-- Fase 18: Modos digitales adicionales (PSK250, THOR, DominoEX, MFSK-128, FSQ)
 - WebRTC audio real (SIPSorcery), migracion claves_api PostgreSQL, i18n web, e2e tests
 
 ### Siguiente paso sugerido
-- Continuar con Fase 18 (modos digitales adicionales)
+- Merge feature/fase-1-rig-waterfall-ft8 a main (crear PR)
 
 ---
 
