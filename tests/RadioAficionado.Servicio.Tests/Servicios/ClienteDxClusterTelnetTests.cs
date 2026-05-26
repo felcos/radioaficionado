@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
+using RadioAficionado.Dominio.Interfaces;
 using RadioAficionado.Servicio.Dtos;
 using RadioAficionado.Servicio.Hubs;
 using RadioAficionado.Servicio.Servicios;
@@ -20,6 +21,7 @@ public sealed class ClienteDxClusterTelnetTests
     public ClienteDxClusterTelnetTests()
     {
         Mock<IHubContext<HubEstado, IClienteHubEstado>> mockHub = new();
+        Mock<IServicioAlertas> mockAlertas = new();
         Mock<IConfiguration> mockConfig = new();
         Mock<IConfigurationSection> mockSeccion = new();
         mockConfig.Setup(c => c.GetSection("DxCluster")).Returns(mockSeccion.Object);
@@ -27,6 +29,7 @@ public sealed class ClienteDxClusterTelnetTests
 
         _cliente = new ClienteDxClusterTelnet(
             mockHub.Object,
+            mockAlertas.Object,
             mockConfig.Object,
             mockLogger.Object);
     }

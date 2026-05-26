@@ -11,6 +11,7 @@ using RadioAficionado.Infraestructura.PskReporter;
 using RadioAficionado.Infraestructura.Qsl;
 using RadioAficionado.Infraestructura.Aprs;
 using RadioAficionado.Infraestructura.Satelites;
+using RadioAficionado.Infraestructura.Alertas;
 using RadioAficionado.Infraestructura.Sincronizacion;
 
 namespace RadioAficionado.Infraestructura;
@@ -61,6 +62,9 @@ public static class ConfiguracionServicios
 
         // APRS-IS (Automatic Packet Reporting System)
         servicios.AddSingleton<IServicioAprs, ClienteAprsIs>();
+
+        // Alertas de DX Cluster
+        servicios.AddSingleton<IServicioAlertas, ServicioAlertas>();
 
         // Tracking de satélites amateur
         servicios.AddSingleton<ConfiguracionSatelites>();

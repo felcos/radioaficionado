@@ -3,6 +3,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.SignalR;
+using RadioAficionado.Dominio.Alertas;
 using RadioAficionado.Dominio.Interfaces;
 using RadioAficionado.Dominio.ObjetosDeValor;
 using RadioAficionado.Servicio.Dtos;
@@ -28,6 +29,7 @@ public sealed class ClienteDxClusterTelnet : BackgroundService
     private static readonly int[] _retrasosReconexionSegundos = [5, 10, 30, 60];
 
     private readonly IHubContext<HubEstado, IClienteHubEstado> _contextoHub;
+    private readonly IServicioAlertas _servicioAlertas;
     private readonly IConfiguration _configuracion;
     private readonly ILogger<ClienteDxClusterTelnet> _logger;
 
@@ -39,14 +41,17 @@ public sealed class ClienteDxClusterTelnet : BackgroundService
     /// Crea el cliente DX Cluster por Telnet.
     /// </summary>
     /// <param name="contextoHub">Contexto del hub SignalR para emitir spots.</param>
+    /// <param name="servicioAlertas">Servicio de alertas para evaluar spots.</param>
     /// <param name="configuracion">Configuracion de la aplicacion.</param>
     /// <param name="logger">Logger para registrar eventos.</param>
     public ClienteDxClusterTelnet(
         IHubContext<HubEstado, IClienteHubEstado> contextoHub,
+        IServicioAlertas servicioAlertas,
         IConfiguration configuracion,
         ILogger<ClienteDxClusterTelnet> logger)
     {
         _contextoHub = contextoHub ?? throw new ArgumentNullException(nameof(contextoHub));
+        _servicioAlertas = servicioAlertas ?? throw new ArgumentNullException(nameof(servicioAlertas));
         _configuracion = configuracion ?? throw new ArgumentNullException(nameof(configuracion));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
@@ -202,6 +207,20 @@ public sealed class ClienteDxClusterTelnet : BackgroundService
             if (spot is not null)
             {
                 await _contextoHub.Clients.All.RecibirSpotDx(spot);
+
+                // Evaluar alertas configuradas
+                IReadOnlyList<ResultadoAlerta> alertas = _servicioAlertas.EvaluarSpot(
+                    spot.Spotteador, spot.Dx, spot.FrecuenciaHz, spot.Comentario, spot.HoraUtc);
+
+                foreach (ResultadoAlerta alerta in alertas)
+                {
+                    await _contextoHub.Clients.All.RecibirAlerta(
+                        alerta.Regla.Nombre,
+                        alerta.Mensaje,
+                        alerta.Dx,
+                        alerta.Frecuencia.Hz,
+                        alerta.Regla.ConSonido);
+                }
             }
         }
 

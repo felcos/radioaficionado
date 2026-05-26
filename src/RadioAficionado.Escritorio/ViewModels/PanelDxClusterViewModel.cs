@@ -114,6 +114,12 @@ public partial class PanelDxClusterViewModel : ViewModelBase, IDisposable
     private string _filtroBanda = string.Empty;
 
     /// <summary>
+    /// Filtro por modo de operacion. Vacío muestra todos los modos.
+    /// </summary>
+    [ObservableProperty]
+    private string _filtroModo = string.Empty;
+
+    /// <summary>
     /// Texto del botón de conexión (Conectar/Desconectar).
     /// </summary>
     [ObservableProperty]
@@ -139,6 +145,16 @@ public partial class PanelDxClusterViewModel : ViewModelBase, IDisposable
         "",
         "160m", "80m", "60m", "40m", "30m", "20m",
         "17m", "15m", "12m", "10m", "6m", "2m", "70cm"
+    ];
+
+    /// <summary>
+    /// Modos disponibles para filtrar.
+    /// </summary>
+    public ObservableCollection<string> ModosDisponibles { get; } =
+    [
+        "",
+        "FT8", "FT4", "CW", "SSB", "RTTY", "PSK",
+        "JT65", "JT9", "WSPR", "JS8", "FM", "AM", "Digital"
     ];
 
     /// <summary>
@@ -304,6 +320,11 @@ public partial class PanelDxClusterViewModel : ViewModelBase, IDisposable
     }
 
     partial void OnFiltroBandaChanged(string value)
+    {
+        AplicarFiltros();
+    }
+
+    partial void OnFiltroModoChanged(string value)
     {
         AplicarFiltros();
     }
@@ -536,6 +557,15 @@ public partial class PanelDxClusterViewModel : ViewModelBase, IDisposable
         if (!string.IsNullOrWhiteSpace(FiltroBanda))
         {
             if (!spot.Banda.Contains(FiltroBanda, StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+        }
+
+        // Filtro por modo
+        if (!string.IsNullOrWhiteSpace(FiltroModo))
+        {
+            if (!spot.Modo.Equals(FiltroModo, StringComparison.OrdinalIgnoreCase))
             {
                 return false;
             }

@@ -114,6 +114,38 @@ public partial class PanelActivacionesViewModel : ViewModelBase
     private string _tiempoTranscurrido = "00:00:00";
 
     /// <summary>
+    /// Minutos para la alarma del cronometro (0 = sin alarma).
+    /// </summary>
+    [ObservableProperty]
+    private int _minutosAlarma = 10;
+
+    /// <summary>
+    /// Indica si la alarma ya se disparo en esta activacion.
+    /// Se resetea al iniciar una nueva activacion.
+    /// </summary>
+    private bool _alarmaDisparada;
+
+    /// <summary>
+    /// Texto de la alarma mostrado cuando se dispara.
+    /// </summary>
+    [ObservableProperty]
+    private string _textoAlarma = string.Empty;
+
+    /// <summary>
+    /// Indica si la alarma esta visible en la UI.
+    /// </summary>
+    [ObservableProperty]
+    private bool _alarmaVisible;
+
+    /// <summary>
+    /// Minutos disponibles para configurar la alarma del cronometro.
+    /// </summary>
+    public ObservableCollection<int> MinutosAlarmaDisponibles { get; } =
+    [
+        0, 5, 10, 15, 20, 30, 45, 60
+    ];
+
+    /// <summary>
     /// Identificador de la activación en curso (para comandos).
     /// </summary>
     [ObservableProperty]
@@ -538,12 +570,47 @@ public partial class PanelActivacionesViewModel : ViewModelBase
     private void IniciarCronometro()
     {
         _cronometro.Restart();
+        _alarmaDisparada = false;
+        AlarmaVisible = false;
+        TextoAlarma = string.Empty;
 
         _temporizador = DispatcherTimer.Run(() =>
         {
             TiempoTranscurrido = _cronometro.Elapsed.ToString(@"hh\:mm\:ss");
+            EvaluarAlarma();
             return true;
         }, TimeSpan.FromSeconds(1));
+    }
+
+    /// <summary>
+    /// Evalua si se ha alcanzado el tiempo configurado para la alarma.
+    /// </summary>
+    private void EvaluarAlarma()
+    {
+        if (_alarmaDisparada || MinutosAlarma <= 0)
+        {
+            return;
+        }
+
+        if (_cronometro.Elapsed.TotalMinutes >= MinutosAlarma)
+        {
+            _alarmaDisparada = true;
+            TextoAlarma = $"Alarma: {MinutosAlarma} minutos alcanzados";
+            AlarmaVisible = true;
+            _logger.LogInformation(
+                "Alarma de activacion disparada: {Minutos} minutos alcanzados",
+                MinutosAlarma);
+        }
+    }
+
+    /// <summary>
+    /// Descarta la alarma visible.
+    /// </summary>
+    [RelayCommand]
+    private void DescartarAlarma()
+    {
+        AlarmaVisible = false;
+        TextoAlarma = string.Empty;
     }
 
     /// <summary>

@@ -55,6 +55,11 @@
                                   SelectedItem="{Binding FiltroBanda}"
                                   MinWidth="100"
                                   VerticalAlignment="Center" />
+                        <TextBlock Text="Modo:" Foreground="#aaaaaa" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        <ComboBox ItemsSource="{Binding ModosDisponibles}"
+                                  SelectedItem="{Binding FiltroModo}"
+                                  MinWidth="100"
+                                  VerticalAlignment="Center" />
                         <Button Content="Limpiar"
                                 Command="{Binding LimpiarSpotsCommand}"
                                 VerticalAlignment="Center"

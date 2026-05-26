@@ -12,4 +12,7 @@ public interface IClienteHubEstado
 
     /// <summary>Envia una notificacion al cliente.</summary>
     Task RecibirNotificacion(string tipo, string mensaje);
+
+    /// <summary>Envia una alerta de DX Cluster al cliente.</summary>
+    Task RecibirAlerta(string nombreRegla, string mensaje, string dx, long frecuenciaHz, bool conSonido);
 }

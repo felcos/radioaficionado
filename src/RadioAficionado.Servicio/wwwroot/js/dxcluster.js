@@ -86,6 +86,10 @@ const DxCluster = (function () {
             }
         });
 
+        hubEstado.on('RecibirAlerta', function (nombreRegla, mensaje, dx, frecuenciaHz, conSonido) {
+            mostrarAlerta(nombreRegla, mensaje, dx, frecuenciaHz, conSonido);
+        });
+
         const filtroBanda = document.getElementById('dxcluster-filtro-banda');
         if (filtroBanda) {
             filtroBanda.addEventListener('change', renderizar);
@@ -94,6 +98,11 @@ const DxCluster = (function () {
         const filtroModo = document.getElementById('dxcluster-filtro-modo');
         if (filtroModo) {
             filtroModo.addEventListener('change', renderizar);
+        }
+
+        const filtroIndicativo = document.getElementById('dxcluster-filtro-indicativo');
+        if (filtroIndicativo) {
+            filtroIndicativo.addEventListener('input', renderizar);
         }
     }
 
@@ -113,11 +122,19 @@ const DxCluster = (function () {
 
         const filtroBanda = document.getElementById('dxcluster-filtro-banda');
         const filtroModo = document.getElementById('dxcluster-filtro-modo');
+        const filtroIndicativo = document.getElementById('dxcluster-filtro-indicativo');
         const bandaFiltro = filtroBanda ? filtroBanda.value : '';
         const modoFiltro = filtroModo ? filtroModo.value : '';
+        const indicativoFiltro = filtroIndicativo ? filtroIndicativo.value.toUpperCase().trim() : '';
 
         let filtrados = spots;
 
+        if (indicativoFiltro) {
+            filtrados = filtrados.filter(function (s) {
+                return s.indicativoDx.toUpperCase().indexOf(indicativoFiltro) !== -1 ||
+                       s.indicativoSpotter.toUpperCase().indexOf(indicativoFiltro) !== -1;
+            });
+        }
         if (bandaFiltro) {
             filtrados = filtrados.filter(function (s) { return s.banda === bandaFiltro; });
         }
@@ -176,8 +193,81 @@ const DxCluster = (function () {
         }
     }
 
+    function mostrarAlerta(nombreRegla, mensaje, dx, frecuenciaHz, conSonido) {
+        // Crear toast de alerta
+        const contenedor = document.getElementById('dxcluster-alertas') || crearContenedorAlertas();
+        const toast = document.createElement('div');
+        toast.className = 'dxcluster-alerta';
+        toast.innerHTML =
+            '<div class="dxcluster-alerta-titulo">' +
+            '<span class="dxcluster-alerta-icono">&#9888;</span> ' +
+            '<strong>' + nombreRegla + '</strong>' +
+            '<button class="dxcluster-alerta-cerrar" title="Cerrar">&times;</button>' +
+            '</div>' +
+            '<div class="dxcluster-alerta-mensaje">' + mensaje + '</div>';
+
+        toast.querySelector('.dxcluster-alerta-cerrar').addEventListener('click', function () {
+            toast.remove();
+        });
+
+        // Click en el toast sintoniza la frecuencia
+        toast.style.cursor = 'pointer';
+        toast.addEventListener('click', function (e) {
+            if (e.target.classList.contains('dxcluster-alerta-cerrar')) { return; }
+            sintonizarSpot(frecuenciaHz);
+        });
+
+        contenedor.prepend(toast);
+
+        // Auto-cerrar despues de 15 segundos
+        setTimeout(function () {
+            if (toast.parentNode) {
+                toast.remove();
+            }
+        }, 15000);
+
+        // Sonido de alerta
+        if (conSonido) {
+            reproducirSonidoAlerta();
+        }
+    }
+
+    function crearContenedorAlertas() {
+        const contenedor = document.createElement('div');
+        contenedor.id = 'dxcluster-alertas';
+        contenedor.className = 'dxcluster-alertas-contenedor';
+        const panelDx = document.querySelector('.panel-dxcluster-contenido');
+        if (panelDx) {
+            panelDx.prepend(contenedor);
+        } else {
+            document.body.appendChild(contenedor);
+        }
+        return contenedor;
+    }
+
+    function reproducirSonidoAlerta() {
+        try {
+            const contextoAudio = new (window.AudioContext || window.webkitAudioContext)();
+            const oscilador = contextoAudio.createOscillator();
+            const ganancia = contextoAudio.createGain();
+            oscilador.connect(ganancia);
+            ganancia.connect(contextoAudio.destination);
+            oscilador.type = 'sine';
+            oscilador.frequency.setValueAtTime(880, contextoAudio.currentTime);
+            oscilador.frequency.setValueAtTime(1100, contextoAudio.currentTime + 0.1);
+            oscilador.frequency.setValueAtTime(880, contextoAudio.currentTime + 0.2);
+            ganancia.gain.setValueAtTime(0.3, contextoAudio.currentTime);
+            ganancia.gain.exponentialRampToValueAtTime(0.01, contextoAudio.currentTime + 0.4);
+            oscilador.start(contextoAudio.currentTime);
+            oscilador.stop(contextoAudio.currentTime + 0.4);
+        } catch (e) {
+            // AudioContext no disponible, ignorar silenciosamente
+        }
+    }
+
     return {
         init: init,
-        setEstadoConexion: setEstadoConexion
+        setEstadoConexion: setEstadoConexion,
+        mostrarAlerta: mostrarAlerta
     };
 })();
