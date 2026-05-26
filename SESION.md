@@ -39,11 +39,22 @@
 - 30 tests unitarios (propiedades, ciclo de vida, audio, dispose, submodos)
 - 1480 tests totales, 0 fallos
 
+#### Tareas de infraestructura (2026-05-26)
+- Merge feature/fase-1-rig-waterfall-ft8 a main (fast-forward, 23 commits)
+- WebRTC real con SIPSorcery: AdaptadorWebRtcAudio reescrito, RTCPeerConnection, G.711 mu-law, 9 tests
+- Verificacion migracion claves_api: ya incluida en migracion inicial, no se necesita nueva
+- 1489 tests totales, 0 fallos propios (1 fallo preexistente en IA.Tests: umbral ML.NET)
+
 ### Que quedo pendiente
-- WebRTC audio real (SIPSorcery), migracion claves_api PostgreSQL, i18n web, e2e tests
+- i18n web (internacionalizacion RadioAficionado.Web)
+- Test end-to-end con radio real conectada via rigctld + control remoto web
+- SDR hardware testing con RTL-SDR reales
+- Mobile testing en emuladores Android/iOS
+- Fix test IA: SfiAlto_BandaAlta_ProbabilidadAlta (umbral 0.3 vs 0.254)
 
 ### Siguiente paso sugerido
-- Merge feature/fase-1-rig-waterfall-ft8 a main (crear PR)
+- Push a origin/main
+- i18n de RadioAficionado.Web
 
 ---
 

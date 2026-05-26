@@ -93,6 +93,7 @@ public sealed class ClienteRelaySignalR : IHostedService, IAsyncDisposable
         ConstruirConexion();
         RegistrarHandlers();
         SuscribirseACambiosDeEstado();
+        SuscribirseAEventosWebRtc();
 
         try
         {
@@ -247,7 +248,41 @@ public sealed class ClienteRelaySignalR : IHostedService, IAsyncDisposable
     }
 
     /// <summary>
-    /// Procesa señalizacion WebRTC recibida del servidor.
+    /// Suscribe los eventos del adaptador WebRTC para reenviar senalizacion al servidor.
+    /// </summary>
+    private void SuscribirseAEventosWebRtc()
+    {
+        _adaptadorWebRtc.RespuestaSdpGenerada += async (object? remitente, string sdpRespuesta) =>
+        {
+            SenalizacionWebRtc senalizacion = new(
+                TipoSenalizacion.Respuesta,
+                sdpRespuesta,
+                null,
+                null,
+                null);
+
+            await EnviarSinBloquearAsync("EnviarSenalizacion", senalizacion);
+            _logger.LogInformation("Respuesta SDP enviada al servidor via SignalR");
+        };
+
+        _adaptadorWebRtc.CandidatoIceGenerado += async (object? remitente, CandidatoIceLocal candidato) =>
+        {
+            SenalizacionWebRtc senalizacion = new(
+                TipoSenalizacion.CandidatoIce,
+                null,
+                candidato.Candidato,
+                candidato.SdpMid,
+                candidato.IndiceLinea);
+
+            await EnviarSinBloquearAsync("EnviarSenalizacion", senalizacion);
+            _logger.LogDebug(
+                "Candidato ICE local enviado al servidor (sdpMid={SdpMid})",
+                candidato.SdpMid);
+        };
+    }
+
+    /// <summary>
+    /// Procesa senalizacion WebRTC recibida del servidor.
     /// </summary>
     private async Task ProcesarSenalizacionAsync(SenalizacionWebRtc senalizacion)
     {

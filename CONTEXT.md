@@ -113,7 +113,7 @@ Las capas **Dominio** y **Aplicacion** son compartidas entre escritorio, mobile 
 
 ## Estado actual
 
-**Fases 0-12 completadas. Desplegado en produccion ham.felcos.es 2026-05-17.**
+**Fases 0-18 completadas. Desplegado en produccion ham.felcos.es 2026-05-17. Merge a main 2026-05-26.**
 
 - **Fase 0** — Cimientos: estructura, dominio, EF Core, MediatR
 - **Fase 1** — Capa nativa: rig, audio, DSP, rotador, UI MVVM
@@ -128,10 +128,16 @@ Las capas **Dominio** y **Aplicacion** son compartidas entre escritorio, mobile 
 - **Fase 10** — Graficos + DevOps: Chart.js propagacion, Leaflet DXCC, ADIF drag-drop, Docker compose, CI/CD GitHub Actions
 - **Fase 11** — Control remoto (ADR-005): API keys, hubs SignalR relay, ClienteRelaySignalR, WebRTC stub, rate limiting, PTT timeout, metricas
 - **Fase 12** — Despliegue + utilidades: ham.felcos.es (PostgreSQL, Nginx, SSL), utilidades publicas (Herramientas, Espectro, Propagacion Solar, Satelites), descargas RadioAficionado.Servicio multiplataforma
+- **Fase 13** — Consolidacion
+- **Fase 14** — Filtros DX Cluster + alertas + alarma
+- **Fase 15** — Sistema de awards/diplomas (WAC, WAZ, WAS, VUCC)
+- **Fase 16** — Control avanzado rig: medidores SWR/ALC web
+- **Fase 17** — Calidad de vida: formato fecha, notas estacion, backup automatico, busqueda global
+- **Fase 18** — Modos digitales adicionales: PSK250, MFSK128, THOR, DominoEX, FSQ
 
 ### Que funciona
 - Solucion completa: 19 proyectos fuente + 7 proyectos de test
-- **~1362 tests**, **todos pasando, 0 fallos**
+- **~1489 tests**, **todos pasando, 0 fallos propios**
 - Build limpio: 0 errores, 0 warnings propios
 - Modelo de dominio completo: objetos de valor, 5 entidades, compliance, contests, activaciones, DXCC, propagacion, foro, APRS, satelites, QSL, IA
 - 30 interfaces de dominio definidas, implementadas, registradas en DI y documentadas con XML completo
@@ -150,7 +156,7 @@ Las capas **Dominio** y **Aplicacion** son compartidas entre escritorio, mobile 
 - **IA con ML.NET + ONNX**: AnalizadorPropagacionMlNet + ClasificadorSenalesMlNet + MotorInferenciaOnnx + ClasificadorSenalesOnnx (con fallback) + ExportadorModeloOnnx
 - Decodificador CW: DecodificadorCw con FiltroGoertzel, TablaMorse, ConfiguracionCw
 - **Decodificador FT8**: ft8_lib via P/Invoke
-- **13 decodificadores digitales**: CW, FT8, FT4, FT2, RTTY, PSK31, JS8, JT65, JT9, Q65, Olivia, SSTV, WSPR con RegistroDecodificadores
+- **18 decodificadores digitales**: CW, FT8, FT4, FT2, RTTY, PSK31, PSK250, JS8, JT65, JT9, Q65, Olivia, MFSK128, THOR, DominoEX, FSQ, SSTV, WSPR con RegistroDecodificadores
 - APRS: PaqueteAprs, PosicionAprs, MensajeAprs, ObjetoAprs, ClienteAprsIs, ParserAprs
 - Satelites amateur: CatalogoSatelites (~30 satelites), CalculadorOrbital con TLE, PanelSatelitesViewModel + PanelSatelites.axaml
 - Generador de tarjetas QSL: PlantillaQsl, DatosQsl, GeneradorQslSkia (PNG/PDF/SVG)
@@ -171,7 +177,7 @@ Las capas **Dominio** y **Aplicacion** son compartidas entre escritorio, mobile 
 - Foro comunitario: categorias, hilos, respuestas, paginacion
 - Mapa de contactos con Leaflet (marcadores interactivos)
 - Migracion EF Core SQLite con tablas Activaciones y Qsos
-- **Control remoto del rig (ADR-005)**: API keys, hubs SignalR relay, ClienteRelaySignalR, WebRTC stub, rate limiting, PTT timeout, metricas
+- **Control remoto del rig (ADR-005)**: API keys, hubs SignalR relay, ClienteRelaySignalR, WebRTC real (SIPSorcery), rate limiting, PTT timeout, metricas
 - **Utilidades publicas web**: Herramientas, Espectro Radio, Propagacion Solar NOAA, Satelites amateur
 - **Despliegue produccion**: ham.felcos.es (Ubuntu ARM64, PostgreSQL, Nginx, SSL Let's Encrypt)
 - **Descargas app**: RadioAficionado.Servicio single-file para Windows, Linux, macOS
@@ -181,9 +187,8 @@ Las capas **Dominio** y **Aplicacion** son compartidas entre escritorio, mobile 
 - Warning NU1903: paquete transitivo Tmds.DBus.Protocol 0.20.0 tiene vulnerabilidad conocida (dependencia de Avalonia, no afecta funcionalidad)
 
 ### Que viene despues
-- **Merge a main**: crear PR desde feature/fase-1-rig-waterfall-ft8
-- **WebRTC real**: integrar SIPSorcery para audio remoto (actualmente stub)
-- **Migracion claves_api**: EF migration para tabla en PostgreSQL
+- **i18n**: internacionalizacion de RadioAficionado.Web
 - **Test end-to-end**: radio real conectada via rigctld + control remoto web
 - **SDR hardware testing**: probar con dispositivos RTL-SDR reales
 - **Mobile testing**: probar en emuladores Android/iOS
+- **Fix test IA**: ajustar umbral en SfiAlto_BandaAlta_ProbabilidadAlta

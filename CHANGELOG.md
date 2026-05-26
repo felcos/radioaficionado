@@ -1,5 +1,31 @@
 # Changelog — RadioAficionado
 
+## [6.0.0] — 2026-05-26 — WebRTC real, merge a main, verificacion migracion claves_api
+
+### feat: WebRTC real con SIPSorcery (reemplaza stub)
+- AdaptadorWebRtcAudio: RTCPeerConnection, SDP offer/answer, ICE candidates
+- Audio PCM16 remuestreado a 8kHz G.711 mu-law para transmision
+- Eventos RespuestaSdpGenerada y CandidatoIceGenerado
+- ClienteRelaySignalR: suscripcion a eventos WebRTC, envio senalizacion via SignalR
+- 9 tests unitarios
+
+### chore: merge feature/fase-1-rig-waterfall-ft8 a main
+- Fast-forward merge de 23 commits (fases 8-18)
+
+### chore: verificacion migracion claves_api
+- Tabla claves_api ya incluida en migracion inicial 20260517112250_Inicial
+- No se requiere migracion adicional
+
+### Archivos modificados
+- src/RadioAficionado.Servicio/Remoto/AdaptadorWebRtcAudio.cs (reescrito)
+- src/RadioAficionado.Servicio/Remoto/ClienteRelaySignalR.cs (eventos WebRTC)
+- src/RadioAficionado.Servicio/RadioAficionado.Servicio.csproj (SIPSorcery 6.2.4)
+
+### Archivos creados
+- tests/RadioAficionado.Servicio.Tests/Remoto/AdaptadorWebRtcAudioTests.cs
+
+---
+
 ## [5.0.0] — 2026-05-26 — Modos digitales adicionales: PSK250, MFSK128, THOR, DominoEX, FSQ
 
 ### feat: 5 nuevos decodificadores de modos digitales
