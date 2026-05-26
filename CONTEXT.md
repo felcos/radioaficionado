@@ -113,7 +113,7 @@ Las capas **Dominio** y **Aplicacion** son compartidas entre escritorio, mobile 
 
 ## Estado actual
 
-**Fases 0-7 completadas. Integracion final verificada 2026-04-11.**
+**Fases 0-12 completadas. Desplegado en produccion ham.felcos.es 2026-05-17.**
 
 - **Fase 0** — Cimientos: estructura, dominio, EF Core, MediatR
 - **Fase 1** — Capa nativa: rig, audio, DSP, rotador, UI MVVM
@@ -122,14 +122,16 @@ Las capas **Dominio** y **Aplicacion** son compartidas entre escritorio, mobile 
 - **Fase 4** — Avanzado: CW decoder, APRS, satelites, generador QSL
 - **Fase 5** — Integracion: Waterfall en vivo, FFTW3, FT8, migracion PostgreSQL Identity, logbook privado, modos digitales (FT4/RTTY/PSK31/JS8), IA (ML.NET), perfiles publicos
 - **Fase 6** — Expansion: SDR (SoapySDR), modos digitales (JT65/JT9/Olivia/SSTV), ONNX Runtime, Mobile (Android+iOS), vistas web completadas
-- **Fase 7** — Completitud: WSPR/FT2/Q65, SDR→Waterfall, modelos ONNX entrenables, auditoría completa (DI, CRUD, documentación interfaces)
-- **Fase 8 (en curso)** — Rig + Waterfall + FT8: conexión CAT serial robusta, audio USB del radio, waterfall en vivo conectado al audio real
-- **Fase 9 (completada 2026-05-15)** — Paneles conectados: DXCC progreso/filtro, propagación colores, Log QSO, Contest datos reales, Lanzador persistido, tests integración
-- **Fase 10 (completada 2026-05-16)** — Graficos + DevOps: Chart.js propagacion, Leaflet DXCC, ADIF drag-drop, Docker compose, CI/CD GitHub Actions
+- **Fase 7** — Completitud: WSPR/FT2/Q65, SDR→Waterfall, modelos ONNX entrenables, auditoria completa (DI, CRUD, documentacion interfaces)
+- **Fase 8** — Rig + Waterfall + FT8: conexion CAT serial robusta, audio USB del radio, waterfall en vivo conectado al audio real
+- **Fase 9** — Paneles conectados: DXCC progreso/filtro, propagacion colores, Log QSO, Contest datos reales, Lanzador persistido, tests integracion
+- **Fase 10** — Graficos + DevOps: Chart.js propagacion, Leaflet DXCC, ADIF drag-drop, Docker compose, CI/CD GitHub Actions
+- **Fase 11** — Control remoto (ADR-005): API keys, hubs SignalR relay, ClienteRelaySignalR, WebRTC stub, rate limiting, PTT timeout, metricas
+- **Fase 12** — Despliegue + utilidades: ham.felcos.es (PostgreSQL, Nginx, SSL), utilidades publicas (Herramientas, Espectro, Propagacion Solar, Satelites), descargas RadioAficionado.Servicio multiplataforma
 
 ### Que funciona
 - Solucion completa: 19 proyectos fuente + 7 proyectos de test
-- **1300 tests** (308 Dominio + 676 Infraestructura + 67 Web + 86 IA + 151 Servicio + 12 Escritorio), **todos pasando, 0 fallos**
+- **~1362 tests**, **todos pasando, 0 fallos**
 - Build limpio: 0 errores, 0 warnings propios
 - Modelo de dominio completo: objetos de valor, 5 entidades, compliance, contests, activaciones, DXCC, propagacion, foro, APRS, satelites, QSL, IA
 - 30 interfaces de dominio definidas, implementadas, registradas en DI y documentadas con XML completo
@@ -169,14 +171,19 @@ Las capas **Dominio** y **Aplicacion** son compartidas entre escritorio, mobile 
 - Foro comunitario: categorias, hilos, respuestas, paginacion
 - Mapa de contactos con Leaflet (marcadores interactivos)
 - Migracion EF Core SQLite con tablas Activaciones y Qsos
+- **Control remoto del rig (ADR-005)**: API keys, hubs SignalR relay, ClienteRelaySignalR, WebRTC stub, rate limiting, PTT timeout, metricas
+- **Utilidades publicas web**: Herramientas, Espectro Radio, Propagacion Solar NOAA, Satelites amateur
+- **Despliegue produccion**: ham.felcos.es (Ubuntu ARM64, PostgreSQL, Nginx, SSL Let's Encrypt)
+- **Descargas app**: RadioAficionado.Servicio single-file para Windows, Linux, macOS
 
 ### Problemas conocidos
 - Escritorio: lock de DLL de Avalonia ocasional en compilacion paralela (error AVLN9999)
 - Warning NU1903: paquete transitivo Tmds.DBus.Protocol 0.20.0 tiene vulnerabilidad conocida (dependencia de Avalonia, no afecta funcionalidad)
 
 ### Que viene despues
-- **Despliegue Docker**: verificar docker compose up en local y servidor
-- **CI/CD en GitHub**: push y validar pipeline
-- **Test end-to-end**: radio real conectada via rigctld
+- **Merge a main**: crear PR desde feature/fase-1-rig-waterfall-ft8
+- **WebRTC real**: integrar SIPSorcery para audio remoto (actualmente stub)
+- **Migracion claves_api**: EF migration para tabla en PostgreSQL
+- **Test end-to-end**: radio real conectada via rigctld + control remoto web
 - **SDR hardware testing**: probar con dispositivos RTL-SDR reales
 - **Mobile testing**: probar en emuladores Android/iOS

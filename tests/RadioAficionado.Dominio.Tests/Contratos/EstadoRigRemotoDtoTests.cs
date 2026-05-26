@@ -22,7 +22,9 @@ public class EstadoRigRemotoDtoTests
             VfoActivo: 'A',
             PotenciaVatios: 50.0,
             SplitActivo: false,
-            Conectado: true);
+            Conectado: true,
+            Swr: 1.5,
+            Alc: 30.0);
 
         // Assert
         estado.FrecuenciaHz.Should().Be(14074000);
@@ -35,6 +37,8 @@ public class EstadoRigRemotoDtoTests
         estado.PotenciaVatios.Should().Be(50.0);
         estado.SplitActivo.Should().BeFalse();
         estado.Conectado.Should().BeTrue();
+        estado.Swr.Should().Be(1.5);
+        estado.Alc.Should().Be(30.0);
     }
 
     [Fact]
@@ -51,7 +55,9 @@ public class EstadoRigRemotoDtoTests
             VfoActivo: 'B',
             PotenciaVatios: 100.0,
             SplitActivo: true,
-            Conectado: true);
+            Conectado: true,
+            Swr: 2.1,
+            Alc: 55.0);
 
         EstadoRigRemotoDto estado2 = new(
             FrecuenciaHz: 7074000,
@@ -63,7 +69,9 @@ public class EstadoRigRemotoDtoTests
             VfoActivo: 'B',
             PotenciaVatios: 100.0,
             SplitActivo: true,
-            Conectado: true);
+            Conectado: true,
+            Swr: 2.1,
+            Alc: 55.0);
 
         // Act & Assert
         estado1.Should().Be(estado2);

@@ -13,6 +13,8 @@ namespace RadioAficionado.Servicio.Dtos;
 /// <param name="VfoActivo">VFO activo ('A' o 'B').</param>
 /// <param name="PotenciaVatios">Potencia de transmision en vatios.</param>
 /// <param name="SplitActivo">Si el split esta activo.</param>
+/// <param name="Swr">SWR durante transmision (1.0 = perfecto, 0 = no disponible).</param>
+/// <param name="Alc">ALC como porcentaje (0-100, 0 = no disponible).</param>
 public sealed record EstadoRigDto(
     long FrecuenciaHz,
     string FrecuenciaDisplay,
@@ -23,4 +25,6 @@ public sealed record EstadoRigDto(
     bool Transmitiendo,
     char VfoActivo,
     double PotenciaVatios,
-    bool SplitActivo);
+    bool SplitActivo,
+    double Swr,
+    double Alc);

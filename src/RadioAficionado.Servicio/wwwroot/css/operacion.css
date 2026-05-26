@@ -109,6 +109,56 @@
     min-width: 24px;
 }
 
+/* Medidores TX (SWR / ALC) */
+.medidor-contenedor {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 100px;
+}
+
+.medidor-tx {
+    display: none;
+}
+
+.medidor-tx.visible {
+    display: flex;
+}
+
+.medidor-etiqueta {
+    font-size: 0.65rem;
+    color: #888;
+    min-width: 22px;
+}
+
+.medidor-barra {
+    width: 60px;
+    height: 10px;
+    background: #111;
+    border: 1px solid #444;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.medidor-relleno {
+    height: 100%;
+    transition: width 0.2s;
+}
+
+.medidor-swr-relleno {
+    background: linear-gradient(to right, #00ff41, #ffd700, #ff4444);
+}
+
+.medidor-alc-relleno {
+    background: linear-gradient(to right, #00ff41, #ffd700, #ff4444);
+}
+
+.medidor-valor {
+    font-size: 0.65rem;
+    color: var(--color-acento);
+    min-width: 30px;
+}
+
 /* PTT */
 .btn-ptt {
     padding: 4px 12px;

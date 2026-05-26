@@ -36,6 +36,12 @@ public sealed class EstadoRig
 
     /// <summary>Frecuencia del VFO B (usada en modo split para TX).</summary>
     public Frecuencia? FrecuenciaVfoB { get; init; }
+
+    /// <summary>Nivel de SWR (Standing Wave Ratio) durante transmision. 1.0 = perfecto. 0 = no disponible.</summary>
+    public double Swr { get; init; }
+
+    /// <summary>Nivel de ALC (Automatic Level Control) como porcentaje (0-100). 0 = no disponible.</summary>
+    public double Alc { get; init; }
 }
 
 /// <summary>

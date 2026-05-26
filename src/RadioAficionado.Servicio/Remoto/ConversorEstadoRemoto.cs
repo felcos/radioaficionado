@@ -29,6 +29,8 @@ public static class ConversorEstadoRemoto
             VfoActivo: estadoLocal.VfoActivo,
             PotenciaVatios: estadoLocal.PotenciaVatios,
             SplitActivo: estadoLocal.SplitActivo,
-            Conectado: conectado);
+            Conectado: conectado,
+            Swr: estadoLocal.Swr,
+            Alc: estadoLocal.Alc);
     }
 }

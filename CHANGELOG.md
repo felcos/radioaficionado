@@ -1,5 +1,96 @@
 # Changelog — RadioAficionado
 
+## [3.9.0] — 2026-05-26 — Control avanzado rig: medidores SWR/ALC en tiempo real
+
+### feat: lectura SWR y ALC desde rigctld
+- EstadoRig: nuevas propiedades Swr y Alc
+- ClienteRigctld: comandos `l SWR` y `l ALC` (solo durante TX)
+- EstadoRigDto y EstadoRigRemotoDto: incluyen Swr y Alc
+- ConversorEstadoRemoto: mapea Swr/Alc al DTO compartido
+- ServicioEstadoOperacion: polling de SWR/ALC durante transmision
+
+### feat: medidores SWR/ALC en la barra del rig (web)
+- _BarraRig.cshtml: barras visuales SWR y ALC (ocultas cuando no se transmite)
+- operacion.js: renderizado dinamico con rangos SWR 1.0-3.0:1, ALC 0-100%
+- operacion.css: estilos .medidor-contenedor con gradiente verde/amarillo/rojo
+
+### Archivos modificados
+- src/RadioAficionado.Dominio/Interfaces/IControlRig.cs
+- src/RadioAficionado.Nativo.Rig/ClienteRigctld.cs
+- src/RadioAficionado.Servicio/Dtos/EstadoRigDto.cs
+- src/RadioAficionado.Servicio/Servicios/ServicioEstadoOperacion.cs
+- src/RadioAficionado.Compartido/Contratos/EstadoRigRemotoDto.cs
+- src/RadioAficionado.Servicio/Remoto/ConversorEstadoRemoto.cs
+- src/RadioAficionado.Servicio/Views/Operacion/_BarraRig.cshtml
+- src/RadioAficionado.Servicio/wwwroot/js/operacion.js
+- src/RadioAficionado.Servicio/wwwroot/css/operacion.css
+- tests/RadioAficionado.Dominio.Tests/Contratos/EstadoRigRemotoDtoTests.cs
+
+## [3.8.0] — 2026-05-26 — Sistema de awards/diplomas (WAC, WAZ, WAS, VUCC)
+
+### feat: motor de calculo de diplomas
+- EstadisticasAwards: calculo WAC (6 continentes), WAZ (40 zonas CQ), WAS (50 estados USA), VUCC (grids VHF+)
+- CatalogoEstadosUsa: 50 estados con abreviatura y nombre
+- TipoDiploma enum y ResumenDiploma record
+- 24 tests unitarios cubriendo todos los diplomas
+
+### Archivos creados
+- src/RadioAficionado.Dominio/Awards/TipoDiploma.cs
+- src/RadioAficionado.Dominio/Awards/CatalogoEstadosUsa.cs
+- src/RadioAficionado.Dominio/Awards/EstadisticasAwards.cs
+- tests/RadioAficionado.Dominio.Tests/Awards/EstadisticasAwardsTests.cs
+
+## [3.7.0] — 2026-05-26 — Filtros DX Cluster + sistema de alertas + alarma configurable
+
+### feat: filtros unificados DX Cluster
+- Escritorio: filtro por modo (ComboBox 13 modos) en PanelDxClusterViewModel
+- Web: filtro por indicativo en _DxCluster.cshtml + dxcluster.js
+
+### feat: sistema de alertas DX Cluster
+- AlertaDxCluster: modelo de dominio (TipoAlerta, ReglaAlerta, ResultadoAlerta)
+- IServicioAlertas: interfaz con EvaluarSpot, reglas CRUD, evento AlertaDisparada
+- ServicioAlertas: implementacion thread-safe con evaluacion de 5 tipos de alerta
+- Integracion SignalR: alertas enviadas a clientes web via RecibirAlerta
+- Web: toasts de alerta con sonido (Web Audio API oscillator)
+- 21 tests unitarios para ServicioAlertas
+
+### feat: alarma configurable en panel activaciones
+- MinutosAlarma configurable (0-60 min) en PanelActivacionesViewModel
+- Evaluacion automatica cada tick del cronometro
+
+### Archivos creados
+- src/RadioAficionado.Dominio/Alertas/AlertaDxCluster.cs
+- src/RadioAficionado.Dominio/Interfaces/IServicioAlertas.cs
+- src/RadioAficionado.Infraestructura/Alertas/ServicioAlertas.cs
+- tests/RadioAficionado.Infraestructura.Tests/Alertas/ServicioAlertasTests.cs
+
+## [3.6.0] — 2026-05-17 — Despliegue produccion + utilidades publicas + descargas corregidas
+
+### feat: despliegue en ham.felcos.es
+- Publicacion en servidor Ubuntu ARM64 con PostgreSQL, Nginx, SSL (Let's Encrypt)
+- Servicio systemd radioaficionado en puerto 5700
+- Migracion Identity PostgreSQL + tablas dominio (Qsos, Activaciones)
+
+### feat: utilidades publicas web (UtilidadesController)
+- Herramientas: conversor potencia, distancia grid, Maidenhead, plan bandas, RST, NATO
+- Espectro: tabla espectro radioelectrico (58+ entradas, filtros por categoria)
+- Propagacion Solar: dashboard NOAA tiempo real con Chart.js
+- Satelites: tabla 13 satelites amateur
+
+### feat: paginas publicas sin autenticacion
+- Estadisticas, Foro (lectura), Mapa ahora publicos
+- Solo Control Remoto permanece con [Authorize]
+- Layout: dropdown Utilidades en navbar
+
+### fix: descargas app corregidas
+- Cambiado de RadioAficionado.Escritorio (Avalonia) a RadioAficionado.Servicio (app web local)
+- PublishSingleFile: un solo ejecutable por plataforma
+- Eliminados artefactos de build (BuildHost, createdump, .pdb)
+
+### feat: favicon SVG + .gitignore seguridad
+- Icono antena con ondas (gradiente verde/azul sobre fondo oscuro)
+- .gitignore: excluye DESPLIEGUE.md, conexion_vm.txt, *.key, *.tar.gz, publish-*, logs
+
 ## [3.5.0] — 2026-05-17 — Control remoto completo del rig (ADR-005 Fases 1-5)
 
 ### feat: tunelado remoto — API keys, hubs SignalR, cliente relay (Fase 1)

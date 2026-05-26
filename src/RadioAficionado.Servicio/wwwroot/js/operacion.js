@@ -139,6 +139,41 @@ const Operacion = (function () {
             }
         }
 
+        // SWR y ALC (solo visibles durante transmision)
+        const swrContenedor = document.getElementById('swr-contenedor');
+        const alcContenedor = document.getElementById('alc-contenedor');
+        const swrRelleno = document.getElementById('swr-relleno');
+        const swrValor = document.getElementById('swr-valor');
+        const alcRelleno = document.getElementById('alc-relleno');
+        const alcValor = document.getElementById('alc-valor');
+
+        if (estado.transmitiendo) {
+            if (swrContenedor) { swrContenedor.classList.add('visible'); }
+            if (alcContenedor) { alcContenedor.classList.add('visible'); }
+
+            // SWR: rango 1.0 a 3.0+ — mapear a 0-100%
+            if (estado.swr > 0) {
+                const swrPct = Math.min(((estado.swr - 1.0) / 2.0) * 100, 100);
+                if (swrRelleno) { swrRelleno.style.width = swrPct + '%'; }
+                if (swrValor) { swrValor.textContent = estado.swr.toFixed(1) + ':1'; }
+            } else {
+                if (swrRelleno) { swrRelleno.style.width = '0%'; }
+                if (swrValor) { swrValor.textContent = '--'; }
+            }
+
+            // ALC: ya viene como porcentaje 0-100
+            if (estado.alc > 0) {
+                if (alcRelleno) { alcRelleno.style.width = estado.alc + '%'; }
+                if (alcValor) { alcValor.textContent = Math.round(estado.alc) + '%'; }
+            } else {
+                if (alcRelleno) { alcRelleno.style.width = '0%'; }
+                if (alcValor) { alcValor.textContent = '--'; }
+            }
+        } else {
+            if (swrContenedor) { swrContenedor.classList.remove('visible'); }
+            if (alcContenedor) { alcContenedor.classList.remove('visible'); }
+        }
+
         // VFO
         const btnVfo = document.getElementById('btn-vfo');
         if (btnVfo) { btnVfo.textContent = 'VFO ' + estado.vfoActivo; }

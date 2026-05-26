@@ -83,6 +83,12 @@ public sealed class ServicioEstadoOperacion : IAsyncDisposable
     /// <summary>Si el split esta activo.</summary>
     public bool SplitActivo { get; private set; }
 
+    /// <summary>SWR actual durante transmision (1.0 = perfecto, 0 = no disponible).</summary>
+    public double Swr { get; private set; }
+
+    /// <summary>ALC como porcentaje (0-100, 0 = no disponible).</summary>
+    public double Alc { get; private set; }
+
     /// <summary>Si el audio esta capturando.</summary>
     public bool AudioCapturando { get; private set; }
 
@@ -383,7 +389,9 @@ public sealed class ServicioEstadoOperacion : IAsyncDisposable
             Transmitiendo,
             VfoActivo,
             PotenciaVatios,
-            SplitActivo);
+            SplitActivo,
+            Swr,
+            Alc);
     }
 
     // ================================================================
@@ -511,6 +519,8 @@ public sealed class ServicioEstadoOperacion : IAsyncDisposable
             PotenciaVatios = estado.PotenciaVatios;
             Transmitiendo = estado.Transmitiendo;
             VfoActivo = estado.VfoActivo;
+            Swr = estado.Swr;
+            Alc = estado.Alc;
 
             if (estado.SubModo.HasValue)
             {

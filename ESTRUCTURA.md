@@ -13,6 +13,8 @@
 - ObjetosDeValor: Indicativo, Frecuencia, Localizador, Coordenadas, BandaRadio (24 bandas), ModoOperacion (48 modos + 43 submodos), RegionItu, ClaseLicencia, FiltroQso, ReferenciaPota, ReferenciaSota, EstadoActivacion, TipoActivacion
 - Entidades: Qso, UsuarioRadio (hereda IdentityUser), CategoriaForo (enum), HiloForo, RespuestaForo
 - Activaciones: Activacion (entidad para POTA/SOTA)
+- Alertas: AlertaDxCluster (TipoAlerta, ReglaAlerta, ResultadoAlerta)
+- Awards: TipoDiploma (enum), EstadisticasAwards (WAC/WAZ/WAS/VUCC), CatalogoEstadosUsa, ResumenDiploma
 - Aprs: PaqueteAprs, PosicionAprs, MensajeAprs, ObjetoAprs, TipoPaqueteAprs (enum), ConfiguracionAprs
 - Compliance: PlanDeBanda, SegmentoBanda, ResultadoCompliance, TipoSegmento, TipoViolacion, PlanDeBandaItu (planes IARU 3 regiones)
 - Configuracion: ConfiguracionCompleta, ConfiguracionEstacion, ConfiguracionAudio, ConfiguracionGeneral
@@ -25,7 +27,7 @@
   - Repositorios: IRepositorioQso (con paginacion y filtros), IRepositorioActivaciones, IUnidadDeTrabajo
   - Hardware: IControlRig, IControlRotador, IAudioPipeline
   - Modos digitales: IDecodificadorDigital, IRegistroDecodificadores
-  - Servicios: IServicioCompliance, IServicioActivaciones, IServicioConfiguracion, IServicioConfirmaciones, IServicioPropagacion, IServicioSincronizacion, IServicioAprs, IServicioSatelites
+  - Servicios: IServicioCompliance, IServicioActivaciones, IServicioConfiguracion, IServicioConfirmaciones, IServicioPropagacion, IServicioSincronizacion, IServicioAprs, IServicioSatelites, IServicioAlertas
   - Clientes externos: IDxCluster, IPskReporter, IClienteLoTW, IClienteEQsl, IClienteClubLog
   - Generadores: IGeneradorQsl
   - Records de sincronizacion: ConfiguracionSincronizacion, ResultadoSincronizacion, EstadoSincronizacion
@@ -167,43 +169,38 @@
 
 #### Web (RadioAficionado.Web) → Dominio, Aplicacion, Infraestructura, Infraestructura.Postgres, Compartido
 - ASP.NET MVC con Razor Views, Bootstrap 5 local, tema oscuro
+- Desplegado en ham.felcos.es (Ubuntu ARM64, PostgreSQL, Nginx, SSL)
 - Data: ContextoIdentidadRadioAficionado (IdentityDbContext separado para Identity)
-- Controllers MVC (8):
-  - HomeController (pagina por defecto ASP.NET)
+- Autenticacion: ApiKeyAuthenticationHandler (esquema "ApiKey" para X-Api-Key header)
+- Middleware: RateLimitingMiddleware (20 req/seg, 429 + Retry-After)
+- Servicios: ServicioApiKeys, RegistroServiciosConectados, ControladorTimeoutPtt, MetricasConexion
+- Hubs SignalR (2): HubTunelServicio (auth ApiKey), HubRelayRig (auth cookie)
+- Controllers MVC (12):
   - InicioController (homepage con estadisticas generales)
   - LogbookController (logbook publico con paginacion, filtros, detalle, mapa)
-  - LogbookPrivadoController ([Authorize], CRUD completo de QSOs, filtros por IndicativoPropio)
-  - OperadoresController (directorio paginado, perfil publico, mapa de contactos JSON)
+  - LogbookPrivadoController ([Authorize], CRUD completo de QSOs)
+  - OperadoresController (directorio paginado, perfil publico, mapa JSON)
   - CuentaController (registro, login, logout, perfil, editar perfil)
-  - EstadisticasController (dashboard con datos agregados + endpoints JSON para graficos)
-  - ForoController (listado paginado, detalle, crear hilo, responder — con [Authorize])
+  - EstadisticasController (dashboard publico + endpoints JSON para graficos)
+  - ForoController (lectura publica, escritura con [Authorize])
+  - ControlRemotoController ([Authorize], display LCD, S-meter, PTT)
+  - ApiKeysController ([Authorize], CRUD claves API)
+  - UtilidadesController (publico: Herramientas, Espectro, Propagacion, Satelites)
 - API REST (2 controladores):
   - QsoApiController [api/qsos]: CRUD de QSOs, paginacion, filtros, [Authorize]
   - AdifApiController [api/adif]: importacion/exportacion ADIF via API, [Authorize], limite 5 MB
-  - Dtos: QsoDto, FiltroQsoDto, ResultadoSincronizacionDto
-  - Mapeadores: MapeadorQsoDto (conversion bidireccional Qso ↔ QsoDto)
-- ViewModels (22):
-  - InicioViewModel, QsoResumenViewModel
-  - LogbookIndexViewModel, QsoDetalleViewModel, MapaContactoViewModel
-  - CrearQsoViewModel, EditarQsoViewModel, LogbookPrivadoIndexViewModel
-  - OperadoresIndexViewModel, OperadorResumenViewModel, PerfilPublicoViewModel, BandaFavoritaViewModel
-  - RegistrarViewModel, IniciarSesionViewModel, PerfilViewModel, EditarPerfilViewModel
-  - EstadisticasViewModel
-  - ForoIndexViewModel, HiloDetalleViewModel, HiloResumenViewModel, CrearHiloViewModel, ResponderHiloViewModel, RespuestaViewModel
-- Views (19 .cshtml):
-  - Shared: _Layout.cshtml, Error.cshtml, _ValidationScriptsPartial.cshtml
-  - Home: Index.cshtml, Privacy.cshtml
-  - Inicio: Index.cshtml
-  - Logbook: Index.cshtml, Detalle.cshtml, Mapa.cshtml
-  - Cuenta: Registrar.cshtml, IniciarSesion.cshtml, Perfil.cshtml, EditarPerfil.cshtml
-  - Foro: Index.cshtml, Detalle.cshtml, CrearHilo.cshtml
-  - Estadisticas: Index.cshtml
-  - _ViewStart.cshtml, _ViewImports.cshtml
-- CSS: sitio.css + site.css (variables --ra-*, tema oscuro azul/gris)
-- JavaScript: estadisticas.js (Chart.js), mapa-contactos.js (Leaflet), site.js
-- Librerias locales: bootstrap, chartjs, leaflet, jquery, jquery-validation, jquery-validation-unobtrusive
-- Identity: ASP.NET Identity con UsuarioRadio, cookie auth, password policy
-- Models: ErrorViewModel
+- Views (27 .cshtml):
+  - Shared: _Layout.cshtml (con dropdown Utilidades y Descargar App), Error.cshtml
+  - Inicio, Logbook (3), LogbookPrivado (3), Cuenta (4), Foro (3), Estadisticas (1)
+  - ControlRemoto: Index.cshtml (LCD frecuencia, controles, PTT countdown)
+  - ApiKeys: Index.cshtml (tabla claves, generacion, copia)
+  - Utilidades: Herramientas, Espectro, Propagacion, Satelites
+- CSS: sitio.css (variables --ra-*, tema oscuro azul/gris)
+- JavaScript: estadisticas.js, mapa-contactos.js, controlRemoto.js, herramientas.js, espectroRadio.js, solarDashboard.js, satelites.js
+- Librerias locales: bootstrap, chartjs, leaflet, signalr, jquery, jquery-validation
+- Identity: ASP.NET Identity con UsuarioRadio, cookie auth
+- wwwroot/descargas/: RadioAficionado-{Windows,Linux,macOS}-x64.tar.gz (RadioAficionado.Servicio)
+- wwwroot/favicon.svg: icono antena con ondas
 
 #### Servicio (RadioAficionado.Servicio) → todos los proyectos
 - ASP.NET Core 10 con SignalR, Kestrel en localhost:5200
@@ -221,7 +218,7 @@
 - ConfiguracionLanzador: persistencia JSON (posicion, tamano, maximizado, puerto, DevTools)
 - Health check polling, F11 pantalla completa
 
-### Tests (1309 tests, todos pasando, 0 fallos)
+### Tests (~1362 tests, todos pasando, 0 fallos)
 - Dominio.Tests (308):
   - ObjetosDeValor: IndicativoTests, FrecuenciaTests, LocalizadorTests, CoordenadasTests, BandaRadioTests, ModoOperacionTests
   - Entidades: QsoTests
@@ -314,7 +311,7 @@
 - ✅ Modos digitales: FT4, RTTY (Goertzel dual), PSK31 (BPSK), JS8 (multi-velocidad) + RegistroDecodificadores
 - ✅ IA con ML.NET (AnalizadorPropagacion FastTree + ClasificadorSenales SdcaMaximumEntropy)
 - ✅ Perfiles publicos de operadores (OperadoresController: directorio, perfil, mapa JSON)
-- ✅ 1309 tests (308 + 676 + 131 + 67 + 29 + 12 + 86), 0 fallos
+- ✅ ~1362 tests, 0 fallos
 - ✅ SDR (SoapySDR)
 - ✅ Mas modos digitales (SSTV, Olivia, JT65, JT9, WSPR, FT2, Q65)
 - ✅ ONNX Runtime (modelos pre-entrenados)
@@ -329,7 +326,13 @@
 - ✅ DXCC: barra progreso, filtro continente, colores semaforo
 - ✅ Propagacion: indices solares con colores (SFI/SN/A/K)
 - ✅ Tests integracion WebApplicationFactory + InMemory DB (25 tests)
-- 🔨 DX Cluster real via telnet al HubEstado
-- 📋 Graficos Chart.js para propagacion, mapa DXCC con Leaflet
-- 📋 Docker compose (web + PostgreSQL)
-- 📋 CI/CD (GitHub Actions)
+- ✅ Control remoto del rig (ADR-005): API keys, SignalR relay, WebRTC stub, rate limiting, PTT timeout
+- ✅ Despliegue produccion ham.felcos.es (PostgreSQL, Nginx, SSL)
+- ✅ Utilidades publicas web: Herramientas, Espectro, Propagacion Solar, Satelites
+- ✅ Descargas multiplataforma RadioAficionado.Servicio (Windows, Linux, macOS)
+- ✅ Paginas publicas: Estadisticas, Foro (lectura), Mapa sin auth
+- ✅ Docker compose (web + PostgreSQL)
+- ✅ CI/CD (GitHub Actions)
+- 🔨 WebRTC audio real (SIPSorcery) — actualmente stub
+- 📋 Migracion EF para tabla claves_api en PostgreSQL
+- 📋 Test end-to-end con radio real + control remoto web

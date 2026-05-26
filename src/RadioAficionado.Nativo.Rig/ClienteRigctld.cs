@@ -143,6 +143,8 @@ public sealed class ClienteRigctld : IControlRig
         int nivelSenal = await ObtenerNivelSenalInternoAsync(ct).ConfigureAwait(false);
         double potenciaVatios = await ObtenerPotenciaInternaAsync(ct).ConfigureAwait(false);
         (bool splitActivo, Frecuencia? frecuenciaVfoB) = await ObtenerSplitInternoAsync(ct).ConfigureAwait(false);
+        double swr = transmitiendo ? await ObtenerSwrInternoAsync(ct).ConfigureAwait(false) : 0.0;
+        double alc = transmitiendo ? await ObtenerAlcInternoAsync(ct).ConfigureAwait(false) : 0.0;
 
         EstadoRig estado = new()
         {
@@ -155,7 +157,9 @@ public sealed class ClienteRigctld : IControlRig
             AnchoDeBandaHz = anchoBanda,
             VfoActivo = vfoActivo,
             SplitActivo = splitActivo,
-            FrecuenciaVfoB = frecuenciaVfoB
+            FrecuenciaVfoB = frecuenciaVfoB,
+            Swr = swr,
+            Alc = alc
         };
 
         return estado;
@@ -467,6 +471,53 @@ public sealed class ClienteRigctld : IControlRig
         if (double.TryParse(respuesta.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out double nivelRfPower))
         {
             return nivelRfPower * _configuracion.PotenciaMaximaVatios;
+        }
+
+        return 0.0;
+    }
+
+    /// <summary>
+    /// Obtiene el SWR actual del radio (solo valido durante transmision).
+    /// El valor devuelto por Hamlib es un ratio directo (ej: 1.5 = 1.5:1).
+    /// </summary>
+    private async Task<double> ObtenerSwrInternoAsync(CancellationToken ct)
+    {
+        try
+        {
+            string respuesta = await EnviarComandoAsync("l SWR", ct).ConfigureAwait(false);
+
+            if (double.TryParse(respuesta.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out double swr))
+            {
+                return swr > 0 ? swr : 0.0;
+            }
+        }
+        catch (InvalidOperationException)
+        {
+            // Radio no soporta lectura de SWR — no es un error
+        }
+
+        return 0.0;
+    }
+
+    /// <summary>
+    /// Obtiene el nivel de ALC actual del radio (solo valido durante transmision).
+    /// El valor devuelto por Hamlib es un porcentaje normalizado (0.0 - 1.0).
+    /// </summary>
+    private async Task<double> ObtenerAlcInternoAsync(CancellationToken ct)
+    {
+        try
+        {
+            string respuesta = await EnviarComandoAsync("l ALC", ct).ConfigureAwait(false);
+
+            if (double.TryParse(respuesta.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out double alc))
+            {
+                // Convertir de 0.0-1.0 a porcentaje 0-100
+                return alc >= 0 ? Math.Round(alc * 100.0, 1) : 0.0;
+            }
+        }
+        catch (InvalidOperationException)
+        {
+            // Radio no soporta lectura de ALC — no es un error
         }
 
         return 0.0;
