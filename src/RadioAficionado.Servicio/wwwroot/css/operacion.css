@@ -612,6 +612,66 @@
     opacity: 1;
 }
 
+/* Busqueda global en sidebar */
+.sidebar-busqueda {
+    padding: 6px 8px;
+    border-top: 1px solid #1a1a2e;
+    position: relative;
+}
+
+.sidebar-busqueda input {
+    font-size: 0.75rem;
+    border: 1px solid #333;
+    width: 100%;
+    display: none;
+}
+
+.sidebar.expandido .sidebar-busqueda input {
+    display: block;
+}
+
+.busqueda-resultados {
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    top: 100%;
+    background: #1a1a2e;
+    border: 1px solid #333;
+    border-radius: 4px;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+    font-size: 0.75rem;
+}
+
+.busqueda-resultado-item {
+    padding: 6px 10px;
+    border-bottom: 1px solid #222;
+    cursor: default;
+}
+
+.busqueda-resultado-item:last-child {
+    border-bottom: none;
+}
+
+.busqueda-resultado-titulo {
+    color: var(--color-acento);
+    font-weight: bold;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    padding: 6px 10px 2px;
+}
+
+.busqueda-resultado-item .dato-principal {
+    color: #e0e0e0;
+    font-weight: 600;
+}
+
+.busqueda-resultado-item .dato-secundario {
+    color: #888;
+    font-size: 0.7rem;
+}
+
 /* Selector de idioma en sidebar */
 .sidebar-idioma {
     padding: 8px 0;

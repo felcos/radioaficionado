@@ -427,14 +427,74 @@ const Operacion = (function () {
             });
         }
 
-        // Cargar puertos y audio al abrir modal
+        // Backup manual
+        const btnBackup = document.getElementById('btn-backup-manual');
+        if (btnBackup) {
+            btnBackup.addEventListener('click', function () {
+                crearBackupManual();
+            });
+        }
+
+        // Guardar preferencias al cerrar modal
         const modal = document.getElementById('modal-configuracion');
         if (modal) {
             modal.addEventListener('show.bs.modal', function () {
                 refrescarPuertos();
                 refrescarDispositivosAudio();
+                cargarPreferencias();
+            });
+            modal.addEventListener('hide.bs.modal', function () {
+                guardarPreferencias();
             });
         }
+    }
+
+    function cargarPreferencias() {
+        fetch('/api/configuracion/preferencias')
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                const selectFecha = document.getElementById('config-formato-fecha');
+                if (selectFecha && data.formatoFecha) { selectFecha.value = data.formatoFecha; }
+
+                const txtNotas = document.getElementById('config-notas-estacion');
+                if (txtNotas && data.notasEstacion !== undefined) { txtNotas.value = data.notasEstacion; }
+
+                const chkBackup = document.getElementById('config-backup-auto');
+                if (chkBackup && data.backupAutomatico !== undefined) { chkBackup.checked = data.backupAutomatico; }
+            })
+            .catch(function (err) { console.warn('Error cargando preferencias:', err); });
+    }
+
+    function guardarPreferencias() {
+        const selectFecha = document.getElementById('config-formato-fecha');
+        const txtNotas = document.getElementById('config-notas-estacion');
+        const chkBackup = document.getElementById('config-backup-auto');
+
+        const dto = {
+            formatoFecha: selectFecha ? selectFecha.value : null,
+            notasEstacion: txtNotas ? txtNotas.value : null,
+            backupAutomatico: chkBackup ? chkBackup.checked : null
+        };
+
+        fetch('/api/configuracion/preferencias', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dto)
+        }).catch(function (err) { console.warn('Error guardando preferencias:', err); });
+    }
+
+    function crearBackupManual() {
+        const resultado = document.getElementById('backup-resultado');
+        if (resultado) { resultado.textContent = 'Creando backup...'; }
+
+        fetch('/api/configuracion/backup', { method: 'POST' })
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                if (resultado) { resultado.textContent = data.mensaje; }
+            })
+            .catch(function (err) {
+                if (resultado) { resultado.textContent = 'Error: ' + err; }
+            });
     }
 
     function refrescarPuertos() {

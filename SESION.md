@@ -23,13 +23,21 @@
 - operacion.js: renderizado dinamico SWR (1.0-3.0:1) y ALC (0-100%)
 - Tests actualizados para DTOs con Swr/Alc
 
+#### Fase 17: Calidad de vida (2026-05-26)
+- Formato de fecha configurable (dd/MM/yyyy, MM/dd/yyyy, yyyy-MM-dd) en ConfiguracionGeneral
+- Notas de estacion (texto libre) en ConfiguracionEstacion
+- Backup automatico: IServicioBackup + ServicioBackup (copia config + BD SQLite, retencion configurable)
+- API configuracion: GET/POST /api/configuracion/preferencias, POST /api/configuracion/backup
+- Busqueda global: API GET /api/busqueda?q= (logbook + DXCC), campo en sidebar con dropdown
+- Modal configuracion: selector formato fecha, textarea notas, checkbox backup, boton backup manual
+- 17 tests nuevos (9 backup + 8 configuracion)
+
 ### Que quedo pendiente
-- Fase 17: Calidad de vida (formatos fecha configurables, notas estacion, backup automatico, busqueda entre paneles)
 - Fase 18: Modos digitales adicionales (PSK250, THOR, DominoEX, MFSK-128, FSQ)
 - WebRTC audio real (SIPSorcery), migracion claves_api PostgreSQL, i18n web, e2e tests
 
 ### Siguiente paso sugerido
-- Continuar con Fase 17 (calidad de vida) o Fase 18 (modos digitales adicionales)
+- Continuar con Fase 18 (modos digitales adicionales)
 
 ---
 

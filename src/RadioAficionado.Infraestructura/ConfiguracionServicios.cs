@@ -12,6 +12,7 @@ using RadioAficionado.Infraestructura.Qsl;
 using RadioAficionado.Infraestructura.Aprs;
 using RadioAficionado.Infraestructura.Satelites;
 using RadioAficionado.Infraestructura.Alertas;
+using RadioAficionado.Infraestructura.Backup;
 using RadioAficionado.Infraestructura.Sincronizacion;
 
 namespace RadioAficionado.Infraestructura;
@@ -65,6 +66,9 @@ public static class ConfiguracionServicios
 
         // Alertas de DX Cluster
         servicios.AddSingleton<IServicioAlertas, ServicioAlertas>();
+
+        // Backup automatico
+        servicios.AddSingleton<IServicioBackup, ServicioBackup>();
 
         // Tracking de satélites amateur
         servicios.AddSingleton<ConfiguracionSatelites>();

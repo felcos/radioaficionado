@@ -94,6 +94,13 @@
                     </a>
                 </li>
             </ul>
+            <!-- Busqueda global -->
+            <div class="sidebar-busqueda">
+                <input type="text" id="busqueda-global" class="form-control form-control-sm bg-dark text-light"
+                       placeholder="Buscar indicativo..." autocomplete="off" />
+                <div class="busqueda-resultados" id="busqueda-resultados" style="display:none;"></div>
+            </div>
+
             <!-- Selector de idioma -->
             <div class="sidebar-idioma">
                 @{
@@ -207,6 +214,78 @@
                         if (window.innerWidth < 769) cerrarSidebar();
                     });
                 });
+            }
+        })();
+    </script>
+    <!-- Busqueda global -->
+    <script>
+        'use strict';
+        (function () {
+            const input = document.getElementById('busqueda-global');
+            const contenedor = document.getElementById('busqueda-resultados');
+            if (!input || !contenedor) { return; }
+
+            let timeout = null;
+
+            input.addEventListener('input', function () {
+                clearTimeout(timeout);
+                const termino = input.value.trim();
+                if (termino.length < 2) {
+                    contenedor.style.display = 'none';
+                    contenedor.innerHTML = '';
+                    return;
+                }
+                timeout = setTimeout(function () {
+                    fetch('/api/busqueda?q=' + encodeURIComponent(termino))
+                        .then(function (r) { return r.json(); })
+                        .then(function (data) { renderizarResultados(data); })
+                        .catch(function () { contenedor.style.display = 'none'; });
+                }, 300);
+            });
+
+            input.addEventListener('blur', function () {
+                setTimeout(function () { contenedor.style.display = 'none'; }, 200);
+            });
+            input.addEventListener('focus', function () {
+                if (contenedor.innerHTML) { contenedor.style.display = 'block'; }
+            });
+
+            function renderizarResultados(data) {
+                let html = '';
+
+                if (data.dxcc) {
+                    html += '<div class="busqueda-resultado-titulo">DXCC</div>';
+                    html += '<div class="busqueda-resultado-item">';
+                    html += '<span class="dato-principal">' + escHtml(data.dxcc.entidad) + '</span>';
+                    html += ' <span class="dato-secundario">' + escHtml(data.dxcc.prefijo) + ' &middot; ' +
+                            escHtml(data.dxcc.continente) + ' &middot; CQ ' + data.dxcc.zonaCq + '</span>';
+                    html += '</div>';
+                }
+
+                if (data.logbook && data.logbook.length > 0) {
+                    html += '<div class="busqueda-resultado-titulo">Logbook (' + data.logbook.length + ')</div>';
+                    for (let i = 0; i < data.logbook.length && i < 10; i++) {
+                        const q = data.logbook[i];
+                        html += '<div class="busqueda-resultado-item">';
+                        html += '<span class="dato-principal">' + escHtml(q.indicativo) + '</span>';
+                        html += ' <span class="dato-secundario">' + escHtml(q.fecha) + ' &middot; ' +
+                                escHtml(q.banda) + ' &middot; ' + escHtml(q.modo) + '</span>';
+                        html += '</div>';
+                    }
+                }
+
+                if (!html) {
+                    html = '<div class="busqueda-resultado-item"><span class="dato-secundario">Sin resultados</span></div>';
+                }
+
+                contenedor.innerHTML = html;
+                contenedor.style.display = 'block';
+            }
+
+            function escHtml(t) {
+                const d = document.createElement('div');
+                d.textContent = t || '';
+                return d.innerHTML;
             }
         })();
     </script>

@@ -25,4 +25,7 @@ public sealed class ConfiguracionEstacion
 
     /// <summary>Nombre del operador.</summary>
     public string Nombre { get; set; } = string.Empty;
+
+    /// <summary>Notas libres sobre la estacion (equipo, antenas, QTH, etc.).</summary>
+    public string NotasEstacion { get; set; } = string.Empty;
 }

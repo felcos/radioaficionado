@@ -27,7 +27,7 @@
   - Repositorios: IRepositorioQso (con paginacion y filtros), IRepositorioActivaciones, IUnidadDeTrabajo
   - Hardware: IControlRig, IControlRotador, IAudioPipeline
   - Modos digitales: IDecodificadorDigital, IRegistroDecodificadores
-  - Servicios: IServicioCompliance, IServicioActivaciones, IServicioConfiguracion, IServicioConfirmaciones, IServicioPropagacion, IServicioSincronizacion, IServicioAprs, IServicioSatelites, IServicioAlertas
+  - Servicios: IServicioCompliance, IServicioActivaciones, IServicioConfiguracion, IServicioConfirmaciones, IServicioPropagacion, IServicioSincronizacion, IServicioAprs, IServicioSatelites, IServicioAlertas, IServicioBackup
   - Clientes externos: IDxCluster, IPskReporter, IClienteLoTW, IClienteEQsl, IClienteClubLog
   - Generadores: IGeneradorQsl
   - Records de sincronizacion: ConfiguracionSincronizacion, ResultadoSincronizacion, EstadoSincronizacion

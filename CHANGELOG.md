@@ -1,5 +1,47 @@
 # Changelog — RadioAficionado
 
+## [4.0.0] — 2026-05-26 — Calidad de vida: formato fecha, notas estacion, backup, busqueda global
+
+### feat: formato de fecha configurable
+- ConfiguracionGeneral: propiedad FormatoFecha (dd/MM/yyyy, MM/dd/yyyy, yyyy-MM-dd)
+- Modal de configuracion web: selector de formato de fecha
+- Preferencias se guardan via API POST /api/configuracion/preferencias
+
+### feat: notas de estacion
+- ConfiguracionEstacion: propiedad NotasEstacion (texto libre)
+- Editable desde el modal de configuracion
+
+### feat: backup automatico de configuracion y BD
+- IServicioBackup: interfaz de dominio (CrearBackupAsync, LimpiarBackupsAntiguos, ObtenerBackupsDisponibles)
+- ServicioBackup: implementacion con copia de configuracion.json + archivos .db
+- ConfiguracionGeneral: BackupAutomatico (bool) + MaxBackups (int)
+- API POST /api/configuracion/backup para backup manual
+- Boton "Crear backup ahora" en modal configuracion
+- 9 tests unitarios
+
+### feat: busqueda global de indicativos
+- BusquedaGlobalApiController: API GET /api/busqueda?q= que busca en logbook + catalogo DXCC
+- Campo de busqueda en sidebar (visible al expandir)
+- Resultados dropdown: entidad DXCC + ultimos QSOs del logbook
+- Estilos integrados en operacion.css
+
+### Archivos creados
+- src/RadioAficionado.Dominio/Interfaces/IServicioBackup.cs
+- src/RadioAficionado.Infraestructura/Backup/ServicioBackup.cs
+- src/RadioAficionado.Servicio/Controllers/ConfiguracionApiController.cs
+- src/RadioAficionado.Servicio/Controllers/BusquedaGlobalApiController.cs
+- tests/RadioAficionado.Infraestructura.Tests/Backup/ServicioBackupTests.cs
+- tests/RadioAficionado.Dominio.Tests/Configuracion/ConfiguracionGeneralTests.cs
+
+### Archivos modificados
+- src/RadioAficionado.Dominio/Configuracion/ConfiguracionGeneral.cs
+- src/RadioAficionado.Dominio/Configuracion/ConfiguracionEstacion.cs
+- src/RadioAficionado.Infraestructura/ConfiguracionServicios.cs
+- src/RadioAficionado.Servicio/Views/Operacion/_Configuracion.cshtml
+- src/RadioAficionado.Servicio/Views/Shared/_LayoutApp.cshtml
+- src/RadioAficionado.Servicio/wwwroot/css/operacion.css
+- src/RadioAficionado.Servicio/wwwroot/js/operacion.js
+
 ## [3.9.0] — 2026-05-26 — Control avanzado rig: medidores SWR/ALC en tiempo real
 
 ### feat: lectura SWR y ALC desde rigctld
