@@ -13,7 +13,7 @@ services:
       - "5200:5200"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=radioaficionado;Username=radio;Password=radio_seguro_2026
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=radioaficionado;Username=radio;Password=${DB_PASSWORD:?define DB_PASSWORD en .env}
       - DxCluster__IndicativoPropio=
       - DxCluster__Servidor=dxc.ve7cc.net
       - DxCluster__Puerto=7300
@@ -30,7 +30,7 @@ services:
     environment:
       POSTGRES_DB: radioaficionado
       POSTGRES_USER: radio
-      POSTGRES_PASSWORD: radio_seguro_2026
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?define DB_PASSWORD en .env}
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:

@@ -315,9 +315,19 @@ const SolarDashboard = (function () {
                     div.className = 'mb-2 p-2 border border-warning rounded small';
                     const mensaje = alerta.message || alerta.producto || '';
                     const primeraLinea = mensaje.split('\n')[0] || 'Alerta NOAA';
-                    div.innerHTML =
-                        '<span class="badge bg-warning text-dark me-1">' + (alerta.product_id || 'NOAA') + '</span> ' +
-                        '<span>' + primeraLinea.substring(0, 120) + '</span>';
+
+                    // Construir con nodos de texto: los datos provienen de NOAA (externos),
+                    // usar textContent evita inyeccion de HTML/script (XSS).
+                    const badge = document.createElement('span');
+                    badge.className = 'badge bg-warning text-dark me-1';
+                    badge.textContent = alerta.product_id || 'NOAA';
+
+                    const texto = document.createElement('span');
+                    texto.textContent = primeraLinea.substring(0, 120);
+
+                    div.appendChild(badge);
+                    div.appendChild(document.createTextNode(' '));
+                    div.appendChild(texto);
                     contenedor.appendChild(div);
                 }
             })

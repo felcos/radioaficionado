@@ -12,13 +12,17 @@ namespace RadioAficionado.Servicio.Controllers;
 public sealed class SatelitesApiController : ControllerBase
 {
     private readonly IServicioSatelites _servicioSatelites;
+    private readonly ILogger<SatelitesApiController> _logger;
 
     /// <summary>
     /// Crea el controlador API de satelites.
     /// </summary>
-    public SatelitesApiController(IServicioSatelites servicioSatelites)
+    public SatelitesApiController(
+        IServicioSatelites servicioSatelites,
+        ILogger<SatelitesApiController> logger)
     {
         _servicioSatelites = servicioSatelites ?? throw new ArgumentNullException(nameof(servicioSatelites));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     /// <summary>
@@ -42,9 +46,10 @@ public sealed class SatelitesApiController : ControllerBase
                 .ObtenerSatelitesAsync(ct)
                 .ConfigureAwait(false);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
             // Si falla la descarga de TLE, devolver datos de ejemplo
+            _logger.LogWarning(ex, "Fallo al obtener el catalogo de satelites (TLE). Se devuelven datos de ejemplo.");
             return Ok(new { pases = GenerarPasesEjemplo() });
         }
 
@@ -91,9 +96,14 @@ public sealed class SatelitesApiController : ControllerBase
                     });
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // Ignorar satelites que fallan en la prediccion
+                // Ignorar satelites que fallan en la prediccion, pero dejar traza
+                _logger.LogDebug(
+                    ex,
+                    "Fallo la prediccion de pasos para el satelite {Satelite} (NORAD {Norad}).",
+                    sat.Nombre,
+                    sat.NumeroNorad);
             }
         }
 

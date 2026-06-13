@@ -17,8 +17,9 @@ public sealed class ActivacionConfiguracion : IEntityTypeConfiguration<Activacio
     /// <param name="builder">Constructor de la configuración de la entidad.</param>
     public void Configure(EntityTypeBuilder<Activacion> builder)
     {
-        builder.ToTable("Activaciones");
-
+        // Sin ToTable explícito: el nombre se deriva del DbSet ("Activaciones").
+        // En SQLite queda "Activaciones"; en Postgres la convención snake_case lo
+        // mapea a "activaciones" (ver ADR-008). No fijar el nombre aquí.
         builder.HasKey(a => a.Id);
 
         builder.Property(a => a.Id)

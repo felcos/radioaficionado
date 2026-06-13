@@ -31,7 +31,7 @@ internal static class Program
         {
             procesoServicio = IniciarServicio();
 
-            if (!EsperarServicioListo(urlServicio + RutaHealth).GetAwaiter().GetResult())
+            if (!EsperarServicioListo(urlServicio + RutaHealth))
             {
                 MessageBox.Show(
                     $"No se pudo iniciar RadioAficionado.Servicio.\n" +
@@ -77,9 +77,11 @@ internal static class Program
 
     /// <summary>
     /// Espera a que el servicio responda al health check.
+    /// Sincrono a proposito: se ejecuta antes de Application.Run, en el hilo STA,
+    /// usando la API sincrona HttpClient.Send para no bloquear con sync-over-async.
     /// </summary>
     /// <param name="urlHealth">URL completa del endpoint de health check.</param>
-    private static async Task<bool> EsperarServicioListo(string urlHealth)
+    private static bool EsperarServicioListo(string urlHealth)
     {
         using HttpClient cliente = new();
         cliente.Timeout = TimeSpan.FromSeconds(5);
@@ -90,7 +92,8 @@ internal static class Program
         {
             try
             {
-                HttpResponseMessage respuesta = await cliente.GetAsync(urlHealth).ConfigureAwait(false);
+                using HttpRequestMessage solicitud = new(HttpMethod.Get, urlHealth);
+                using HttpResponseMessage respuesta = cliente.Send(solicitud);
 
                 if (respuesta.IsSuccessStatusCode)
                 {
@@ -106,7 +109,7 @@ internal static class Program
                 // Timeout en la petición, reintentar.
             }
 
-            await Task.Delay(500).ConfigureAwait(false);
+            Thread.Sleep(500);
         }
 
         return false;

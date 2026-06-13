@@ -15,10 +15,14 @@ using RadioAficionado.Web.Middleware;
 using RadioAficionado.Web.Servicios;
 
 // Configurar Serilog
+string plantillaLog =
+    "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] [{CorrelationId}] {Message:lj}{NewLine}{Exception}";
+
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
-    .WriteTo.Console()
-    .WriteTo.File("logs/radioaficionado-web-.log", rollingInterval: RollingInterval.Day)
+    .Enrich.FromLogContext()
+    .WriteTo.Console(outputTemplate: plantillaLog)
+    .WriteTo.File("logs/radioaficionado-web-.log", rollingInterval: RollingInterval.Day, outputTemplate: plantillaLog)
     .CreateLogger();
 
 try
@@ -35,7 +39,10 @@ try
     {
         opciones.AddPolicy("PermitirEscritorio", politica =>
         {
-            politica.AllowAnyOrigin()
+            politica.WithOrigins(
+                       "http://localhost:5200",
+                       "https://localhost:5200",
+                       "https://ham.felcos.es")
                    .AllowAnyMethod()
                    .AllowAnyHeader();
         });
@@ -126,6 +133,16 @@ try
     app.UseCors("PermitirEscritorio");
     app.UseAuthentication();
     app.UseAuthorization();
+
+    // Correlation ID: adjunta el identificador de traza de cada request a los logs (Art. 17)
+    app.Use(async (contexto, siguiente) =>
+    {
+        using (Serilog.Context.LogContext.PushProperty("CorrelationId", contexto.TraceIdentifier))
+        {
+            await siguiente();
+        }
+    });
+
     app.UseSerilogRequestLogging();
 
     app.MapControllers();

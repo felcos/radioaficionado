@@ -21,10 +21,14 @@ using RadioAficionado.Servicio.Remoto;
 using RadioAficionado.Servicio.Servicios;
 
 // Configurar Serilog
+string plantillaLog =
+    "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] [{CorrelationId}] {Message:lj}{NewLine}{Exception}";
+
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
-    .WriteTo.Console()
-    .WriteTo.File("logs/radioaficionado-servicio-.log", rollingInterval: RollingInterval.Day)
+    .Enrich.FromLogContext()
+    .WriteTo.Console(outputTemplate: plantillaLog)
+    .WriteTo.File("logs/radioaficionado-servicio-.log", rollingInterval: RollingInterval.Day, outputTemplate: plantillaLog)
     .CreateLogger();
 
 try
@@ -154,6 +158,15 @@ try
     });
 
     app.UseRequestLocalization(opcionesLocalizacion);
+
+    // Correlation ID: adjunta el identificador de traza de cada request a los logs (Art. 17)
+    app.Use(async (contexto, siguiente) =>
+    {
+        using (Serilog.Context.LogContext.PushProperty("CorrelationId", contexto.TraceIdentifier))
+        {
+            await siguiente();
+        }
+    });
 
     app.UseSerilogRequestLogging();
 

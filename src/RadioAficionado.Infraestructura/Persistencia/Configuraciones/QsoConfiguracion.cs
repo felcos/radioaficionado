@@ -17,8 +17,9 @@ public sealed class QsoConfiguracion : IEntityTypeConfiguration<Qso>
     /// <param name="builder">Constructor de la configuración de la entidad.</param>
     public void Configure(EntityTypeBuilder<Qso> builder)
     {
-        builder.ToTable("Qsos");
-
+        // Sin ToTable explícito: el nombre se deriva del DbSet ("Qsos").
+        // En SQLite queda "Qsos"; en Postgres la convención snake_case lo mapea
+        // a "qsos" (ver ADR-008). No fijar el nombre aquí para no romper ese mapeo.
         builder.HasKey(q => q.Id);
 
         builder.Property(q => q.Id)

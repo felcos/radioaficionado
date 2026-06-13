@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using RadioAficionado.Dominio.Interfaces;
 using RadioAficionado.Dominio.Propagacion;
@@ -20,7 +21,10 @@ public sealed class PropagacionApiControllerTests
     {
         _mockServicio = new Mock<IServicioPropagacion>();
         _mockClienteSolar = new Mock<IClienteDatosSolares>();
-        _controlador = new PropagacionApiController(_mockServicio.Object, _mockClienteSolar.Object);
+        _controlador = new PropagacionApiController(
+            _mockServicio.Object,
+            _mockClienteSolar.Object,
+            NullLogger<PropagacionApiController>.Instance);
     }
 
     [Fact]
@@ -101,7 +105,10 @@ public sealed class PropagacionApiControllerTests
     public void Constructor_ConServicioNulo_LanzaArgumentNullException()
     {
         // Act
-        Action accion = () => new PropagacionApiController(null!, _mockClienteSolar.Object);
+        Action accion = () => new PropagacionApiController(
+            null!,
+            _mockClienteSolar.Object,
+            NullLogger<PropagacionApiController>.Instance);
 
         // Assert
         accion.Should().Throw<ArgumentNullException>()
@@ -112,7 +119,10 @@ public sealed class PropagacionApiControllerTests
     public void Constructor_ConClienteSolarNulo_LanzaArgumentNullException()
     {
         // Act
-        Action accion = () => new PropagacionApiController(_mockServicio.Object, null!);
+        Action accion = () => new PropagacionApiController(
+            _mockServicio.Object,
+            null!,
+            NullLogger<PropagacionApiController>.Instance);
 
         // Assert
         accion.Should().Throw<ArgumentNullException>()

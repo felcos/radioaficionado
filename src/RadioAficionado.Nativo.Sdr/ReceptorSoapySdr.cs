@@ -414,9 +414,19 @@ public sealed class ReceptorSoapySdr : IReceptorSdr
     /// </summary>
     private Task DesconectarInternoAsync()
     {
+        DesconectarInterno();
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// Desconecta del dispositivo SDR sin adquirir el semáforo (uso interno, síncrono).
+    /// Las operaciones son llamadas nativas síncronas; no hay E/S async real.
+    /// </summary>
+    private void DesconectarInterno()
+    {
         if (!EstaConectado)
         {
-            return Task.CompletedTask;
+            return;
         }
 
         _logger.LogInformation("Desconectando dispositivo SDR: {Dispositivo}...", DispositivoActual);
@@ -451,8 +461,6 @@ public sealed class ReceptorSoapySdr : IReceptorSdr
         TasaDeMuestreoHz = 0;
 
         _logger.LogInformation("Dispositivo SDR desconectado: {Dispositivo}.", dispositivoAnterior);
-
-        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -468,7 +476,7 @@ public sealed class ReceptorSoapySdr : IReceptorSdr
         _semaforo.Wait();
         try
         {
-            DesconectarInternoAsync().GetAwaiter().GetResult();
+            DesconectarInterno();
         }
         finally
         {

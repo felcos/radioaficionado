@@ -44,4 +44,8 @@ ENV ASPNETCORE_ENVIRONMENT=Production
 
 COPY --from=build /app/publish .
 
+# Ejecutar como usuario no-root (UID predefinido en la imagen aspnet) para reducir
+# el impacto de una eventual ejecucion remota de codigo.
+USER $APP_UID
+
 ENTRYPOINT ["dotnet", "RadioAficionado.Servicio.dll"]

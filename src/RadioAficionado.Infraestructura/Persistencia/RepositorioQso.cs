@@ -32,6 +32,7 @@ public sealed class RepositorioQso : IRepositorioQso
     public async Task<IReadOnlyList<Qso>> ObtenerTodosAsync(CancellationToken ct)
     {
         List<Qso> qsos = await _contexto.Qsos
+            .AsNoTracking()
             .OrderByDescending(q => q.FechaHoraInicio)
             .ToListAsync(ct);
 
@@ -42,6 +43,7 @@ public sealed class RepositorioQso : IRepositorioQso
     public async Task<IReadOnlyList<Qso>> BuscarPorIndicativoAsync(Indicativo indicativo, CancellationToken ct)
     {
         List<Qso> qsos = await _contexto.Qsos
+            .AsNoTracking()
             .Where(q => q.IndicativoPropio == indicativo || q.IndicativoContacto == indicativo)
             .OrderByDescending(q => q.FechaHoraInicio)
             .ToListAsync(ct);
@@ -72,7 +74,7 @@ public sealed class RepositorioQso : IRepositorioQso
     public async Task<ResultadoPaginado<Qso>> ObtenerPaginadoAsync(
         int pagina, int tamano, FiltroQso? filtro, CancellationToken ct)
     {
-        IQueryable<Qso> consulta = AplicarFiltro(_contexto.Qsos.AsQueryable(), filtro);
+        IQueryable<Qso> consulta = AplicarFiltro(_contexto.Qsos.AsNoTracking(), filtro);
 
         int total = await consulta.CountAsync(ct);
 

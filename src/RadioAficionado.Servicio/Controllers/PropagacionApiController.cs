@@ -13,16 +13,19 @@ public sealed class PropagacionApiController : ControllerBase
 {
     private readonly IServicioPropagacion _servicioPropagacion;
     private readonly IClienteDatosSolares _clienteDatosSolares;
+    private readonly ILogger<PropagacionApiController> _logger;
 
     /// <summary>
     /// Crea el controlador API de propagacion.
     /// </summary>
     public PropagacionApiController(
         IServicioPropagacion servicioPropagacion,
-        IClienteDatosSolares clienteDatosSolares)
+        IClienteDatosSolares clienteDatosSolares,
+        ILogger<PropagacionApiController> logger)
     {
         _servicioPropagacion = servicioPropagacion ?? throw new ArgumentNullException(nameof(servicioPropagacion));
         _clienteDatosSolares = clienteDatosSolares ?? throw new ArgumentNullException(nameof(clienteDatosSolares));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     /// <summary>
@@ -38,9 +41,10 @@ public sealed class PropagacionApiController : ControllerBase
                 .ObtenerIndicesSolaresAsync(ct)
                 .ConfigureAwait(false);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
             // Si falla la consulta a NOAA, devolvemos datos de ejemplo
+            _logger.LogWarning(ex, "Fallo al obtener indices solares de NOAA. Se devuelven datos de ejemplo.");
         }
 
         if (indices is not null)

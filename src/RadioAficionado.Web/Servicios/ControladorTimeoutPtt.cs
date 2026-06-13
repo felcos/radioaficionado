@@ -13,7 +13,8 @@ namespace RadioAficionado.Web.Servicios;
 public sealed class ControladorTimeoutPtt : IDisposable
 {
     private readonly ConcurrentDictionary<string, DateTime> _pttActivos = new();
-    private readonly IServiceProvider _proveedor;
+    private readonly IHubContext<HubTunelServicio, IClienteHubTunel> _hubTunel;
+    private readonly RegistroServiciosConectados _registro;
     private readonly ILogger<ControladorTimeoutPtt> _logger;
     private readonly Timer _timerVerificacion;
     private bool _disposed;
@@ -24,13 +25,16 @@ public sealed class ControladorTimeoutPtt : IDisposable
     /// <summary>
     /// Crea una nueva instancia del controlador de timeout de PTT.
     /// </summary>
-    /// <param name="proveedor">Proveedor de servicios para resolver el hub context.</param>
+    /// <param name="hubTunel">Contexto del hub de tunel (singleton) para enviar comandos al servicio local.</param>
+    /// <param name="registro">Registro de servicios conectados (singleton) para resolver connection IDs.</param>
     /// <param name="logger">Logger para registrar eventos del controlador.</param>
     public ControladorTimeoutPtt(
-        IServiceProvider proveedor,
+        IHubContext<HubTunelServicio, IClienteHubTunel> hubTunel,
+        RegistroServiciosConectados registro,
         ILogger<ControladorTimeoutPtt> logger)
     {
-        _proveedor = proveedor ?? throw new ArgumentNullException(nameof(proveedor));
+        _hubTunel = hubTunel ?? throw new ArgumentNullException(nameof(hubTunel));
+        _registro = registro ?? throw new ArgumentNullException(nameof(registro));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         _timerVerificacion = new Timer(
@@ -133,14 +137,7 @@ public sealed class ControladorTimeoutPtt : IDisposable
     {
         try
         {
-            using IServiceScope scope = _proveedor.CreateScope();
-            IHubContext<HubTunelServicio, IClienteHubTunel> hubTunel =
-                scope.ServiceProvider.GetRequiredService<IHubContext<HubTunelServicio, IClienteHubTunel>>();
-
-            RegistroServiciosConectados registro =
-                scope.ServiceProvider.GetRequiredService<RegistroServiciosConectados>();
-
-            string? connectionId = registro.ObtenerConnectionId(usuarioId);
+            string? connectionId = _registro.ObtenerConnectionId(usuarioId);
             if (string.IsNullOrWhiteSpace(connectionId))
             {
                 _logger.LogWarning(
@@ -154,7 +151,7 @@ public sealed class ControladorTimeoutPtt : IDisposable
                 usuarioId,
                 new Dictionary<string, string> { ["Activar"] = "false" });
 
-            await hubTunel.Clients.Client(connectionId).EjecutarComandoRig(comando);
+            await _hubTunel.Clients.Client(connectionId).EjecutarComandoRig(comando);
             _logger.LogInformation(
                 "Comando de desactivacion de PTT enviado al servicio local del usuario {UsuarioId} por timeout.",
                 usuarioId);

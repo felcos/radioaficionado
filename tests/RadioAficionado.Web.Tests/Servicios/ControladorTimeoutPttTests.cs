@@ -1,22 +1,26 @@
 using FluentAssertions;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
+using RadioAficionado.Web.Hubs;
 using RadioAficionado.Web.Servicios;
 
 namespace RadioAficionado.Web.Tests.Servicios;
 
 public class ControladorTimeoutPttTests : IDisposable
 {
-    private readonly Mock<IServiceProvider> _mockProveedor;
+    private readonly Mock<IHubContext<HubTunelServicio, IClienteHubTunel>> _mockHubTunel;
+    private readonly RegistroServiciosConectados _registro;
     private readonly ILogger<ControladorTimeoutPtt> _logger;
     private readonly ControladorTimeoutPtt _controlador;
 
     public ControladorTimeoutPttTests()
     {
-        _mockProveedor = new Mock<IServiceProvider>();
+        _mockHubTunel = new Mock<IHubContext<HubTunelServicio, IClienteHubTunel>>();
+        _registro = new RegistroServiciosConectados();
         _logger = NullLogger<ControladorTimeoutPtt>.Instance;
-        _controlador = new ControladorTimeoutPtt(_mockProveedor.Object, _logger);
+        _controlador = new ControladorTimeoutPtt(_mockHubTunel.Object, _registro, _logger);
     }
 
     [Fact]

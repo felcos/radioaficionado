@@ -30,6 +30,9 @@ public static class ConfiguracionPostgres
         servicios.AddDbContext<ContextoRadioAficionado>(opciones =>
         {
             opciones.UseNpgsql(cadenaDeConexion);
+            // snake_case solo en PostgreSQL (Art. 23). SQLite de escritorio conserva
+            // PascalCase porque comparte la configuración Fluent (ver ADR-008).
+            opciones.UseSnakeCaseNamingConvention();
         });
 
         return servicios;

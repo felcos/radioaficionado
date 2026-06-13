@@ -41,14 +41,10 @@ function inicializarMapaOperador(indicativo) {
             const grupoMarcadores = L.featureGroup();
 
             marcadores.forEach(function (contacto) {
-                const contenidoPopup =
-                    '<div class="text-dark">' +
-                    '<strong>' + contacto.indicativo + '</strong><br/>' +
-                    '<small>' + contacto.fecha + '</small><br/>' +
-                    (contacto.banda ? '<span>Banda: ' + contacto.banda + '</span><br/>' : '') +
-                    '<span>Modo: ' + contacto.modo + '</span><br/>' +
-                    '<span>Loc: ' + contacto.localizador + '</span>' +
-                    '</div>';
+                // Los datos del contacto (indicativo, localizador, etc.) los introduce
+                // el usuario. Se construye el popup con nodos de texto (textContent) en
+                // lugar de innerHTML para evitar XSS almacenado.
+                const contenidoPopup = construirPopupContacto(contacto);
 
                 const marcador = L.marker([contacto.latitud, contacto.longitud])
                     .bindPopup(contenidoPopup);
@@ -63,4 +59,45 @@ function inicializarMapaOperador(indicativo) {
             console.error('Error cargando mapa de contactos:', error);
             contenedorMapa.innerHTML = '<div class="text-center text-danger py-5">Error al cargar el mapa de contactos.</div>';
         });
+}
+
+/**
+ * Construye el contenido del popup de un contacto usando nodos de texto.
+ * Evita XSS almacenado al no interpolar datos del usuario en innerHTML.
+ * @param {object} contacto - Datos del contacto (indicativo, fecha, banda, modo, localizador).
+ * @returns {HTMLElement} Elemento div listo para bindPopup.
+ */
+function construirPopupContacto(contacto) {
+    'use strict';
+
+    const div = document.createElement('div');
+    div.className = 'text-dark';
+
+    const titulo = document.createElement('strong');
+    titulo.textContent = contacto.indicativo || '';
+    div.appendChild(titulo);
+    div.appendChild(document.createElement('br'));
+
+    const fecha = document.createElement('small');
+    fecha.textContent = contacto.fecha || '';
+    div.appendChild(fecha);
+    div.appendChild(document.createElement('br'));
+
+    if (contacto.banda) {
+        const banda = document.createElement('span');
+        banda.textContent = 'Banda: ' + contacto.banda;
+        div.appendChild(banda);
+        div.appendChild(document.createElement('br'));
+    }
+
+    const modo = document.createElement('span');
+    modo.textContent = 'Modo: ' + (contacto.modo || '');
+    div.appendChild(modo);
+    div.appendChild(document.createElement('br'));
+
+    const loc = document.createElement('span');
+    loc.textContent = 'Loc: ' + (contacto.localizador || '');
+    div.appendChild(loc);
+
+    return div;
 }

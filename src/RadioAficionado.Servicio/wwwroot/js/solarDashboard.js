@@ -132,9 +132,19 @@ const SolarDashboard = (function () {
             div.className = 'solar-alerta-item';
             // Extraer primera línea del mensaje
             const primeraLinea = (alerta.mensaje || '').split('\n')[0] || alerta.codigo;
-            div.innerHTML =
-                '<span class="solar-alerta-codigo">' + (alerta.codigo || '') + '</span> ' +
-                '<span class="solar-alerta-texto">' + primeraLinea + '</span>';
+
+            // Datos provenientes de NOAA (externos): usar textContent evita XSS.
+            const codigo = document.createElement('span');
+            codigo.className = 'solar-alerta-codigo';
+            codigo.textContent = alerta.codigo || '';
+
+            const texto = document.createElement('span');
+            texto.className = 'solar-alerta-texto';
+            texto.textContent = primeraLinea || '';
+
+            div.appendChild(codigo);
+            div.appendChild(document.createTextNode(' '));
+            div.appendChild(texto);
             contenedor.appendChild(div);
         }
     }

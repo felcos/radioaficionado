@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
@@ -19,8 +20,12 @@ public class HubTunelServicio(
     IHubContext<HubRelayRig, IClienteHubRelay> _hubRelay,
     ILogger<HubTunelServicio> _logger) : Hub<IClienteHubTunel>
 {
-    /// <summary>Ultimo envio de linea de espectro en ticks para throttle a 10fps.</summary>
-    private static long _ultimoEnvioEspectroTicks;
+    /// <summary>
+    /// Ultimo envio de linea de espectro por usuario (en ticks) para throttle a 10fps.
+    /// El hub se instancia por invocacion, por lo que el estado de throttle debe ser
+    /// estatico y, ademas, separado por usuario para no mezclar los flujos de distintos clientes.
+    /// </summary>
+    private static readonly ConcurrentDictionary<string, long> _ultimoEnvioEspectroPorUsuario = new();
 
     /// <summary>
     /// Se ejecuta cuando el servicio local se conecta al hub.
@@ -62,6 +67,7 @@ public class HubTunelServicio(
         if (!string.IsNullOrWhiteSpace(usuarioId))
         {
             _registro.Eliminar(usuarioId);
+            _ultimoEnvioEspectroPorUsuario.TryRemove(usuarioId, out _);
 
             _logger.LogInformation(
                 "Servicio local desconectado para usuario {UsuarioId}. ConnectionId: {ConnectionId}",
@@ -117,14 +123,14 @@ public class HubTunelServicio(
         string? usuarioId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrWhiteSpace(usuarioId)) { return; }
 
-        // Throttle a 10fps
+        // Throttle a 10fps por usuario
         long ahora = Stopwatch.GetTimestamp();
-        long ultimo = Interlocked.Read(ref _ultimoEnvioEspectroTicks);
+        long ultimo = _ultimoEnvioEspectroPorUsuario.GetValueOrDefault(usuarioId, 0);
         long intervaloMinimo = Stopwatch.Frequency / 10;
 
         if (ahora - ultimo < intervaloMinimo) { return; }
 
-        Interlocked.Exchange(ref _ultimoEnvioEspectroTicks, ahora);
+        _ultimoEnvioEspectroPorUsuario[usuarioId] = ahora;
         await _hubRelay.Clients.User(usuarioId).RecibirLineaEspectro(linea);
     }
 

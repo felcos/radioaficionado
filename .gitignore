@@ -46,6 +46,7 @@ Desktop.ini
 ## Secrets
 appsettings.Development.json
 appsettings.Local.json
+.env
 *.pfx
 *.p12
 

@@ -1,5 +1,28 @@
 # Changelog — RadioAficionado
 
+## [6.1.0] — 2026-06-13 — snake_case en Postgres (ADR-008 Opción A) + despliegue
+
+### refactor: nomenclatura snake_case en PostgreSQL para `ContextoRadioAficionado`
+- `EFCore.NamingConventions` 10.0.1 + `UseSnakeCaseNamingConvention()` SOLO en `AgregarPostgres()`
+- Eliminado `ToTable("Qsos")`/`ToTable("Activaciones")` de la config Fluent compartida: el nombre se deriva del `DbSet`, así Postgres lo mapea a `qsos`/`activaciones` y SQLite (sin convención) lo mantiene como `Qsos`/`Activaciones` — el escritorio NO se rompe
+- Tablas, columnas, índices y constraints de QSO/Activaciones ahora 100% snake_case en Postgres (Art. 23)
+
+### deploy: migración en producción (ham.felcos.es) preservando datos
+- Backup `pg_dump` previo + rename en transacción (`ALTER TABLE/COLUMN/INDEX RENAME`), tablas vacías (0 filas)
+- Publish `linux-arm64` self-contained, swap de binarios preservando `appsettings.Production.json` y `logs/`
+- Verificado: web 200, `/Logbook` 200, EF generando SQL snake_case sin errores
+
+### Archivos modificados
+- src/RadioAficionado.Infraestructura.Postgres/ConfiguracionPostgres.cs (+ UseSnakeCaseNamingConvention)
+- src/RadioAficionado.Infraestructura.Postgres/RadioAficionado.Infraestructura.Postgres.csproj (+ EFCore.NamingConventions)
+- src/RadioAficionado.Infraestructura/Persistencia/Configuraciones/QsoConfiguracion.cs (- ToTable)
+- src/RadioAficionado.Infraestructura/Persistencia/Configuraciones/ActivacionConfiguracion.cs (- ToTable)
+
+### Archivos creados
+- docs/migraciones/postgres-qsos-snakecase.md (runbook, ejecutado)
+
+---
+
 ## [6.0.0] — 2026-05-26 — WebRTC real, merge a main, verificacion migracion claves_api
 
 ### feat: WebRTC real con SIPSorcery (reemplaza stub)

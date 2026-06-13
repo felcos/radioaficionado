@@ -45,8 +45,12 @@ public sealed class RateLimitingMiddleware : IDisposable
     {
         string ruta = contexto.Request.Path.Value ?? string.Empty;
 
-        // Solo aplicar rate limiting a rutas de hubs
-        if (!ruta.StartsWith("/hubs/", StringComparison.OrdinalIgnoreCase))
+        // Solo aplicar rate limiting a rutas de hubs SignalR y endpoints de API
+        bool rutaLimitada =
+            ruta.StartsWith("/hubs/", StringComparison.OrdinalIgnoreCase) ||
+            ruta.StartsWith("/api/", StringComparison.OrdinalIgnoreCase);
+
+        if (!rutaLimitada)
         {
             await _siguiente(contexto);
             return;

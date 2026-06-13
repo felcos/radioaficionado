@@ -43,6 +43,9 @@ public sealed class VentanaPrincipal : Form
         KeyDown += VentanaPrincipal_KeyDown;
     }
 
+    // async void es el patron idiomatico para handlers de eventos de WinForms.
+    // Toda la inicializacion async va envuelta en try/catch para que un fallo de
+    // WebView2 no se convierta en una excepcion no observada que tumbe el proceso.
     private async void VentanaPrincipal_Load(object? sender, EventArgs e)
     {
         // Aplicar posicion guardada si es valida
@@ -57,21 +60,33 @@ public sealed class VentanaPrincipal : Form
             WindowState = FormWindowState.Maximized;
         }
 
-        await _webView.EnsureCoreWebView2Async(null);
-
-        // Configurar WebView2 como app (sin barra de navegación)
-        _webView.CoreWebView2.Settings.AreDefaultContextMenusEnabled = false;
-        _webView.CoreWebView2.Settings.IsStatusBarEnabled = false;
-        _webView.CoreWebView2.Settings.AreDevToolsEnabled = _config.DevToolsHabilitados;
-
-        // Navegar a la URL del servicio
-        _webView.CoreWebView2.Navigate(_urlInicial);
-
-        // Actualizar título con el de la página
-        _webView.CoreWebView2.DocumentTitleChanged += (s, args) =>
+        try
         {
-            Text = _webView.CoreWebView2.DocumentTitle;
-        };
+            await _webView.EnsureCoreWebView2Async(null);
+
+            // Configurar WebView2 como app (sin barra de navegación)
+            _webView.CoreWebView2.Settings.AreDefaultContextMenusEnabled = false;
+            _webView.CoreWebView2.Settings.IsStatusBarEnabled = false;
+            _webView.CoreWebView2.Settings.AreDevToolsEnabled = _config.DevToolsHabilitados;
+
+            // Navegar a la URL del servicio
+            _webView.CoreWebView2.Navigate(_urlInicial);
+
+            // Actualizar título con el de la página
+            _webView.CoreWebView2.DocumentTitleChanged += (s, args) =>
+            {
+                Text = _webView.CoreWebView2.DocumentTitle;
+            };
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(
+                $"No se pudo inicializar el navegador embebido (WebView2).\n\n{ex.Message}",
+                "RadioAficionado",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            Close();
+        }
     }
 
     private void VentanaPrincipal_KeyDown(object? sender, KeyEventArgs e)
